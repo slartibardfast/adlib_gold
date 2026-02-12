@@ -1,0 +1,33 @@
+
+# Copyright (c) 2026.  All rights reserved.
+#
+# Ad Lib Gold WDM Audio Driver
+#
+
+TARGETNAME=adlibgold
+TARGETTYPE=DRIVER
+TARGETPATH=obj
+
+TARGETLIBS= \
+        $(SDK_LIB_PATH)\portcls.lib\
+        $(SDK_LIB_PATH)\libcntpr.lib\
+        ..\lib\*\stdunk.lib
+
+INCLUDES=..\inc
+
+MSC_WARNING_LEVEL=-W3 -WX
+
+C_DEFINES= $(C_DEFINES) -D_WIN32 -DUNICODE -D_UNICODE
+
+#
+# Debug print level.
+#
+C_DEFINES= $(C_DEFINES) -DDEBUG_LEVEL=DEBUGLVL_TERSE
+
+LINKER_FLAGS=-map
+
+SOURCES=\
+        adapter.cpp     \
+        common.cpp      \
+        mintopo.cpp     \
+        adlibgold.rc
