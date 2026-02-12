@@ -18,7 +18,7 @@ The current version of the Sample Editor does not use the AD Lib Gold drivers. I
 uses linkable libraries that conflict with the drivers.
 
 In order to execute the Sample Editor, all drivers must be removed from memory,
-otherwise the program may hang or display an “Insufficient Memory” message.
+otherwise the program may hang or display an "Insufficient Memory" message.
 
 Disabling Interrupts when accessing the hardware
 In order to avoid possible conflicts between applications that try to access the
@@ -198,7 +198,7 @@ application support for the Ad Lib Gold series of cards.
 
 The Developer Toolkit covers the following areas:
 
-¢ Quick Start and Evaluation Software
+• Quick Start and Evaluation Software
 
 This section is for developers who want to try the software provided with
 the Gold Card and get a quick look at all programming possibilities. It
@@ -206,20 +206,20 @@ summarizes the installation of the Gold card and briefly describes some
 of the available applications. The evaluation software provides tools for
 a variety of sound quality tests.
 
-¢ Gold Hardware
+• Gold Hardware
 
 This section describes the physical layout of the Gold card, and the
 procedure for installing the card in your computer. It also provides a short
 description of the Surround Sound Module.
 
-¢ Software Applications
+• Software Applications
 
 Describes the applications and TSRs that you can use with the Gold
 card. Some of these applications can be used to create FM sounds,
 digitized sounds, and Surround presets, that the developer can use in
 his/her applications.
 
-¢ Software Drivers
+• Software Drivers
 
 This section explains how your applications can interface with the
 memory-resident drivers. It also contains a complete function directory for
@@ -234,7 +234,7 @@ Details the 1/O map of each of the hardware sections of the Gold Card.
 This section is intended for programmers who want to directly access the
 hardware, instead of using the software drivers.
 
-¢ Appendices
+• Appendices
 
 The appendices provide additional information on the Yamaha Gold
 Sound Standard, the Surround Processor chip (YM7128), a diagram
@@ -296,9 +296,9 @@ Installing the Gold card
 1.
 
 Make sure that the on-board jumpers, the
-“Game port enable jumper’, the “Port address
-jumper” and the “Dual joystick selector
-jumpers”, are in the desired position.
+"Game port enable jumper', the "Port address
+jumper" and the "Dual joystick selector
+jumpers", are in the desired position.
 
 Plug the Gold card into the computer in a free
 slot as far as possible from the video adapter
@@ -312,7 +312,7 @@ NOTE: Certain cards, such as video adapters,
 produce high-frequency signals which can interfere
 with the sound quality of the sound card.
 
-See "3.2: Getting Installed”.
+See "3.2: Getting Installed".
 
 Connect the Other Peripherais
 
@@ -335,7 +335,7 @@ of the card. If you plan to use the MIDI
 interface, connect your MIDI device with the
 Ad Lib adapter cable.
 
-See “3.2: Getting Installed”.
+See "3.2: Getting Installed".
 
 installing the Software
 
@@ -373,7 +373,7 @@ following commands:
 A:\>ctrldrv
 A:\>setup
 
-L} See "4.1: Software Installation and Configuration”.
+L} See "4.1: Software Installation and Configuration".
 
 Test Hardware
 
@@ -382,13 +382,13 @@ to verify that the Ad Lib Gold card is functioning
 
 properly.
 
-¢ Go to the directory where you placed the Gold
+• Go to the directory where you placed the Gold
 Test Program at installation and load this
 program by typing the following commana:
 
 testgold
 
-O See "4.2: Test Program”.
+O See "4.2: Test Program".
 
 Using the Gold Card Evaluation Sofiware
 
@@ -429,7 +429,7 @@ Program offers on-line Help containing summarized
 information on how to operate the program and how
 to use the various features.
 
-CL} See “Chapter 4 - Software Applications’.
+CL} See "Chapter 4 - Software Applications'.
 
  
 
@@ -444,12 +444,12 @@ Confidential Mon, Mar 23, 1992
 adjust output volume at any time, without opening
 the Mixer Panel, using the following shortcuts:
 
-(atj-(2)-(@j ‘For increasing output volume.
+(atj-(2)-(@j 'For increasing output volume.
 
 (at}-(@)-G@) For decreasing output
 volume.
 
-L} See “4.3: Mixer Panel TSR”.
+L} See "4.3: Mixer Panel TSR".
 
 Quick Start and Evaluation Software
 Using the Gold Card
@@ -565,7 +565,7 @@ Digitized and Synthesized Sound Playback
 
 With the Gold card, you can play back:
 
-¢ Digitized sounds: The Gold card has two
+• Digitized sounds: The Gold card has two
 channels for digitized sounds. These
 channels can be used in a variety of ways,
 such as for voice notes with the Voice Pad
@@ -584,11 +584,11 @@ The sound capability of the Gold card also features:
 Gold card controls the volume of various audio
 sources, through programming, such as within
 third party software, or manually using the
-Mixer Panel (see “Mixer Pane! TSR" section).
+Mixer Panel (see "Mixer Pane! TSR" section).
 
 * Volume control: The output volume of the
-Gold card is software controlled (see “Mixer
-Panel TSR’).
+Gold card is software controlled (see "Mixer
+Panel TSR').
 
  
 
@@ -598,7 +598,7 @@ Functionality
 
 « Tone control: Bass and treble controls are
 
-software controlled (see “Mixer Panel TSR’).
+software controlled (see "Mixer Panel TSR').
 
 MIDI Recording and Playback
 
@@ -721,7 +721,7 @@ of the auxiliary audio source.
  
 
 The PC speaker connector (No. 3), to
-connect the signal of the PC’s internal speaker
+connect the signal of the PC's internal speaker
 directly to the Ad Lib Gold card, so that it is
 mixed with the other audio signals on the card
 and can be heard through the headphones or
@@ -903,7 +903,7 @@ The Gold card jumpers are the following:
 
 * Game port enable jumper (No. 16)
 This jumper lets the user enable/disable Ad
-Lib Gold’s on-board game port interface. The
+Lib Gold's on-board game port interface. The
 interface should be disabled in cases where
 the user already has a standard PC game port
 interface inside his/her PC, to avoid conflicts.
@@ -928,9 +928,9 @@ enabled position.
 Dual joystick selector jumpers (No. 11)
 
 These jumpers let the user change the factory-
-set “joystick plus MIDI" option (all jumpers on
-the bracket side) to the “two joysticks without
-MIDI” option (all jumpers on the opposite side).
+set "joystick plus MIDI" option (all jumpers on
+the bracket side) to the "two joysticks without
+MIDI" option (all jumpers on the opposite side).
 All jumpers in this selector must be changed to
 the same position, as shown in the following
 illustrations.
@@ -1049,13 +1049,13 @@ you need the following:
 1. For the Gold 1000: an IBM PC, XT, AT (286),
 386, 486 compatible computer, PS/2 Model
 25 and 30, or Tandy 1000 (except EX/HX), a
-disk drive (1.2 MB 5 1/4” or 720 KB 3 1/2")
+disk drive (1.2 MB 5 1/4" or 720 KB 3 1/2")
 and 640K of RAM.
 
 For the Gold 2000: an IBM AT (286), 386 and
 486 compatible computer, a disk drive
 
-(1.2 MB 5 1/4” or 720 KB 3 1/2") and 640K
+(1.2 MB 5 1/4" or 720 KB 3 1/2") and 640K
 of RAM.
 
 A hard disk.
@@ -1106,7 +1106,7 @@ Installing the Hardware
 Io Set Game Port Enable/Disable Jumper
 
 The game port enable/disable jumper lets the user
-enable or disable Ad Lib Gold’s on-board game port
+enable or disable Ad Lib Gold's on-board game port
 interface. The interface should be disabled in cases
 where the user already has a standard PC game port
 interface inside his/her PC, in order to avoid
@@ -1128,22 +1128,22 @@ the two right pins as shown in Figure 3.
 To Set Dual Joystick Selector Jumpers
 
 The dual joystick selector jumpers let the user
-change the factory-set “joystick plus MIDI" option to
-the “two joysticks without MIDI” option. All jumpers in
+change the factory-set "joystick plus MIDI" option to
+the "two joysticks without MIDI" option. All jumpers in
 this selector must be changed to the same position,
 as shown in Figure 4. To obtairi the desired setting:
 
 1. Locate the dual joystick selection jumpers
 (refer to Figure 1 or 2, No. 11).
 
-2. If you wish to use the Gold card’s game port in
-the “single joystick with MIDI option”, leave the
+2. If you wish to use the Gold card's game port in
+the "single joystick with MIDI option", leave the
 jurnpers in the factory-set position (i.e.
 plugged into the bracket side of the card) as
 shown in Figure 4.
 
-3. If you want to use the Gold card’s game port in
-the “dual joystick option”, unplug all six
+3. If you want to use the Gold card's game port in
+the "dual joystick option", unplug all six
 jumpers and replug them onto the jumpers, as
 shown in Figure 4.
 
@@ -1274,9 +1274,9 @@ Confidential 3-11
 Getting Installed
 Installing the Hardware
 
-4. Put the card’s bracket screw back on and Microphone tnput
+4. Put the card's bracket screw back on and Microphone tnput
 tighten it. The microphone input is the uppermost of the three
-5. Put the computer cover back on and tighten audio jacks on the card’s bracket (refer to Figure 3 or
+5. Put the computer cover back on and tighten audio jacks on the card's bracket (refer to Figure 3 or
 the screws. 4). This connector lets the audio signal froma
 
 6. Reconnect the power cord and other cables.
@@ -1334,7 +1334,7 @@ make sure that you are using the
 auxillary output of the device you are
 conneciing to the card, Instead of using
 the speaker output which would overload
-the card’s amplifier.
+the card's amplifier.
 
  
 
@@ -1342,8 +1342,8 @@ the card’s amplifier.
 
 Stereo Auxiliary Input —Intemal Connector
 
-As mentioned inthe “Description of the Hardware:
-Layout of the Card” section, there is an intemal
+As mentioned inthe "Description of the Hardware:
+Layout of the Card" section, there is an intemal
 connector (see No. 4 in Figure 1 or 2) for connecting
 the audio output of an intemal CD-ROM drive. This
 connector is electrically in parallel with the extemal
@@ -1385,7 +1385,7 @@ Surround Sound Module
 
 Ad Lib Gold Stereo Sound Adapters have an
 expansion connector for an optional plug-in module
-capable of adding a “surround” sound effect to the
+capable of adding a "surround" sound effect to the
 audio output of the card. This effect can range from
 stereo depth simulation to artificial reverberation and
 echo.
@@ -1442,7 +1442,7 @@ the computer (consult your hardware user's
 guide).
 
 4. Remove the computer cover (consult your
-hardware user’s guide).
+hardware user's guide).
 
  
 
@@ -1472,7 +1472,7 @@ Figure 1: Location of the Surround Sound option sockets on the Ad Lib Gold 1000 
 
 Remove the Sound Card 1. Remove the sound card bracket screw.
 ' 2. Take the sound card out of the computer and
-¢ WARNING: Users should ground place it ona flat surface so that it is positioned
+• WARNING: Users should ground place it ona flat surface so that it is positioned
 themselves before handling the card. as in Figure 1.
 Please read the manual before beginning
 Installation.
@@ -1521,42 +1521,42 @@ Figure 2).
  
 
 ,
-’
-‘
+'
+'
 ,
-‘
-‘
-‘
-‘
-‘
-‘
-‘
-‘
-‘
+'
+'
+'
+'
+'
+'
+'
+'
+'
 ,
-‘
-’
+'
+'
 ,
-‘
-‘
-¢
-‘
-‘
-‘
+'
+'
+•
+'
+'
+'
 -
-‘
-‘
-¢
-‘
-‘
-‘
+'
+'
+•
+'
+'
+'
 ;
 -
 +
 -
-‘
+'
 ,
-’
+'
 
 LRRARAESBABRELLA ESSE ES EDE RL EBEBAS AEE
 
@@ -1590,7 +1590,7 @@ Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 3-17
 Surround Sound Module
 Installing the Surround Sound Module
 
-4. Putthe card’s bracket screw back on and
+4. Putthe card's bracket screw back on and
 tighten it.
 
 5. Put the computer cover back on and tighten
@@ -1603,7 +1603,7 @@ Using the Surround Sound Option
 Once your module is connected to the sound card,
 the Surround Sound option is ready to use.
 
-Ad Lib’s control software offers the user a choice of
+Ad Lib's control software offers the user a choice of
 various pre-programmed audio enhancements that
 create totally new, compelling effects. To use the
 Surround Sound option, simply proceed as follows:
@@ -1614,7 +1614,7 @@ information on the Mixer Panel).
 
 2. Activate the Mixer Panel. (atJ-(0)-(#) are the
 default activation keys, but you may change
-this combination with the “Keys” window of the
+this combination with the "Keys" window of the
 Mixer Panel.
 
 3. Press the (BJ key when in the Mixer Panel
@@ -1662,7 +1662,7 @@ Figure 3: Mixer Panel Surround Features window
 
 %* NOTE: If the Surround Sound Module is not
 installed, or not correctly installed, the program will
-display the message: “OPTION NOT INSTALLED”
+display the message: "OPTION NOT INSTALLED"
 and changes you make to the parameters will have
 no effect.
 
@@ -1690,7 +1690,7 @@ allows you to use a combination of keys for
 enabling and disabling the surround sound
 effect. The default combination is (at)-()-
 (S.J, but you may change this combination with
-the “Keys” window of the Mixer Panel.
+the "Keys" window of the Mixer Panel.
 
 Level
 Sets the volume level of the surround sound
@@ -1833,7 +1833,7 @@ To Remove Songs from the Selection 14
 
 Tue, Mar 31, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential
 
-PATELALSTEPAlASAPAVAVAVI S191 01 ¢ OLS IETETEIMIGIATISIPLSLOLSISLOTOLSTOISTE OLA TATA SL Se Sl ele ra eatata tl TL eae el Plc Tee rara Tatar tat
+PATELALSTEPAlASAPAVAVAVI S191 01 • OLS IETETEIMIGIATISIPLSLOLSISLOTOLSTOISTE OLA TATA SL Se Sl ele ra eatata tl TL eae el Plc Tee rara Tatar tat
 
 4-1
 Chapter 4 - Software Applications
@@ -1851,7 +1851,7 @@ To Stop Music Playback 14
 To Pause and Resume Music Playback 14
 To Scan Songs 15
 Adjusting the Sound 15
-‘To Adjust the Volume, Bass or Treble 15
+'To Adjust the Volume, Bass or Treble 15
 To Set the Stereo/Mono Option 15
 Asking for Help 15
 Exiting the Program 16
@@ -1968,7 +1968,7 @@ the drive you are using).
 A:\>ctridrv
 A:\>setup
 When the program opens, a window entitled
-“Installation Notes” introduces you to the Setup
+"Installation Notes" introduces you to the Setup
 Program and its basic commands. Two main buttons
 
 are displayed at the bottom of each screen:
@@ -2096,7 +2096,7 @@ Configuration Environment Variable
 
 Coniiguration Environment Varlable
 
-A special environment variable, called “GOLD” is
+A special environment variable, called "GOLD" is
 used by the software to recognize the base address
 of the Gold card. When the card is relocated by the
 Setup program, the program automatically modifies
@@ -2141,7 +2141,7 @@ Prior to running the Test Program:
 
 1. Make sure that the Gold card is properly
 installed. If necessary, refer to the previous
-section, “Installing the Hardware”.
+section, "Installing the Hardware".
 
 2. Connect headphones, a speaker or stereo
 system to the audio jack.
@@ -2166,7 +2166,7 @@ following command at the DOS prompt:
 C:\GOLD>test
 
 When the program opens, a first window entitled
-“Installation Notes” introduces you to the Test
+"Installation Notes" introduces you to the Test
 Program and its basic commands. Two main buttons
 are displayed at the bottom of each screen:
 <Cancel> and <Continue>.
@@ -2212,10 +2212,10 @@ presents the list of the tests you can execute:
 
 * Configuration « Joystick
 
-¢ Audio * MIDI interface
+• Audio * MIDI interface
 
 « SCSI Interface « Sampling and Playback
-¢ Timers ° Telephone
+• Timers ° Telephone
 
 « FM Sound * Mixer
 
@@ -2265,7 +2265,7 @@ C32 - fudio £17-HIDI Interface
 
 [34 —- Timers C19 - Telephone
 C15 — FM Sound C1 - Mixer
-« Cancel > ¢ Continue >
+« Cancel > • Continue >
 
  
 
@@ -2369,7 +2369,7 @@ The Mixer Panel window will not open upon loading
 and has to be activated as explained in the next
 section. If you want the Mixer Panel window open
 upon loading the program, you can use the option
-“/a”" with the loading command. To do this, go to
+"/a"" with the loading command. To do this, go to
 the appropriate directory and type the following at
 the DOS prompt:
 
@@ -2393,7 +2393,7 @@ Activating the Mixer Panel
 
 (ar )-(@J-() are the default activation keys, but you
 may change this combination, as explained in the
-“Activation and Volume Keys” section. To activate
+"Activation and Volume Keys" section. To activate
 the Mixer Panel, press all of the activation keys down
 at the same time and release them. Upon releasing
 the keys, the main Mixer Panel window will appear as
@@ -2438,7 +2438,7 @@ time using the horizontal arrow keys
 meters ten steps at a time using Shift with the
 horizontal arrow keys ((@)-() and (@)-f));
 
-¢ toggle On/Off parameters using the Space
+• toggle On/Off parameters using the Space
 bar.
 
 Sound Parameters
@@ -2662,7 +2662,7 @@ Figure 9: The Surround control window
 
 % NOTE: If the Surround Sound Module is not
 installed, the program will display the message
-“OPTION NOT INSTALLED” and the changes you
+"OPTION NOT INSTALLED" and the changes you
 make to the parameters will have no effect (Fig. 10).
 
  
@@ -2786,7 +2786,7 @@ Closes the Keys window and returns to the
 main Mixer Panel window saving the changes
 you made in the control keys.
 
-<Esc> ((Es¢})
+<Esc> ((Es•})
 
 Closes the Keys window and returns to the
 main Mixer Panel window canceling the
@@ -2795,14 +2795,14 @@ changes you made in the control keys.
 Closing the Mixer Panel
 
 When in the main window of the Mixer Panel, press
-the (4) or (Es¢j key to leave the program and return to
+the (4) or (Es•j key to leave the program and return to
 where you were when the Mixer Panel was activated.
 
 Removing the Mixer Panel TSR
 
 When the Mixer Panel TSR is already installed but
 you do not wish to use it, you can unload the
-program with the option “/r". This option removes
+program with the option "/r". This option removes
 the Mixer Panel TSR from the computer's memory.
 To remove the Mixer Panel TSR, go to the
 appropriate directory and type the following
@@ -3008,7 +3008,7 @@ The Ad Lib Gold card has an on-board analog mixer
 that allows volume and tone contrdls to be adjusted.
 These features can be accessed from any
 application by using the Mixer Panel TSR program
-(see the section “Mixer Panel TSR”). But you can
+(see the section "Mixer Panel TSR"). But you can
 also adjust the sound directly inside the Juke Box
 Gold program. Three sliders located along the
 bottom of the window allow you to adjust volume,
@@ -3079,8 +3079,8 @@ the songs previously selected in Juke Box Gold,
 while using other applications.
 
 For details on the loading options of the ROL2
-Playback TSR, see the section 4.9 “ROL2 Playback
-TSR”.
+Playback TSR, see the section 4.9 "ROL2 Playback
+TSR".
 
 The playback commands of this TSR can be used at
 any time by the following key combinations:
@@ -3140,7 +3140,7 @@ INSGOLD
 OR
 
 ED /BBANKNAME.BNK
-Where “BANKNAME’”’ is the name of the bank.
+Where "BANKNAME'"' is the name of the bank.
 
 Using Menu_Commands
 (F5} File
@@ -3167,7 +3167,7 @@ Deletes an existing sound patch.
 
 Read "opl3.txt"
 
-Save "“opl3.txt”
+Save ""opl3.txt"
 
 Debug...
 
@@ -3273,7 +3273,7 @@ respectively.
 NOTE: Inthe supplied sound bank, the two-operator
 
 sound names begin with a capital letter and end
-with a "#”", while four-operator sound names begin
+with a "#"", while four-operator sound names begin
 with a lower case letter.
 
  
@@ -3369,7 +3369,7 @@ sound and puts it into a memory buffer.
 
 Paste
 
-Inserts a copy of the buffer’s contents at the
+Inserts a copy of the buffer's contents at the
 point where the cursor is positioned in the
 displayed sampled sound.
 
@@ -3411,14 +3411,14 @@ Options
 
 Scope Mode
 
-This command makes Sample Maker’s screen
+This command makes Sample Maker's screen
 display the sampled signal received at the
 input as a scope.
 
 NOTE: When in Scope Mode, only the sampling
 
 frequency (in PCM) is an effective parameter in
-the “Sampling Params...” dialog.
+the "Sampling Params..." dialog.
 
 Scale Up
 
@@ -3475,11 +3475,11 @@ results.
 Sample Maker
 Using Menu Commands
 
-QO) See “Digital Input and Output”.
+QO) See "Digital Input and Output".
 
 Sampling Length Limitation
 
-¢ Sampled sounds are limited to 256 K. Ifa
+• Sampled sounds are limited to 256 K. Ifa
 recording goes over 256 K, it will clip at 256 K.
 
 Scope Mode
@@ -3524,10 +3524,10 @@ Technical Features
 
 The underlying technology of the Surround Sound
 Module is a circuit designed as a general-purpose
-digital processing element. The board’s main
+digital processing element. The board's main
 component is an LSI chip which has quality digital
 surround sound capabilities made possible through
-Yamaha’s digital audio technology. Each of its eight
+Yamaha's digital audio technology. Each of its eight
 digital delay lines may provide a delay time of up to
 100 milliseconds, and combining delay line signals
 for two-channel output assures a wide range of
@@ -3553,8 +3553,8 @@ surround
 Once the program is loaded, the main Juke Box Gold
 window will appear. You can then select and play
 back songs as you wish. For complete information
-on using Juke Box Gold, refer to the “Juke Box Gold
-Music Playback Program” section of Ad Lib Gold
+on using Juke Box Gold, refer to the "Juke Box Gold
+Music Playback Program" section of Ad Lib Gold
 Pre-Release Evaluation Kit.
 
 When ready, open the Surround Sound Editor by
@@ -3630,7 +3630,7 @@ main parts:
  
 
 4-24 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Mon, Mar 23, 1992
-¢ The global delay line parameter section, located
+• The global delay line parameter section, located
 at the lower right comer of the screen.
 
 Channel Line Attenuation Sections
@@ -3854,14 +3854,14 @@ Playrl2 fileName [/Q]
 Where fileName is the name of the ROL2 music
 file (.RL2) to be played.
 
-The optional “/Q” parameier can be used to start the
+The optional "/Q" parameier can be used to start the
 playback of the RL2 song file and immediately
 returns control to DOS. The playback of the song will
 be taken in charge by the ROL2 Playback memory
 resident driver.
 
-if you enter “playx12” alone or with the option
-“/?” (‘playr12 /?"), the program displays: help
+if you enter "playx12" alone or with the option
+"/?" ('playr12 /?"), the program displays: help
 lines giving summarized information on program
 parameters.
 
@@ -3874,7 +3874,7 @@ drivers, which have to be loaded before running it:
 - Wave driver WAVEDRV.EXE)
 
 * Timer driver (TIMERDRV.EXE)
-¢ ROL2 Playback driver (RL2DRV.EXE)
+• ROL2 Playback driver (RL2DRV.EXE)
 
 Digitized Sound Playback Utility
 
@@ -3891,16 +3891,16 @@ playdigi fileName [/p] [/n]
 Where fileName is the name of the digitized
 sound file (.SMP) to be played.
 
-Where “p” in the option “/p”, may be “c” (center),
-“R” (right), or “1.” (left), indicating the stereo position
+Where "p" in the option "/p", may be "c" (center),
+"R" (right), or "1." (left), indicating the stereo position
 you want for the playback of the digitized sound file.
 
-Where “n” in the option “/n", may be a number from
+Where "n" in the option "/n", may be a number from
 0 to 100, indicating the volume you want for the
 playback of the digitized sound file.
 
-If you enter “playdigi” alone or with the option
-“/2" (‘playdigi /?”), the program displays help
+If you enter "playdigi" alone or with the option
+"/2" ('playdigi /?"), the program displays help
 lines giving summarized information on program
 parameters.
 
@@ -3919,8 +3919,8 @@ following two drivers, which have to be loaded
 
 before running it:
 
-¢ Control driver (CTRLDRV.EXE)
-¢ Wave driver (WAVEDRV.EXE)
+• Control driver (CTRLDRV.EXE)
+• Wave driver (WAVEDRV.EXE)
 
  
 
@@ -4028,8 +4028,8 @@ computers memory (RAM).
 rl2drv /vn
 
 This option disables the specified sampling
-voice “n”, which can be “1” or “2”. Use two
-options consecutively, “/v1 /v2", to
+voice "n", which can be "1" or "2". Use two
+options consecutively, "/v1 /v2", to
 disable the two sampling voices.
 
 The playback of sampled voices consumes a
@@ -4117,13 +4117,13 @@ packages. Developers should, when possible, use the services
 provided by those drivers. There are a number of advantages to using
 memory-resident drivers:
 
-¢ A lot of the applications supplied for the Gold Card are TSR
+• A lot of the applications supplied for the Gold Card are TSR
 applications. Memory-resident drivers provide applications with a
 common software core for managing shared resources. Digital playback
 and recording, MID! input and output and the timers available on the
 card, for instance, share a same interrupt request line.
 
-¢ Memory-resident drivers car: easily be maintained and updated,
+• Memory-resident drivers car: easily be maintained and updated,
 independently of the application code.
 
 The method used by applications to interface with the Ad Lib Gold
@@ -4304,7 +4304,7 @@ SetControlRegister
 
 Syntax
 int SetControlRegister(int reg, WORD val)
-__ Sets register 'reg' of Ad Lib Control Chip to ‘val’.
+__ Sets register 'reg' of Ad Lib Control Chip to 'val'.
 Parameters
 int reg
 Which register to write to.
@@ -5587,7 +5587,7 @@ the Volume Control Chip.
 Set to 1 when the Contro! Chip is busy writing its
 internal registers to the external EEPROM chip.
 This bit must be polled after activating the "Store
-configuration” sequence to make sure that the
+configuration" sequence to make sure that the
 Control Chip is free to proceed with another
 operation.
 
@@ -5610,7 +5610,7 @@ Gets telephone status.
 Parameters
 None
 Return value
-bit 0: “Ring signal” (0 = no ring, 71 = ring)
+bit 0: "Ring signal" (0 = no ring, 71 = ring)
 Comments
 
 None
@@ -5700,7 +5700,7 @@ This routine will store a preset into the surround module.
 The preset is defined by a 32 bytes array passed as argument.
 
 Parameters
-BYTE “ptrData
+BYTE "ptrData
 Pointer to the array of 32 bytes.
 Return value 7
 0 if no error, otherwise 1, no surround module.
@@ -5921,7 +5921,7 @@ Syntax
 void NoteOffOPL3(voiceNum)
 Starts the decay of the timbre currently playing on the voice.
 Parameters
-‘int voiceNum
+'int voiceNum
 VoiceNumber between 0 and 19.
 
  
@@ -6016,7 +6016,7 @@ Syntax
 void QuitOPL3()
 Resets the FM chip in the compatible mode.
 Parameters
-‘None.
+'None.
 Comments
 
 This should be called by all applications prior to leaving, in order to put the
@@ -6044,7 +6044,7 @@ Bit 0 corresponds to voice 0 (0-1 in 2 op), bit 1 to voice 2 (2-3 in 2 op) etc.
 (See to table 1 in the Voice Allocation section of this document).
 
 Comments
-’ There is a maximum of 6 4-op voices.
+' There is a maximum of 6 4-op voices.
 
  
 
@@ -6607,7 +6607,7 @@ LpWaveFormat lpFormat
 Specifies a pointer to a WaveFormat structure that identifies the format of
 the waveform that will be sent to the output device.
 
-The WaveFormat struciure is also used to specify the “mode” by which
+The WaveFormat struciure is also used to specify the "mode" by which
 the data will be sent to the hardware (WAVE_TRANF_POLLING,
 WAVE_TRANSF_INTERRUPT, WAVE_TRANSF_ DMA).
 
@@ -6902,14 +6902,14 @@ similar.
 All timers have their own base clock (time resolution) and counter size
 (maximum period). The controls available for all timers are:
 
-¢ Write access in their register of different count values (divider).
+• Write access in their register of different count values (divider).
 
-¢ Stop and start (decrementing the initial stored count until it reach zero
+• Stop and start (decrementing the initial stored count until it reach zero
 and re-writing the original count, again and again).
 
-¢ Enable/disable interrupts to occur on zero count crossing.
+• Enable/disable interrupts to occur on zero count crossing.
 
-¢ Read the interrupt status (access on the zero count crossing).
+• Read the interrupt status (access on the zero count crossing).
 
 some differences exist and need to be noticed:
 The timer 2 from the MMA chip is the only timer whose current count
@@ -7513,10 +7513,10 @@ WORD GetOPL3Timeri1Caps
 (DWORD far *IPeriodMin, DWORD far *IPeriodMax)
 WORD GetOPL3Timer2Caps
 
-(DWORD far “iPeriodMin, DWORD far “IPeriodMax)
+(DWORD far "iPeriodMin, DWORD far "IPeriodMax)
 WORD GetMMATimerOCaps
 
-(DWORD far “IPeriodMin, DWORD far *iPeriodMax)
+(DWORD far "IPeriodMin, DWORD far *iPeriodMax)
 WORD GetMMATimer1Caps
 
 (DWORD far *IPeriodMin, DWORD far *!|PeriodMax)
@@ -7751,7 +7751,7 @@ address, 38Bh, is the data address. Values written to this address are
 directed to the register number specified by the previous write to the
 address register. There are delays that must be respected when writing
 to certain registers. These delays are explained in detail-in the Status
-‘Register section.
+'Register section.
 
 By default, the control chip is located at 38Ah and 38Bh. However, the
 chip may be relocated (as explained in the section Audio Relocalization).
@@ -7952,7 +7952,7 @@ REG D7 D6 D5 D4 D3 D2 D1 DO
 03 SAMPLING GAIN - RIGHT
 04 1 1 FINAL OUTPUT VOLUME - LEFT
 05 1 1 FINAL. OUTPUT VOLUME -RIGHT
-06 1 1 ‘2 1 BASS
+06 1 1 '2 1 BASS
 07 1 1 1 1 TREBLE
 08 1 1 MU ST-MONO SOURCE
 09 FM VOLUME - LEFT
@@ -8196,7 +8196,7 @@ dB D5-D0
 3E
 -62 1D
 -64 1C
-“80 1B
+"80 1B
 -80 0
 Registers #4 and #5
 
@@ -9002,14 +9002,14 @@ wt # E(t)
 The operators can be connected in three different ways: additive,
 frequency modulation and composite sine wave.
 
-¢ FM synthesis
+• FM synthesis
 FM synthesis uses two operators in series. The first operator, the
 modulator, modulates the second operator via its modulation
 input. The name given to the second operator is the carrier. The
 modulator can feed back its output into its modulation data input;
 
 F(t) = Em(t) sin(Wmt + BF ,»(t)) Modulator and feedback
-F,(t) = E¢(t) sin(wet + Fm(t)) Carrier and Modulator
+F,(t) = E•(t) sin(wet + Fm(t)) Carrier and Modulator
 
  
 
@@ -9019,7 +9019,7 @@ Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Programming the Synthesizer
 Operators
 
-¢ Additive synthesis
+• Additive synthesis
 Additive synthesis connects two operators in parallel, adding both
 outputs together. This method of synthesis is not as interesting as
 FM synthesis, but it can generate good organ type sounds.
@@ -9027,7 +9027,7 @@ FM synthesis, but it can generate good organ type sounds.
 The simplified formula for the additive synthesis is:
 F(t) = E(t) sin(wt + Q;) + E(t) sin(wt + QO»)
 
-¢ Composite sine wave synthesis
+• Composite sine wave synthesis
 Composite sine wave synthesis (CSW) may be used to generate
 speech or other related sounds by playing all voices
 simultaneously. When using this mode the card cannot generate
@@ -9726,7 +9726,7 @@ Register Reference
 REG | D7 | D6 | D5 | D4 | D3 | D2 | D1 | Do
 AOH- F-Number
 
-A8H}| 2”? 2° 25 24 oS 92 2! 29
+A8H}| 2"? 2° 25 24 oS 92 2! 29
 BOH- KEY Block F-Number
 B8H IN] 27 2!' p®}]2% 28
 
@@ -10563,7 +10563,7 @@ default). ,
 
 Accessing a MMA register is done in two steps:
 
-1) write the index of the register to be accesed to the “register select” port,
+1) write the index of the register to be accesed to the "register select" port,
 located at 38CH
 
 2) write or read the desired value for the selected register, either in the
@@ -11330,11 +11330,11 @@ MMA Programming Tips
 
  
 
-¢ Reset a MMA channel after each sample (using the RST bit in register 9), after
+• Reset a MMA channel after each sample (using the RST bit in register 9), after
 stopping the sample playback. This makes sure that the FIFO buffer for the channel
 is emptied.
 
-¢ In playback mode, when processing a FIFO interrupt, a situation occurs where your
+• In playback mode, when processing a FIFO interrupt, a situation occurs where your
 application is filling in the FIFO while the playback mechanism is emptying the FIFO
 at the same time. In some cases this can cause "false triggers" of the FIFO interrupt.
 In order to avoid this, a simple trick is to temporarily lower the FIFO level, while your
@@ -11343,22 +11343,22 @@ interrupt procedure. :;
 
 * A similar situation can occur in recording mode.
 
-¢ To avoid the same situation during playback and recording using DMA transfers,
+• To avoid the same situation during playback and recording using DMA transfers,
 you can double-check if the interrupt is valid by reading the DMA controller's
 counters or status register. they should indicate that data transfer is over.
 
-¢ The MMA FIFO buffers should never be left to empty themselves during playback
+• The MMA FIFO buffers should never be left to empty themselves during playback
 (tht is wen GO bit is set) This implies that the FIFO buffers should be filled to a level
 exceeding the FIFO interrupt level before the GO bit is set.
 
 Special care should be taken during high-speed transfers (44.1K, 12 bit stereo
 samples, for example) on slower computers.
 
-¢ All masks (mask T2, T1, TO, FIFO, POV, MOV, TRQ and RRQ) have no effect
+• All masks (mask T2, T1, TO, FIFO, POV, MOV, TRQ and RRQ) have no effect
 whatsoever on the status register. They are only used to disable the hardware
 interrupt.
 
-¢ Respect the 470ns delay between writes to the MMA registers.
+• Respect the 470ns delay between writes to the MMA registers.
 
  
 
@@ -11410,13 +11410,13 @@ The rapid evolution of multimedia has necessitated an
 audio standard to be defined. Although Windows allevi-
 ates some of the need for compatibility, it is important that
 an audio standard is established for DOS, game, and
-“edutainment” applications. The implementation of an
+"edutainment" applications. The implementation of an
 audio multimedia standard lessens the concerns of both
 hardware and software developers.
 
 This document describes recommended procedures and
 practices for implementing multimedia audio hardware
-using the “Magic” chip set from YAMAHA. By conform-
+using the "Magic" chip set from YAMAHA. By conform-
 ing to the Gold Sound Standard, hardware manufacturers
 can be assured that software written for Gold Sound
 Standard compatible cards will run on their product.
@@ -11444,11 +11444,11 @@ YAMAHA GOLD SOUND STANDARD
 Overview
 
 The Gold Sound Standard (GSS) is composed of the
-YAMAHA “Magic” chip set and a form of mixer and set
-up circuitry. In the case of the YAMAHA “Magic” chip set,
+YAMAHA "Magic" chip set and a form of mixer and set
+up circuitry. In the case of the YAMAHA "Magic" chip set,
 this document will summarize its functions. A more
 detailed reference for the individual registers of the
-“Magic” chip set may be found in the YAMAHA reference
+"Magic" chip set may be found in the YAMAHA reference
 manual for the particular chip.
 
 Only the minimum requirements are defined in this
@@ -11456,10 +11456,10 @@ document. The individual hardware designer may imple-
 ment additional features. The GSS provides the necessary
 functionality to be Level 1 MPC compatible.
 
-The “Magic” chip set is designed as a highly integrated
+The "Magic" chip set is designed as a highly integrated
 solution to developing a Level-1 MPC compatible audio
 subsystem. The following sections illustrate design con-
-cerns when using the “Magic” chip set. They also provide
+cerns when using the "Magic" chip set. They also provide
 the I/O register map requirements to be Gold Sound
 Standard compatible.
 
@@ -11481,12 +11481,12 @@ Optionally, a SCSI interface may be implemented for use
 with CD-ROM drives. A hardware design conforming to
 the GSS will allow software that directly accesses the
 hardware to run on all GSS compatible cards. The design
-concerns are minimized by implementing the “Magic”
+concerns are minimized by implementing the "Magic"
 chip set, which includes the YMZ263 (MMA) Multimedia
 Audio LSI, the YMF262 (OPL3) Advanced Algorithm
 Synthesizer LSJ, and the YAC512-M Stereo Serial DAC.
 The following figure illustrates the hardware components
-of a typical Level 1 multimedia PC using the “Magic” chip
+of a typical Level 1 multimedia PC using the "Magic" chip
 set.
 
  
@@ -11612,7 +11612,7 @@ Game Port
  
  
 
-“| PCM/ADPCM
+"| PCM/ADPCM
 
      
  
@@ -11874,7 +11874,7 @@ an asynchronous UART, and two 16 byte FIFOs for send-
 ing and receiving MIDI data. The MIDI output channel
 (TXD) is inverted and sent through an external 5 mA
 current loop to the external MIDI output connector. The
-external MIDI input connector’s RXD signal is optically
+external MIDI input connector's RXD signal is optically
 isolated to avoid ground loops. An optional MIDI thru
 port may be added by transferring the MIDI input signal
 through two inverters out an additional MIDI output port.
@@ -11983,7 +11983,7 @@ when the channel sampling lines of the OPL3 fall.
 The serial data output and sample/hold channel signals
 are directly connected to the YAC512-M. The serial data
 between the OPL3 and the YAC512-M is synchronized
-using the OPL3’s SY clock signal. This data is then latched
+using the OPL3's SY clock signal. This data is then latched
 
  
 
@@ -12009,7 +12009,7 @@ and is used for channel 1/2 common input.
 The YAC512-M converts the digital serial stream into an
 analog signal. The YAC512-M requires external capacitors
 for stabilizing the analog output. The stereo output of the
-YAC512-M is ready for mixing with the MMA’s stereo
+YAC512-M is ready for mixing with the MMA's stereo
 audio output. The block diagram below illustrates the
 simple connections between the OPL3 and the YAC512-M.
 
@@ -12171,7 +12171,7 @@ As is the case with all other aspects of the GSS hardware,
 special care must be taken for the possibility of reentrance
 when separate applications access the mixer section and
 the OPL3 chip simultaneously. This is discussed in the
-section entitled “Software Issues” below.
+section entitled "Software Issues" below.
 
  
 
@@ -12244,7 +12244,7 @@ register should be polled.
 
 While writing the mixer registers to memory the mixer
 must not be accessed. This is achieved by polling the mixer
-register write status bit, checking fora “0”.
+register write status bit, checking fora "0".
 
  
 
@@ -12867,7 +12867,7 @@ register are identified in the following figure.
 
  
 
-‘D7 D6 DS D4 D3 D2 D1 DO Function
+'D7 D6 DS D4 D3 D2 D1 DO Function
 X xX X X | Treble Output
 Xx Xx x X Reserved = |
 
@@ -13548,10 +13548,10 @@ low level of compatibility provides the software developer,
 who writes directly to the hardware, with a large variety of
 implementations based on a common audio platform. The
 Gold Sound Standard is a minimum implementation
-standard, offering a safe migration path for today’s hard-
+standard, offering a safe migration path for today's hard-
 ware and software designs.
 
-For more information on the “Magic” chip set and imple-
+For more information on the "Magic" chip set and imple-
 menting the Gold Sound Standard, call your local
 YAMAHA representative or contact YAMAHA at:
 
@@ -13603,7 +13603,7 @@ Surround Processor.
 
 Communication with the SP2 is done using a bit-serial protocol.
 
-Modifying a register value to the SP2 involves sending a “register address
+Modifying a register value to the SP2 involves sending a "register address
 - register value" pair to the SP2 using a special bit-serial protocol through
 register 18H.
 
@@ -13838,10 +13838,10 @@ low pass filter. Digital input to D/A converter shall be with doubled value, whi
 MICROPROCESSOR INTERFACE
 
 Digital attenuation value, delay time and FIR type low pass filter coefficients are all set by writing data
-into registers. | ‘.
+into registers. | '.
 
-With AO=‘L", 8 bit address data are sent synchronizing with SCI, At the rising edge of AO, register
-address is taken in. With AO ~ “HH”, 8 bit data are sent synchronizing with SCI, then register data are changed
+With AO='L", 8 bit address data are sent synchronizing with SCI, At the rising edge of AO, register
+address is taken in. With AO ~ "HH", 8 bit data are sent synchronizing with SCI, then register data are changed
 at the falling edge of AO.
 
 SCI WLLL LL LPL LLL LPL
@@ -13911,14 +13911,14 @@ a REGISTER DATA DESCRIPTION
 (1) Attenuation value setting (GL1 to GL8, GR1 to GR8, VM, VG, VL, VR}
 
 e Output polarity (bit 5) ,
-When bit 5 = “1': Output signal is in phase with input signal. |
+When bit 5 = "1': Output signal is in phase with input signal. |
 
 When bit 5= 0's Output signal is reversed phase with input signal.
 
 @ Attenuation value (bit 4—0)
 
 Data
-“HEXD 76543210 Function EES 766 ae 71 Function
+"HEXD 76543210 Function EES 766 ae 71 Function
 00 x x GLi 10 x x VM
 01 x x GL2 | 11 x x VC Attenuation value —
 02 x x GL3 Lich Tap | 12 x x VL (bit. 5; sign)
@@ -13938,7 +13938,7 @@ op |x| GR (bit 6; sign}: ww ixxx! 77
 OF x x GR8
 Note 1) x; Don't Care
 
-Note 2) Don’t write to the other addresa
+Note 2) Don't write to the other addresa
 
  
 
@@ -13983,10 +13983,10 @@ Level Data Level - Data
 —18 10311 17 ~48 0011121 Q7
 -18 10110 16 -— 60 00110 06
 - 20 10101 15 —~ 62 00101 O65
-+22 10100 14 ~B¢ 00100 04
++22 10100 14 ~B• 00100 04
 — 24 1001] 18 — 66 00011 03
 —28 10010 12 — 68 00010 02
-— 28 10¢01 1] - 60 00001 01
+— 28 10•01 1] - 60 00001 01
 -30 10000 10 ~ 90 00000 00
 
  
@@ -14231,10 +14231,10 @@ ime
  
 
 ="
-“eC
-“a
+"eC
+"a
 -o_
-“|
+"|
 -o
 aT
 _{[025#008
@@ -14346,7 +14346,7 @@ temperature Top 9 26 70 °C
  
 
 _ Parameter Symbol Condition Min. Typ. Max Unit
-Supply current _ ‘Ipp 50 mA
+Supply current _ 'Ipp 50 mA
 High-level input voltage (1) Voi 2.0 Vv *]
 Low-level input voltage (1) VIL 0.8 Vv #1
 High-level input voltage (2) VIH2 4.0 Vv *2
@@ -14399,7 +14399,7 @@ Fall time TSF 200 ng
  
 VAMABA YM7128
 
-@¢ ANALOG characteristics (Conditions: Ta= 25°C, Von -6§.0V)
+@• ANALOG characteristics (Conditions: Ta= 25°C, Von -6§.0V)
 
  
 
@@ -14480,7 +14480,7 @@ Tel. 0699-62-4918 Fax. 0539-63-5054
 
 ¥ Tokyo Offica 8-4, Surugadal Kanda, Chiyoda-ku,
 Tokyo, 101
-“Ryumeikan Bldg. 4F
+"Ryumeikan Bldg. 4F
 Tel, 038-265-4481 Fax. 038-255-4488
 
 ® Osaka Offfce 8-12-9, Minami! Senba, Chuo-ku.
@@ -14520,7 +14520,7 @@ Copyright 1992, Ad Lib Inc.
 */
 unsigned control_io = 0x38a; /* address of control chip-section */
 
-/* Write ‘val’ to the surround register in the control chip. */
+/* Write 'val' to the surround register in the control chip. */
 static void fastcall Write_Srnd_Reg (unsigned val)
 
 {
@@ -14829,12 +14829,12 @@ sequence which loads all Ad Lib Gold drivers.
 Other Files
 
 * RL2
-The “.RL2” files contain the pieces of music
+The ".RL2" files contain the pieces of music
 that will be played with the Juke Box Gold.
 
 * SMP
 
-The “SMP” files contain the PCM digitized
+The "SMP" files contain the PCM digitized
 sounds. TESTGLD1.SMP is the sound file
 that will be used by the Test Program.
 
