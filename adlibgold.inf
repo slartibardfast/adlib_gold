@@ -31,10 +31,10 @@ adlibgold.sys=222
 
 ;;
 ;; The Ad Lib Gold is a non-PnP ISA card.
-;; ADL1000 is a vendor-assigned device ID for manual installation.
+;; ALG1000 is a vendor-assigned device ID for manual installation.
 ;;
 [AdLibGold]
-%AdLibGold.DeviceDesc%=AdLibGold_Device, , ADL1000
+%AdLibGold.DeviceDesc%=AdLibGold_Device, , ALG1000
 
 [AdLibGold_Device]
 AlsoInstall=ks.registration(ks.inf),wdmaudio.registration(wdmaudio.inf)
