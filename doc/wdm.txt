@@ -16435,7 +16435,7 @@ audio adapter samples.<P>
 
 <H3>RESOURCES</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
  This exact miniport is already included in PortCls. We have provided the source code as a starting point for those that need to augment it, as well as those that need to create completely new miniports. 
-This miniport interfaces to the port driver of type MIDI. A new port, type DMUS, was introduced in Microsoft® Windows 98® Second Edition (SE) and Microsoft Windows 2000.  The DMUS port provides higher functionality than the MIDI port, so if you are creating your own miniport, consider interfacing to DMUS instead of MIDI. The advantage of DMUS miniport drivers is that they are visible to DirectMusic APIs, unlike MIDI miniport drivers. Additionally, DMUS miniports are still visible to the older MIDI APIs. In short, DirectMusic miniports have the benefits of both backward compatibility and advanced functionality. 
+This miniport interfaces to the port driver of type MIDI. A new port, type DMUS, was introduced in MicrosoftÂ® Windows 98Â® Second Edition (SE) and Microsoft Windows 2000.  The DMUS port provides higher functionality than the MIDI port, so if you are creating your own miniport, consider interfacing to DMUS instead of MIDI. The advantage of DMUS miniport drivers is that they are visible to DirectMusic APIs, unlike MIDI miniport drivers. Additionally, DMUS miniports are still visible to the older MIDI APIs. In short, DirectMusic miniports have the benefits of both backward compatibility and advanced functionality. 
  
 <p>
 Please refer to the SB16 sample to learn how to use the built-in miniport.<p>
@@ -28374,7 +28374,7 @@ Makefile	Makefile for Stdunk
 </FONT><P align=center><A href="file:///D:/Documents%20and%20Settings/fberreth/Local%20Settings/Temp/stdunk1.htm#top"><FONT face=Verdana size=2>Top of page</FONT></A><FONT face=Verdana size=2> </P></FONT>
 <TABLE border=0 cellSpacing=0 width=624><TBODY><TR><TD bgColor=#00ffff height=2 vAlign=center><P></P></TD></TR></TBODY></TABLE>
 
-<FONT face="MS Sans Serif" size=1><P>© 1999 Microsoft Corporation</FONT><FONT face=Verdana size=2> </P></FONT>
+<FONT face="MS Sans Serif" size=1><P>Â© 1999 Microsoft Corporation</FONT><FONT face=Verdana size=2> </P></FONT>
 
 </PRE></BODY></HTML>
 
@@ -30158,7 +30158,7 @@ successful build produces Uart.lib, which can be linked into an adapter driver a
 
 <H3>RESOURCES</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
 This exact miniport is already included in PortCls. We have provided the source code as a starting point for those that need to augment it, as well as those that need to create completely new miniports. 
-This miniport interfaces to the port driver of type MIDI. A new port, type DMUS, was introduced in Microsoft® Windows 98® Second Edition (SE) and Microsoft Windows 2000.  The DMUS port provides higher functionality than the MIDI port, so if you are creating your own miniport, consider interfacing to DMUS instead of MIDI. The advantage of DMUS miniport drivers is that they are visible to DirectMusic APIs, unlike MIDI miniport drivers. Additionally, DMUS miniports are still visible to the older MIDI APIs. In short, DirectMusic miniports have the benefits of both backward compatibility and advanced functionality. 
+This miniport interfaces to the port driver of type MIDI. A new port, type DMUS, was introduced in MicrosoftÂ® Windows 98Â® Second Edition (SE) and Microsoft Windows 2000.  The DMUS port provides higher functionality than the MIDI port, so if you are creating your own miniport, consider interfacing to DMUS instead of MIDI. The advantage of DMUS miniport drivers is that they are visible to DirectMusic APIs, unlike MIDI miniport drivers. Additionally, DMUS miniports are still visible to the older MIDI APIs. In short, DirectMusic miniports have the benefits of both backward compatibility and advanced functionality. 
 <p>
 Please refer to the SB16 sample to learn how to use the built-in miniport.<p>
 
