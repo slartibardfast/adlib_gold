@@ -226,7 +226,7 @@ DECLARE_INTERFACE_(IAdapterCommon, IUnknown)
 
 ### Control Chip Access Pattern
 
-Derived from SDK Chapter 7.1 (output.txt ~lines 7925–9000):
+Derived from SDK Chapter 7.1 (sdk.txt ~lines 7925–9000):
 
 ```cpp
 void CAdapterCommon::ControlRegWrite(BYTE Register, BYTE Value)
@@ -321,7 +321,7 @@ NTSTATUS CAdapterCommon::InterruptServiceRoutine(
 | 8-bit and 16-bit DMA channels | Two independent DMA channels (ch0 and ch1) |
 | DmaChannel->Start/Stop | DMA mode via MMA reg 0Ch bit 0 |
 
-### Key MMA Registers (output.txt Chapter 7.3, ~lines 10600+)
+### Key MMA Registers (sdk.txt Chapter 7.3, ~lines 10600+)
 
 | Offset | Register | Purpose |
 |--------|----------|---------|
@@ -575,11 +575,11 @@ The card's I/O range is 16 ports starting at 388h by default (relocatable via Co
 | SB16 topology miniport | wdm.txt | 23394–25057 |
 | DDK FM synth miniport | wdm.txt | 16498–19119 |
 | DDK UART MIDI miniport | wdm.txt | 28420–30111 |
-| AdLib Gold Control Chip registers | output.txt | ~7925–9000 |
-| AdLib Gold OPL3 (YMF262) programming | output.txt | ~9100–10600 |
-| AdLib Gold MMA (YMZ263) programming | output.txt | ~10600–12500 |
-| AdLib Gold hardware description | output.txt | ~536–900 |
-| AdLib Gold surround (YM7128) | output.txt | ~14826–14930 |
+| AdLib Gold Control Chip registers | sdk.txt | ~7925–9000 |
+| AdLib Gold OPL3 (YMF262) programming | sdk.txt | ~9100–10600 |
+| AdLib Gold MMA (YMZ263) programming | sdk.txt | ~10600–12500 |
+| AdLib Gold hardware description | sdk.txt | ~536–900 |
+| AdLib Gold surround (YM7128) | sdk.txt | ~14826–14930 |
 
 ---
 
