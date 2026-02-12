@@ -1,0 +1,13 @@
+/* Copyright (c) 2026.  All Rights Reserved. */
+
+#include <windows.h>
+
+#include <ntverp.h>
+
+#define VER_FILETYPE                VFT_DRV
+#define VER_FILESUBTYPE             VFT2_DRV_SOUND
+#define VER_FILEDESCRIPTION_STR     "Ad Lib Gold Sound Card Driver"
+#define VER_INTERNALNAME_STR        "adlibgold.sys"
+#define VER_ORIGINALFILENAME_STR    "adlibgold.sys"
+
+#include "common.ver"
