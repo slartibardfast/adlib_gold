@@ -18,7 +18,7 @@ The current version of the Sample Editor does not use the AD Lib Gold drivers. I
 uses linkable libraries that conflict with the drivers.
 
 In order to execute the Sample Editor, all drivers must be removed from memory,
-otherwise the program may hang or display an â€œInsufficient Memoryâ€ message.
+otherwise the program may hang or display an “Insufficient Memory” message.
 
 Disabling Interrupts when accessing the hardware
 In order to avoid possible conflicts between applications that try to access the
@@ -83,13 +83,13 @@ environment, we strongly recommend that developers contact the Ad Lib
 Developer Support Department.
 
 Ad Lib Inc.
-220 Grande-AllÃ©e East, Suite 850
-QuÃ©bec, QC, Canada G1R 2J1
+220 Grande-Allée East, Suite 850
+Québec, QC, Canada G1R 2J1
 
 50 Staniford Street, Suite 800
 Boston, MA 02114
 
-Copyright Â©1992, Ad Lib Inc.
+Copyright ©1992, Ad Lib Inc.
 1st edition
 ISBN 2-920858-32-7
 
@@ -131,7 +131,7 @@ Adjusting the Volume 2-3
 
  
 
-Tue, Mar 31, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential i
+Tue, Mar 31, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential i
 Table of Contents
 
  
@@ -183,7 +183,7 @@ Appendix D: List of Installed Files D-1
 
  
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential
 
 Tue, Mar 31, 1992
 Introduction
@@ -198,7 +198,7 @@ application support for the Ad Lib Gold series of cards.
 
 The Developer Toolkit covers the following areas:
 
-Â¢ Quick Start and Evaluation Software
+¢ Quick Start and Evaluation Software
 
 This section is for developers who want to try the software provided with
 the Gold Card and get a quick look at all programming possibilities. It
@@ -206,20 +206,20 @@ summarizes the installation of the Gold card and briefly describes some
 of the available applications. The evaluation software provides tools for
 a variety of sound quality tests.
 
-Â¢ Gold Hardware
+¢ Gold Hardware
 
 This section describes the physical layout of the Gold card, and the
 procedure for installing the card in your computer. It also provides a short
 description of the Surround Sound Module.
 
-Â¢ Software Applications
+¢ Software Applications
 
 Describes the applications and TSRs that you can use with the Gold
 card. Some of these applications can be used to create FM sounds,
 digitized sounds, and Surround presets, that the developer can use in
 his/her applications.
 
-Â¢ Software Drivers
+¢ Software Drivers
 
 This section explains how your applications can interface with the
 memory-resident drivers. It also contains a complete function directory for
@@ -234,7 +234,7 @@ Details the 1/O map of each of the hardware sections of the Gold Card.
 This section is intended for programmers who want to directly access the
 hardware, instead of using the software drivers.
 
-Â¢ Appendices
+¢ Appendices
 
 The appendices provide additional information on the Yamaha Gold
 Sound Standard, the Surround Processor chip (YM7128), a diagram
@@ -245,7 +245,7 @@ Please read the README.TXT file on DISK 1 for more information.
 
  
 
-Wed, Mar 25, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 1-1
+Wed, Mar 25, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 1-1
 Chapter 2 - Quick Start and
 Evaluation Software
 
@@ -275,7 +275,7 @@ Adjusting the Volume 3
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 2-i
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 2-i
 O
 
  
@@ -296,9 +296,9 @@ Installing the Gold card
 1.
 
 Make sure that the on-board jumpers, the
-â€œGame port enable jumperâ€™, the â€œPort address
-jumperâ€ and the â€œDual joystick selector
-jumpersâ€, are in the desired position.
+“Game port enable jumper’, the “Port address
+jumper” and the “Dual joystick selector
+jumpers”, are in the desired position.
 
 Plug the Gold card into the computer in a free
 slot as far as possible from the video adapter
@@ -312,7 +312,7 @@ NOTE: Certain cards, such as video adapters,
 produce high-frequency signals which can interfere
 with the sound quality of the sound card.
 
-See "3.2: Getting Installedâ€.
+See "3.2: Getting Installed”.
 
 Connect the Other Peripherais
 
@@ -335,7 +335,7 @@ of the card. If you plan to use the MIDI
 interface, connect your MIDI device with the
 Ad Lib adapter cable.
 
-See â€œ3.2: Getting Installedâ€.
+See “3.2: Getting Installed”.
 
 installing the Software
 
@@ -359,7 +359,7 @@ Mon, Mar 23, 1992
 
 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 2-1
 Quick Start and Evaluation Software
@@ -373,7 +373,7 @@ following commands:
 A:\>ctrldrv
 A:\>setup
 
-L} See "4.1: Software Installation and Configurationâ€.
+L} See "4.1: Software Installation and Configuration”.
 
 Test Hardware
 
@@ -382,13 +382,13 @@ to verify that the Ad Lib Gold card is functioning
 
 properly.
 
-Â¢ Go to the directory where you placed the Gold
+¢ Go to the directory where you placed the Gold
 Test Program at installation and load this
 program by typing the following commana:
 
 testgold
 
-O See "4.2: Test Programâ€.
+O See "4.2: Test Program”.
 
 Using the Gold Card Evaluation Sofiware
 
@@ -429,13 +429,13 @@ Program offers on-line Help containing summarized
 information on how to operate the program and how
 to use the various features.
 
-CL} See â€œChapter 4 - Software Applicationsâ€™.
+CL} See “Chapter 4 - Software Applications’.
 
  
 
 2-2 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Mon, Mar 23, 1992
 Adjusting the Volume
@@ -444,19 +444,19 @@ Confidential Mon, Mar 23, 1992
 adjust output volume at any time, without opening
 the Mixer Panel, using the following shortcuts:
 
-(atj-(2)-(@j â€˜For increasing output volume.
+(atj-(2)-(@j ‘For increasing output volume.
 
 (at}-(@)-G@) For decreasing output
 volume.
 
-L} See â€œ4.3: Mixer Panel TSRâ€.
+L} See “4.3: Mixer Panel TSR”.
 
 Quick Start and Evaluation Software
 Using the Gold Card
 
  
 
-Mon, Mar 23, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992
+Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1992
 
 Confidential 2-3
  
@@ -521,7 +521,7 @@ Reinstall the Sound Card 17
 
  
 
-Mon, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 3-i
+Mon, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 3-i
 Chapter 3 - Gold Hardware
 Table of Contents
 
@@ -532,7 +532,7 @@ Programming the Surround Sound Module 20
 
  
 
-3-ii Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Mon, Mar 24, 1992
+3-ii Ad Lib Gold © Ad Lib Inc. 1992 Confidential Mon, Mar 24, 1992
 3.1
 
 Description of the Hardware
@@ -551,13 +551,13 @@ mixing, MIDI recording and playback, game port, and
 
 Digital Recording
 With the Ad Lib Gold card, you can record from:
-Â« A microphone, using Voice Pad or third party
+« A microphone, using Voice Pad or third party
 software;
 
-Â« An audio tape or a compact disk, using Voice
+« An audio tape or a compact disk, using Voice
 Pad or third party software;
 
-Â« A telephone, using the optional add-on board
+« A telephone, using the optional add-on board
 contained in the Ad Lib PC Telephone
 Answering System.
 
@@ -565,7 +565,7 @@ Digitized and Synthesized Sound Playback
 
 With the Gold card, you can play back:
 
-Â¢ Digitized sounds: The Gold card has two
+¢ Digitized sounds: The Gold card has two
 channels for digitized sounds. These
 channels can be used in a variety of ways,
 such as for voice notes with the Voice Pad
@@ -580,25 +580,25 @@ music.
 
 The sound capability of the Gold card also features:
 
-Â« Audio mixing: The internal analog mixer of the
+« Audio mixing: The internal analog mixer of the
 Gold card controls the volume of various audio
 sources, through programming, such as within
 third party software, or manually using the
-Mixer Panel (see â€œMixer Pane! TSR" section).
+Mixer Panel (see “Mixer Pane! TSR" section).
 
 * Volume control: The output volume of the
-Gold card is software controlled (see â€œMixer
-Panel TSRâ€™).
+Gold card is software controlled (see “Mixer
+Panel TSR’).
 
  
 
-Mon, Mar 23, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 3-1
+Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 3-1
 Description of the Hardware
 Functionality
 
-Â« Tone control: Bass and treble controls are
+« Tone control: Bass and treble controls are
 
-software controlled (see â€œMixer Panel TSRâ€™).
+software controlled (see “Mixer Panel TSR’).
 
 MIDI Recording and Playback
 
@@ -655,7 +655,7 @@ adapter available from Ad Lib.
 
 3-2 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Mon, Mar 23, 1992
 On-Board Connectors and Main
@@ -721,7 +721,7 @@ of the auxiliary audio source.
  
 
 The PC speaker connector (No. 3), to
-connect the signal of the PCâ€™s internal speaker
+connect the signal of the PC’s internal speaker
 directly to the Ad Lib Gold card, so that it is
 mixed with the other audio signals on the card
 and can be heard through the headphones or
@@ -733,7 +733,7 @@ Mon, Mar 23, 1992
 
 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 3-3
 
@@ -774,7 +774,7 @@ Figure 1: Gold 1000 diagram
 
 10. Game port/Ml 1DB-8 connector
 
-11. Dual ees selector j pe rs (JP2â€”7)
+11. Dual ees selector j pe rs (JP2—7)
 12, Port address jumper Pa)
 
 13. Control chip rte ror (UPS)
@@ -802,7 +802,7 @@ ton connector
 
 3-4 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential
 
@@ -842,7 +842,7 @@ Layout of the Card
 
 v
 
-; â€”+â€”{(6)
+; —+—{(6)
 
 WME
 
@@ -857,7 +857,7 @@ U, 8
 
 1 WV 13
 
-EXEEEEEEESEE) bs ere He | | <â€”â€”Â§_(i)
+EXEEEEEEESEE) bs ere He | | <——§_(i)
 
   
 
@@ -872,7 +872,7 @@ ts
 Figure 2: Gold 2000 diagram
 9. Main audio output 17. 16-bit FM DAC
 10. Game port/MIDI DB-15 connector 18. Professional FM synthesis chip
-11. Dual joystick selector jumpers (JP2â€”7) 19. Sampling 12-bit DAC and MIDI chip
+11. Dual joystick selector jumpers (JP2—7) 19. Sampling 12-bit DAC and MIDI chip
 12. Port address jumper (UPS) 20. SCS! chip
 13. Control chip reset per (JP9) 21. SCSI terminator resistor
 14. Custom control VLSI chip 22. SCSI cable connector
@@ -882,7 +882,7 @@ Figure 2: Gold 2000 diagram
 
  
 
-Fri, Mar 20, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 3-5
+Fri, Mar 20, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 3-5
  
 
 Description of the Hardware
@@ -895,7 +895,7 @@ we have made the Interrupt lines (IRQ) and DMA
 channels software selectable, thereby keeping the
 amount of jumpers to a minimum. The four remaining
 jumper sets are the game port enable jumper (JP 1),
-the dual joystick selector jumpers (JP2â€”7), the port
+the dual joystick selector jumpers (JP2—7), the port
 address change jumper (JP8), and the Control chip
 reset jumper (JP9).
 
@@ -903,7 +903,7 @@ The Gold card jumpers are the following:
 
 * Game port enable jumper (No. 16)
 This jumper lets the user enable/disable Ad
-Lib Goldâ€™s on-board game port interface. The
+Lib Gold’s on-board game port interface. The
 interface should be disabled in cases where
 the user already has a standard PC game port
 interface inside his/her PC, to avoid conflicts.
@@ -928,9 +928,9 @@ enabled position.
 Dual joystick selector jumpers (No. 11)
 
 These jumpers let the user change the factory-
-set â€œjoystick plus MIDI" option (all jumpers on
-the bracket side) to the â€œtwo joysticks without
-MIDIâ€ option (all jumpers on the opposite side).
+set “joystick plus MIDI" option (all jumpers on
+the bracket side) to the “two joysticks without
+MIDI” option (all jumpers on the opposite side).
 All jumpers in this selector must be changed to
 the same position, as shown in the following
 illustrations.
@@ -946,7 +946,7 @@ Figure 4: Dual joystick jumper selection
 
  
 
-3-6 Ad Lib Gold Â© Ad Lib Inc. 1992
+3-6 Ad Lib Gold © Ad Lib Inc. 1992
 
 Confidential Fri, Mar 20, 1992
 Port address jumper (No. 12)
@@ -1021,7 +1021,7 @@ Fri, Mar 20, 1992
 
 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 3-7
 O
@@ -1049,13 +1049,13 @@ you need the following:
 1. For the Gold 1000: an IBM PC, XT, AT (286),
 386, 486 compatible computer, PS/2 Model
 25 and 30, or Tandy 1000 (except EX/HX), a
-disk drive (1.2 MB 5 1/4â€ or 720 KB 3 1/2")
+disk drive (1.2 MB 5 1/4” or 720 KB 3 1/2")
 and 640K of RAM.
 
 For the Gold 2000: an IBM AT (286), 386 and
 486 compatible computer, a disk drive
 
-(1.2 MB 5 1/4â€ or 720 KB 3 1/2") and 640K
+(1.2 MB 5 1/4” or 720 KB 3 1/2") and 640K
 of RAM.
 
 A hard disk.
@@ -1097,7 +1097,7 @@ computer.
 
 Mon, Mar 23, 1992 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 3-9
 Getting Installed
@@ -1106,7 +1106,7 @@ Installing the Hardware
 Io Set Game Port Enable/Disable Jumper
 
 The game port enable/disable jumper lets the user
-enable or disable Ad Lib Goldâ€™s on-board game port
+enable or disable Ad Lib Gold’s on-board game port
 interface. The interface should be disabled in cases
 where the user already has a standard PC game port
 interface inside his/her PC, in order to avoid
@@ -1128,22 +1128,22 @@ the two right pins as shown in Figure 3.
 To Set Dual Joystick Selector Jumpers
 
 The dual joystick selector jumpers let the user
-change the factory-set â€œjoystick plus MIDI" option to
-the â€œtwo joysticks without MIDIâ€ option. All jumpers in
+change the factory-set “joystick plus MIDI" option to
+the “two joysticks without MIDI” option. All jumpers in
 this selector must be changed to the same position,
 as shown in Figure 4. To obtairi the desired setting:
 
 1. Locate the dual joystick selection jumpers
 (refer to Figure 1 or 2, No. 11).
 
-2. If you wish to use the Gold cardâ€™s game port in
-the â€œsingle joystick with MIDI optionâ€, leave the
+2. If you wish to use the Gold card’s game port in
+the “single joystick with MIDI option”, leave the
 jurnpers in the factory-set position (i.e.
 plugged into the bracket side of the card) as
 shown in Figure 4.
 
-3. If you want to use the Gold cardâ€™s game port in
-the â€œdual joystick optionâ€, unplug all six
+3. If you want to use the Gold card’s game port in
+the “dual joystick option”, unplug all six
 jumpers and replug them onto the jumpers, as
 shown in Figure 4.
 
@@ -1168,7 +1168,7 @@ any other.
 
 3-10 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Mon, Mar 23, 1992
 Getting Installed
@@ -1264,7 +1264,7 @@ Mon, Mar 23, 1992
 
 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 3-11
 
@@ -1274,9 +1274,9 @@ Confidential 3-11
 Getting Installed
 Installing the Hardware
 
-4. Put the cardâ€™s bracket screw back on and Microphone tnput
+4. Put the card’s bracket screw back on and Microphone tnput
 tighten it. The microphone input is the uppermost of the three
-5. Put the computer cover back on and tighten audio jacks on the cardâ€™s bracket (refer to Figure 3 or
+5. Put the computer cover back on and tighten audio jacks on the card’s bracket (refer to Figure 3 or
 the screws. 4). This connector lets the audio signal froma
 
 6. Reconnect the power cord and other cables.
@@ -1287,7 +1287,7 @@ Connecting Other Peripherals
 standard microphone be mixed with other audio
 sources or to be used as a source for sampling
 
-The card is equipped with jacks and plugs for Stereo Auxiliary Input â€” External Connector
+The card is equipped with jacks and plugs for Stereo Auxiliary Input — External Connector
 
 connecting various peripherals. These allow
 devices to be connected to: stereo audio output,
@@ -1316,7 +1316,7 @@ system, connect the card to an auxiliary-type input.
 
  
 
-3-12 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential
+3-12 Ad Lib Gold © Ad Lib Inc. 1992 Confidential
 
 Mon, Mar 23, 1992
  
@@ -1334,16 +1334,16 @@ make sure that you are using the
 auxillary output of the device you are
 conneciing to the card, Instead of using
 the speaker output which would overload
-the cardâ€™s amplifier.
+the card’s amplifier.
 
  
 
  
 
-Stereo Auxiliary Input â€”Intemal Connector
+Stereo Auxiliary Input —Intemal Connector
 
-As mentioned inthe â€œDescription of the Hardware:
-Layout of the Cardâ€ section, there is an intemal
+As mentioned inthe “Description of the Hardware:
+Layout of the Card” section, there is an intemal
 connector (see No. 4 in Figure 1 or 2) for connecting
 the audio output of an intemal CD-ROM drive. This
 connector is electrically in parallel with the extemal
@@ -1369,12 +1369,12 @@ cable.)
 
 Dual joystick. (This requires a special adapter,
 which is usually supplied by the joystick
-manufacturer. â€” See Figure 4 for related
+manufacturer. — See Figure 4 for related
 jumper settings.)
 
  
 
-Mon, Mar 23, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992
+Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1992
 
 Confidential 3-13
 3.3
@@ -1385,7 +1385,7 @@ Surround Sound Module
 
 Ad Lib Gold Stereo Sound Adapters have an
 expansion connector for an optional plug-in module
-capable of adding a â€œsurroundâ€ sound effect to the
+capable of adding a “surround” sound effect to the
 audio output of the card. This effect can range from
 stereo depth simulation to artificial reverberation and
 echo.
@@ -1442,13 +1442,13 @@ the computer (consult your hardware user's
 guide).
 
 4. Remove the computer cover (consult your
-hardware userâ€™s guide).
+hardware user’s guide).
 
  
 
 Mon, Mar 23, 1992 Ad Lib Gold
 
-Â© Ad Lib inc. 1992
+© Ad Lib inc. 1992
 
 Confidential 3-15
 Surround Sound Module
@@ -1457,7 +1457,7 @@ Installing the Surround Sound Module
 Surround Sound option connectors
 
 ly.
-â€” =
+— =
 
    
    
@@ -1472,7 +1472,7 @@ Figure 1: Location of the Surround Sound option sockets on the Ad Lib Gold 1000 
 
 Remove the Sound Card 1. Remove the sound card bracket screw.
 ' 2. Take the sound card out of the computer and
-Â¢ WARNING: Users should ground place it ona flat surface so that it is positioned
+¢ WARNING: Users should ground place it ona flat surface so that it is positioned
 themselves before handling the card. as in Figure 1.
 Please read the manual before beginning
 Installation.
@@ -1485,7 +1485,7 @@ Installation.
 
  
 
-3-16 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Mon, Mar 23, 1992
+3-16 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Mon, Mar 23, 1992
 Surround Sound Module
 Installing the Surround Sound Module
 
@@ -1521,42 +1521,42 @@ Figure 2).
  
 
 ,
-â€™
-â€˜
+’
+‘
 ,
-â€˜
-â€˜
-â€˜
-â€˜
-â€˜
-â€˜
-â€˜
-â€˜
-â€˜
+‘
+‘
+‘
+‘
+‘
+‘
+‘
+‘
+‘
 ,
-â€˜
-â€™
+‘
+’
 ,
-â€˜
-â€˜
-Â¢
-â€˜
-â€˜
-â€˜
+‘
+‘
+¢
+‘
+‘
+‘
 -
-â€˜
-â€˜
-Â¢
-â€˜
-â€˜
-â€˜
+‘
+‘
+¢
+‘
+‘
+‘
 ;
 -
 +
 -
-â€˜
+‘
 ,
-â€™
+’
 
 LRRARAESBABRELLA ESSE ES EDE RL EBEBAS AEE
 
@@ -1586,11 +1586,11 @@ groove previously occupied by the slot cover.
 
  
 
-Mon, Mar 23, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 3-17
+Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 3-17
 Surround Sound Module
 Installing the Surround Sound Module
 
-4. Putthe cardâ€™s bracket screw back on and
+4. Putthe card’s bracket screw back on and
 tighten it.
 
 5. Put the computer cover back on and tighten
@@ -1603,7 +1603,7 @@ Using the Surround Sound Option
 Once your module is connected to the sound card,
 the Surround Sound option is ready to use.
 
-Ad Libâ€™s control software offers the user a choice of
+Ad Lib’s control software offers the user a choice of
 various pre-programmed audio enhancements that
 create totally new, compelling effects. To use the
 Surround Sound option, simply proceed as follows:
@@ -1614,7 +1614,7 @@ information on the Mixer Panel).
 
 2. Activate the Mixer Panel. (atJ-(0)-(#) are the
 default activation keys, but you may change
-this combination with the â€œKeysâ€ window of the
+this combination with the “Keys” window of the
 Mixer Panel.
 
 3. Press the (BJ key when in the Mixer Panel
@@ -1662,7 +1662,7 @@ Figure 3: Mixer Panel Surround Features window
 
 %* NOTE: If the Surround Sound Module is not
 installed, or not correctly installed, the program will
-display the message: â€œOPTION NOT INSTALLEDâ€
+display the message: “OPTION NOT INSTALLED”
 and changes you make to the parameters will have
 no effect.
 
@@ -1676,7 +1676,7 @@ Sound option parameters:
 
 3-18 Ad Lib Gold
 
-Â© Ad Lib Inc.
+© Ad Lib Inc.
 
 1992 Confidential Mon, Mar 23, 1992
 
@@ -1690,7 +1690,7 @@ allows you to use a combination of keys for
 enabling and disabling the surround sound
 effect. The default combination is (at)-()-
 (S.J, but you may change this combination with
-the â€œKeysâ€ window of the Mixer Panel.
+the “Keys” window of the Mixer Panel.
 
 Level
 Sets the volume level of the surround sound
@@ -1756,7 +1756,7 @@ Mixer Panel.
 
 Mon, Mar 23, 1992 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 3-19
 Surround Sound Module
@@ -1780,7 +1780,7 @@ to your Ad Lib Gold Sound applications.
 
  
 
-3-20 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential
+3-20 Ad Lib Gold © Ad Lib Inc. 1992 Confidential
 
 Mon, Mar 23, 1992
 
@@ -1822,7 +1822,7 @@ ALT-SHIFT Keys (Short Cuts) 11
 Closing the Mixer Panel 12
 Removing the Mixer Panel TSR 12
 
-4.4 Juke Box Gold Music Playback Program 13Â°
+4.4 Juke Box Gold Music Playback Program 13°
 Loading Juke Box Gold 13
 Selecting Songs 14
 
@@ -1831,9 +1831,9 @@ To Remove Songs from the Selection 14
 
  
 
-Tue, Mar 31, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential
+Tue, Mar 31, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential
 
-PATELALSTEPAlASAPAVAVAVI S191 01 Â¢ OLS IETETEIMIGIATISIPLSLOLSISLOTOLSTOISTE OLA TATA SL Se Sl ele ra eatata tl TL eae el Plc Tee rara Tatar tat
+PATELALSTEPAlASAPAVAVAVI S191 01 ¢ OLS IETETEIMIGIATISIPLSLOLSISLOTOLSTOISTE OLA TATA SL Se Sl ele ra eatata tl TL eae el Plc Tee rara Tatar tat
 
 4-1
 Chapter 4 - Software Applications
@@ -1851,7 +1851,7 @@ To Stop Music Playback 14
 To Pause and Resume Music Playback 14
 To Scan Songs 15
 Adjusting the Sound 15
-â€˜To Adjust the Volume, Bass or Treble 15
+‘To Adjust the Volume, Bass or Treble 15
 To Set the Stereo/Mono Option 15
 Asking for Help 15
 Exiting the Program 16
@@ -1871,7 +1871,7 @@ Edit 19
 (Fz) Sampling 20
 Options 20
 
-4-ii Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 31, 1992
+4-ii Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 31, 1992
 Chapter 4 - Software Applications
 Table of Contents
 
@@ -1924,8 +1924,8 @@ ROL2 Playback TSR Options 32
 
  
 
-Tue, Mar 31, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 4-iii
-Â©)
+Tue, Mar 31, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 4-iii
+©)
 
 ( )
 
@@ -1968,7 +1968,7 @@ the drive you are using).
 A:\>ctridrv
 A:\>setup
 When the program opens, a window entitled
-â€œInstallation Notesâ€ introduces you to the Setup
+“Installation Notes” introduces you to the Setup
 Program and its basic commands. Two main buttons
 
 are displayed at the bottom of each screen:
@@ -1989,7 +1989,7 @@ following submenus:
 
 Mon, Mar 23, 1992 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 4-1
 Software Installation and Configuration
@@ -2000,7 +2000,7 @@ Hain Select lon
 
 =}
 Tor a first-tine installatlon you must first copy the programs and T
-Ã©rivers to your hard disk.
+érivers to your hard disk.
 
  
 
@@ -2030,7 +2030,7 @@ Please select an Installatson procedure:
  
 
 <2 - Configure the Card and Drivers >
-Â«3 = Quit the Setup Program >
+«3 = Quit the Setup Program >
 < Cancel >
 
  
@@ -2071,7 +2071,7 @@ To Continue the Setup Process
 In the setup process, activating the <Continue>
 button lets you close the current dialog box and
 access the next step. Doing this will initiate the
-changÃ©s you mace in this dialog box, if there were
+changés you mace in this dialog box, if there were
 any.
 
 To Answer Program Questions
@@ -2086,7 +2086,7 @@ can use this default, or enter your own answer.
 
 4-2 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Mon, Mar 23, 1992
 
@@ -2096,7 +2096,7 @@ Configuration Environment Variable
 
 Coniiguration Environment Varlable
 
-A special environment variable, called â€œGOLDâ€ is
+A special environment variable, called “GOLD” is
 used by the software to recognize the base address
 of the Gold card. When the card is relocated by the
 Setup program, the program automatically modifies
@@ -2118,7 +2118,7 @@ the programs assume a default base address of
 
  
 
-Mon, Mar 23, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential
+Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential
 
 4-3
 4.2
@@ -2141,7 +2141,7 @@ Prior to running the Test Program:
 
 1. Make sure that the Gold card is properly
 installed. If necessary, refer to the previous
-section, â€œInstalling the Hardwareâ€.
+section, “Installing the Hardware”.
 
 2. Connect headphones, a speaker or stereo
 system to the audio jack.
@@ -2166,7 +2166,7 @@ following command at the DOS prompt:
 C:\GOLD>test
 
 When the program opens, a first window entitled
-â€œInstallation Notesâ€ introduces you to the Test
+“Installation Notes” introduces you to the Test
 Program and its basic commands. Two main buttons
 are displayed at the bottom of each screen:
 <Cancel> and <Continue>.
@@ -2191,7 +2191,7 @@ next step of the test.
 
 Mon, Mar 23, 1992 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 4-5
 Test Program
@@ -2210,14 +2210,14 @@ Notes introductory screen opens the Selection
 Panel dialog box (see Figure 6). This dialog box
 presents the list of the tests you can execute:
 
-* Configuration Â« Joystick
+* Configuration « Joystick
 
-Â¢ Audio * MIDI interface
+¢ Audio * MIDI interface
 
-Â« SCSI Interface Â« Sampling and Playback
-Â¢ Timers Â° Telephone
+« SCSI Interface « Sampling and Playback
+¢ Timers ° Telephone
 
-Â« FM Sound * Mixer
+« FM Sound * Mixer
 
 Some of these options may be grayed to indicate
 
@@ -2230,7 +2230,7 @@ will fet you access the corresponding tests.
 
  
 
-[ERITREA â‚¬4 Lib Gold Test Progran
+[ERITREA €4 Lib Gold Test Progran
 Selection Pane)
 
 The Yest Panel dialog is the list of the tests you can do. Select as
@@ -2238,16 +2238,16 @@ many tests as you want and then click on the < Continue > button.
 
  
 
-â€”â€”
+——
 
-â€” -- Tet
+— -- Tet
 
  
 
  
 
 [ ] 1 - Configuration [ 1 & ~ Joystick
-C32 - fudio Â£17-HIDI Interface
+C32 - fudio £17-HIDI Interface
 
 (13 - SCSI Saterface C1 - Sampling and Playback
 
@@ -2263,9 +2263,9 @@ C32 - fudio Â£17-HIDI Interface
 
  
 
-[34 â€”- Timers C19 - Telephone
-C15 â€” FM Sound C1 - Mixer
-Â« Cancel > Â¢ Continue >
+[34 —- Timers C19 - Telephone
+C15 — FM Sound C1 - Mixer
+« Cancel > ¢ Continue >
 
  
 
@@ -2293,7 +2293,7 @@ during the test.
 
 4-6 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Mon, Mar 23, 1992
 4.3
@@ -2369,7 +2369,7 @@ The Mixer Panel window will not open upon loading
 and has to be activated as explained in the next
 section. If you want the Mixer Panel window open
 upon loading the program, you can use the option
-â€œ/aâ€" with the loading command. To do this, go to
+“/a”" with the loading command. To do this, go to
 the appropriate directory and type the following at
 the DOS prompt:
 
@@ -2379,7 +2379,7 @@ mixer /a
 
 Mon, Mar 23, 1992 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 4-7
 
@@ -2393,7 +2393,7 @@ Activating the Mixer Panel
 
 (ar )-(@J-() are the default activation keys, but you
 may change this combination, as explained in the
-â€œActivation and Volume Keysâ€ section. To activate
+“Activation and Volume Keys” section. To activate
 the Mixer Panel, press all of the activation keys down
 at the same time and release them. Upon releasing
 the keys, the main Mixer Panel window will appear as
@@ -2434,11 +2434,11 @@ time using the horizontal arrow keys
 
 (G) and &));
 
-Â« increase or decrease the numerical para-
+« increase or decrease the numerical para-
 meters ten steps at a time using Shift with the
 horizontal arrow keys ((@)-() and (@)-f));
 
-Â¢ toggle On/Off parameters using the Space
+¢ toggle On/Off parameters using the Space
 bar.
 
 Sound Parameters
@@ -2460,7 +2460,7 @@ Input level 49
 Output mode Linear
 
 <F1-MSC mode> <F2-Sub Mixer>
-<F3-Surround> <F4â€”-Keys> <OK>
+<F3-Surround> <F4—-Keys> <OK>
 
 Figure 7: The main Mixer Panel window
 
@@ -2468,7 +2468,7 @@ Figure 7: The main Mixer Panel window
 
 4-8 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Mon, Mar 23, 1992
 Volume
@@ -2507,7 +2507,7 @@ applied when the source is mono;
 * Mono: forced mono effect that can be
 applied when the source is stereo;
 
-Â° Spatial: light surround sound effect that can
+° Spatial: light surround sound effect that can
 
 Mixer Panel TSR
 Using the Mixer Panel
@@ -2550,7 +2550,7 @@ five different audio sources to be controlled:
 
  
 
-Mon, Mar 23, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 4-9
+Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 4-9
 Mixer Panel TSR
 Using the Mixer Panel
 
@@ -2643,7 +2643,7 @@ Effect Recital Hall
 
 Peete eta eta at a ata ete alata a ss te a a a ee a stn a se a ata a se eG a pe a a ee ew ee
 
-<F3-Surround> <F4â€”Keys> <OK
+<F3-Surround> <F4—Keys> <OK
 
    
 
@@ -2662,7 +2662,7 @@ Figure 9: The Surround control window
 
 % NOTE: If the Surround Sound Module is not
 installed, the program will display the message
-â€œOPTION NOT INSTALLEDâ€ and the changes you
+“OPTION NOT INSTALLED” and the changes you
 make to the parameters will have no effect (Fig. 10).
 
  
@@ -2673,7 +2673,7 @@ make to the parameters will have no effect (Fig. 10).
 
 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Mon, Mar 23, 1992
 
@@ -2752,7 +2752,7 @@ Flgure 11: The ALT-SHIFT Keys window
 
  
 
-Mon, Mar 23, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 4-11
+Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 4-11
 Mixer Pane! TSR
 Using the Mixer Panel
 
@@ -2786,7 +2786,7 @@ Closes the Keys window and returns to the
 main Mixer Panel window saving the changes
 you made in the control keys.
 
-<Esc> ((EsÂ¢})
+<Esc> ((Es¢})
 
 Closes the Keys window and returns to the
 main Mixer Panel window canceling the
@@ -2795,14 +2795,14 @@ changes you made in the control keys.
 Closing the Mixer Panel
 
 When in the main window of the Mixer Panel, press
-the (4) or (EsÂ¢j key to leave the program and return to
+the (4) or (Es¢j key to leave the program and return to
 where you were when the Mixer Panel was activated.
 
 Removing the Mixer Panel TSR
 
 When the Mixer Panel TSR is already installed but
 you do not wish to use it, you can unload the
-program with the option â€œ/r". This option removes
+program with the option “/r". This option removes
 the Mixer Panel TSR from the computer's memory.
 To remove the Mixer Panel TSR, go to the
 appropriate directory and type the following
@@ -2818,7 +2818,7 @@ been removed.
 
 4-12 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Mon, Mar 23, 1992
 4.4 Juke Box Gold Music Playback Program
@@ -2913,7 +2913,7 @@ the highlighted letter.
 
 Mon, Mar 23, 1992 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 4-13
 Juke Box Gold Music Playback Program
@@ -2980,7 +2980,7 @@ button toggles to Resume.
 
 4-14 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Mon, Mar 23, 1992
 To continue music playback at the exact place where
@@ -3008,7 +3008,7 @@ The Ad Lib Gold card has an on-board analog mixer
 that allows volume and tone contrdls to be adjusted.
 These features can be accessed from any
 application by using the Mixer Panel TSR program
-(see the section â€œMixer Panel TSRâ€). But you can
+(see the section “Mixer Panel TSR”). But you can
 also adjust the sound directly inside the Juke Box
 Gold program. Three sliders located along the
 bottom of the window allow you to adjust volume,
@@ -3046,7 +3046,7 @@ how to use the various features.
 
 Mon, Mar 23, 1992 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 4-15
 Juke Box Gold Music Playback Program
@@ -3062,7 +3062,7 @@ menu.
 
 OR
 
-Â« Click on the System menu box at the upper left
+« Click on the System menu box at the upper left
 corner of the window and activate the Close
 command.
 
@@ -3079,8 +3079,8 @@ the songs previously selected in Juke Box Gold,
 while using other applications.
 
 For details on the loading options of the ROL2
-Playback TSR, see the section 4.9 â€œROL2 Playback
-TSRâ€.
+Playback TSR, see the section 4.9 “ROL2 Playback
+TSR”.
 
 The playback commands of this TSR can be used at
 any time by the following key combinations:
@@ -3119,7 +3119,7 @@ with the ROL2 Playback driver.
 
 4-16 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Mon, Mar 23, 1992
 
@@ -3140,7 +3140,7 @@ INSGOLD
 OR
 
 ED /BBANKNAME.BNK
-Where â€œBANKNAMEâ€™â€â€™ is the name of the bank.
+Where “BANKNAME’”’ is the name of the bank.
 
 Using Menu_Commands
 (F5} File
@@ -3167,7 +3167,7 @@ Deletes an existing sound patch.
 
 Read "opl3.txt"
 
-Save "â€œopl3.txtâ€
+Save "“opl3.txt”
 
 Debug...
 
@@ -3199,7 +3199,7 @@ volume modulation (tremolo).
 
  
 
-Mon, Mar 23, 1992 Ad Lib Gold Â© Ad Lib Inc. 1991
+Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1991
 
 Confidential 4-17
 Instrument Maker Gold
@@ -3273,14 +3273,14 @@ respectively.
 NOTE: Inthe supplied sound bank, the two-operator
 
 sound names begin with a capital letter and end
-with a "#â€", while four-operator sound names begin
+with a "#”", while four-operator sound names begin
 with a lower case letter.
 
  
 
 4-18 Ad Lib Gold
 
-Â© Ad Lib Inc. 1991
+© Ad Lib Inc. 1991
 
 Confidential Mon, Mar 23, 1992
 4.6 Sample Maker
@@ -3357,7 +3357,7 @@ sound and puts it into a memory buffer.
 
  
 
-Mon, Mar 23, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992
+Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1992
 
 Confidential 4-19
 Sampie Maker
@@ -3369,7 +3369,7 @@ sound and puts it into a memory buffer.
 
 Paste
 
-Inserts a copy of the bufferâ€™s contents at the
+Inserts a copy of the buffer’s contents at the
 point where the cursor is positioned in the
 displayed sampled sound.
 
@@ -3381,7 +3381,7 @@ put it into the buffer.
 
 Clear All
 Deletes the entire sampled sound from the
-screen. â€”
+screen. —
 
 Sampling
 
@@ -3399,7 +3399,7 @@ sample sound. When a section of the sampled
 sound is selected, you will only hear that
 section played.
 
-Ad Lib Gold Â© Ad Lib Inc. 1992
+Ad Lib Gold © Ad Lib Inc. 1992
 
 Sampling Params...
 
@@ -3411,14 +3411,14 @@ Options
 
 Scope Mode
 
-This command makes Sample Makerâ€™s screen
+This command makes Sample Maker’s screen
 display the sampled signal received at the
 input as a scope.
 
 NOTE: When in Scope Mode, only the sampling
 
 frequency (in PCM) is an effective parameter in
-the â€œSampling Params...â€ dialog.
+the “Sampling Params...” dialog.
 
 Scale Up
 
@@ -3475,11 +3475,11 @@ results.
 Sample Maker
 Using Menu Commands
 
-QO) See â€œDigital Input and Outputâ€.
+QO) See “Digital Input and Output”.
 
 Sampling Length Limitation
 
-Â¢ Sampled sounds are limited to 256 K. Ifa
+¢ Sampled sounds are limited to 256 K. Ifa
 recording goes over 256 K, it will clip at 256 K.
 
 Scope Mode
@@ -3497,7 +3497,7 @@ format is displayed correctly on screen.
 
 Mon, Mar 23, 1992 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 4-21
 4.7
@@ -3524,10 +3524,10 @@ Technical Features
 
 The underlying technology of the Surround Sound
 Module is a circuit designed as a general-purpose
-digital processing element. The boardâ€™s main
+digital processing element. The board’s main
 component is an LSI chip which has quality digital
 surround sound capabilities made possible through
-Yamahaâ€™s digital audio technology. Each of its eight
+Yamaha’s digital audio technology. Each of its eight
 digital delay lines may provide a delay time of up to
 100 milliseconds, and combining delay line signals
 for two-channel output assures a wide range of
@@ -3553,8 +3553,8 @@ surround
 Once the program is loaded, the main Juke Box Gold
 window will appear. You can then select and play
 back songs as you wish. For complete information
-on using Juke Box Gold, refer to the â€œJuke Box Gold
-Music Playback Programâ€ section of Ad Lib Gold
+on using Juke Box Gold, refer to the “Juke Box Gold
+Music Playback Program” section of Ad Lib Gold
 Pre-Release Evaluation Kit.
 
 When ready, open the Surround Sound Editor by
@@ -3566,7 +3566,7 @@ appear as shown in the following figure.
 
 Mon, Mar 23, 1992 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 4-23
 Surround Sound Editor
@@ -3629,8 +3629,8 @@ main parts:
 
  
 
-4-24 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Mon, Mar 23, 1992
-Â¢ The global delay line parameter section, located
+4-24 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Mon, Mar 23, 1992
+¢ The global delay line parameter section, located
 at the lower right comer of the screen.
 
 Channel Line Attenuation Sections
@@ -3650,7 +3650,7 @@ signal is phase reversed with the input signal.
 dB
 
 Displays the attenuation value setting of the
-delay line, which ranges from â€”60 decibels to
+delay line, which ranges from —60 decibels to
 0 decibels, in steps of 2 dB. A delay line can
 also be turned off (-e).
 
@@ -3675,7 +3675,7 @@ reversed with the input signal.
 dB
 
 Displays the attenuation value setting of the
-signal, which ranges from â€”60 decibels to
+signal, which ranges from —60 decibels to
 
 0 decibels, in steps of 2 dB. A signal can also
 be turned off (-~-).
@@ -3700,7 +3700,7 @@ approximately 3.2 milliseconds.
 
 Mon, Mar 23, 1992 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 4-25
 Surround Sound Edltor
@@ -3783,7 +3783,7 @@ from the bank entitled STANDARD. SRD.
 
 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Mon, Mar 23, 1992
 Surround Sound Editor
@@ -3824,12 +3824,12 @@ preset.
 
  
 
-Mon, Mar 23, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 4-27
+Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 4-27
  
 
 ()
 
-Â©
+©
 
  
 4.8
@@ -3854,14 +3854,14 @@ Playrl2 fileName [/Q]
 Where fileName is the name of the ROL2 music
 file (.RL2) to be played.
 
-The optional â€œ/Qâ€ parameier can be used to start the
+The optional “/Q” parameier can be used to start the
 playback of the RL2 song file and immediately
 returns control to DOS. The playback of the song will
 be taken in charge by the ROL2 Playback memory
 resident driver.
 
-if you enter â€œplayx12â€ alone or with the option
-â€œ/?â€ (â€˜playr12 /?"), the program displays: help
+if you enter “playx12” alone or with the option
+“/?” (‘playr12 /?"), the program displays: help
 lines giving summarized information on program
 parameters.
 
@@ -3874,7 +3874,7 @@ drivers, which have to be loaded before running it:
 - Wave driver WAVEDRV.EXE)
 
 * Timer driver (TIMERDRV.EXE)
-Â¢ ROL2 Playback driver (RL2DRV.EXE)
+¢ ROL2 Playback driver (RL2DRV.EXE)
 
 Digitized Sound Playback Utility
 
@@ -3891,16 +3891,16 @@ playdigi fileName [/p] [/n]
 Where fileName is the name of the digitized
 sound file (.SMP) to be played.
 
-Where â€œpâ€ in the option â€œ/pâ€, may be â€œcâ€ (center),
-â€œRâ€ (right), or â€œ1.â€ (left), indicating the stereo position
+Where “p” in the option “/p”, may be “c” (center),
+“R” (right), or “1.” (left), indicating the stereo position
 you want for the playback of the digitized sound file.
 
-Where â€œnâ€ in the option â€œ/n", may be a number from
+Where “n” in the option “/n", may be a number from
 0 to 100, indicating the volume you want for the
 playback of the digitized sound file.
 
-If you enter â€œplaydigiâ€ alone or with the option
-â€œ/2" (â€˜playdigi /?â€), the program displays help
+If you enter “playdigi” alone or with the option
+“/2" (‘playdigi /?”), the program displays help
 lines giving summarized information on program
 parameters.
 
@@ -3908,7 +3908,7 @@ parameters.
 
 Mon, Mar 30, 1992 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential 4-29
 Batch File Utilltes
@@ -3919,12 +3919,12 @@ following two drivers, which have to be loaded
 
 before running it:
 
-Â¢ Control driver (CTRLDRV.EXE)
-Â¢ Wave driver (WAVEDRV.EXE)
+¢ Control driver (CTRLDRV.EXE)
+¢ Wave driver (WAVEDRV.EXE)
 
  
 
-4-30 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Mon, Mar 30, 1992
+4-30 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Mon, Mar 30, 1992
 4.9
 
 ROL2 Playback TSR
@@ -3952,7 +3952,7 @@ the songs previously selected in Juke Box Gold,
 while using other applications.
 
 The playback commands of the ROI2 Playback TSR
-can be used at any time by the following key â€”
+can be used at any time by the following key —
 combinations:
 
 moo
@@ -4000,7 +4000,7 @@ fat j-(@)-(_) Stops the music playback. translation table.
 the selection.
 
 songs.
-Tue, Mar 31, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 4-31
+Tue, Mar 31, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 4-31
 
  
 ROL2 Playback TSR
@@ -4028,8 +4028,8 @@ computers memory (RAM).
 rl2drv /vn
 
 This option disables the specified sampling
-voice â€œnâ€, which can be â€œ1â€ or â€œ2â€. Use two
-options consecutively, â€œ/v1 /v2", to
+voice “n”, which can be “1” or “2”. Use two
+options consecutively, “/v1 /v2", to
 disable the two sampling voices.
 
 The playback of sampled voices consumes a
@@ -4055,7 +4055,7 @@ drivers.
 
 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Tue, Mar 31, 1992
 Chapter 5 - DOS Software Drivers
@@ -4103,7 +4103,7 @@ Function Directory 95
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential
 
 5-i
 Introduction
@@ -4117,13 +4117,13 @@ packages. Developers should, when possible, use the services
 provided by those drivers. There are a number of advantages to using
 memory-resident drivers:
 
-Â¢ A lot of the applications supplied for the Gold Card are TSR
+¢ A lot of the applications supplied for the Gold Card are TSR
 applications. Memory-resident drivers provide applications with a
 common software core for managing shared resources. Digital playback
 and recording, MID! input and output and the timers available on the
 card, for instance, share a same interrupt request line.
 
-Â¢ Memory-resident drivers car: easily be maintained and updated,
+¢ Memory-resident drivers car: easily be maintained and updated,
 independently of the application code.
 
 The method used by applications to interface with the Ad Lib Gold
@@ -4159,7 +4159,7 @@ the YMF262 chip.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-iii
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-iii
 DOS Software Drivers
 Introduction
 
@@ -4187,7 +4187,7 @@ YMZ263 MIDI FIFO buffers.
 
  
 
-5-iv Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-iv Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 3.1
 
 Interfacing DOS Drivers
@@ -4234,7 +4234,7 @@ accelerate the calling of driver routines.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-1
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-1
 Interfacing DOS Drivers with Applications
 
  
@@ -4293,7 +4293,7 @@ WAVELNK GetWaveDriverStatus() OxFF if the driver is present
 TIMERLNK GetTimerDriverStatus() OxFF if the driver is present
 MIDILNK GetMIDIDriverStatus() OxFF if the driver is present
 
-5-2 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-2 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 5.2 DOS Control Features Driver
 
  
@@ -4304,7 +4304,7 @@ SetControlRegister
 
 Syntax
 int SetControlRegister(int reg, WORD val)
-__ Sets register 'reg' of Ad Lib Control Chip to â€˜valâ€™.
+__ Sets register 'reg' of Ad Lib Control Chip to ‘val’.
 Parameters
 int reg
 Which register to write to.
@@ -4320,7 +4320,7 @@ made while the Control Chip's RB & SB bits are set.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Contidentia! 5-3
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Contidentia! 5-3
 DOS Control Features Driver
 Function Directory
 
@@ -4344,7 +4344,7 @@ None
 
  
 
-5-4 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-4 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -4368,7 +4368,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-5
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-5
 DOS Control Features Driver
 Function Directory
 
@@ -4401,7 +4401,7 @@ None
 
  
 
-5-6 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-6 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -4430,7 +4430,7 @@ playback operation.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-7
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-7
 DOS Control Features Driver
 Function Directory
 
@@ -4453,7 +4453,7 @@ None
 
  
 
-5-8 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-8 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -4477,7 +4477,7 @@ channel 0 using this function.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-9
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-9
 DOS Control Features Driver
 Function Directory
 
@@ -4499,7 +4499,7 @@ None
 
  
 
-5-10 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-10 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -4524,7 +4524,7 @@ causes of feedback.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-11
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-11
 DOS Control Features Driver
 Function Directory
 
@@ -4551,7 +4551,7 @@ See CtEnabDisabMicroOutput()
 
  
 
-5-12 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-12 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -4576,7 +4576,7 @@ signals of a Gold card (directly, without any mixer volume control).
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-13
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-13
 DOS Contro! Features Driver
 Function Directory
 
@@ -4598,7 +4598,7 @@ None
 
  
 
-5-14 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Jue, Mar 24, 1992
+5-14 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Jue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -4624,7 +4624,7 @@ on an AT are IRQ3, IRQ4, IRQ5, IRQ7, 1RQ10, IRQ11, IRQ12 and IRQ15.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc, 1992 Confidential 5-15
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc, 1992 Confidential 5-15
 DOS Control! Features Driver
 Function Directory
 
@@ -4650,7 +4650,7 @@ None
 
  
 
-5-16 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-16 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -4683,7 +4683,7 @@ DMA channels are available on the Gold 2000 and 2000MC.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-17
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-17
 DOS Control Features Driver
 Function Directory
 
@@ -4714,7 +4714,7 @@ None
 
  
 
-5-18 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-18 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 .DOS Control Features Driver
 Function Directory
 
@@ -4739,7 +4739,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-19
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-19
 DOS Control Features Driver
 Function Directory
 
@@ -4766,7 +4766,7 @@ None
 
  
 
-5-20 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-20 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -4789,7 +4789,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-21
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-21
 DOS Control Features Driver
 Function Directory
 
@@ -4804,14 +4804,14 @@ None
 Return Value
 
 New base I/O address, divided by 8.
-Range is fromOto127 â€”
+Range is fromOto127 —
 
 Comments
 None
 
  
 
-5-22 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-22 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -4856,7 +4856,7 @@ signal of opposite polarity.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc, 1992 Confidential 5-23
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc, 1992 Confidential 5-23
 DOS Control Features Driver
 
 Function Directory
@@ -4907,7 +4907,7 @@ None
 
  
 
-5-24 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-24 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -4934,7 +4934,7 @@ value by 4.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 9-25
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 9-25
 DO
 
 S Control Features Driver
@@ -4965,7 +4965,7 @@ the value specified with CTSetOutputVolumeXXX().
 
 5-26
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -4992,7 +4992,7 @@ or bass. 0 does not alter sound.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-27
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-27
 DOS Control Features Driver
 Function Directory
 
@@ -5017,7 +5017,7 @@ CtSetOutputTrebleLevel function, due to rounding errors.
 
  
 
-5-28 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-28 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Controi Features Driver
 Function Directory
 
@@ -5037,7 +5037,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-29
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-29
 DOS Control Features Driver
 Function Directory
 
@@ -5059,7 +5059,7 @@ None
 
  
 
-5-30 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-30 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -5089,7 +5089,7 @@ IRQ10, IRQ11, IRQ12 and IRQ15.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-31
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-31
 DOS Control Features Driver
 Function Directory
 
@@ -5122,7 +5122,7 @@ Comments
 None
 5-32 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential
 
@@ -5145,7 +5145,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-33
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-33
 DOS Control Features Driver
 Function Directory
 
@@ -5165,7 +5165,7 @@ None
 
  
 
-5-34 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-34 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -5187,7 +5187,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-35
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-35
 DOS Control Features Driver
 Function Directory
 
@@ -5214,7 +5214,7 @@ None
 
 5-36 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential
 
@@ -5245,7 +5245,7 @@ future extensions.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-37
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-37
 DOS Control Features Driver
 Function Directory
 
@@ -5272,7 +5272,7 @@ None
 
  
 
-5-38 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-38 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -5296,7 +5296,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-39
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-39
 DOS Control Features Driver
 Function Directory
 
@@ -5318,7 +5318,7 @@ None
 
  
 
-5-40 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-40 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -5341,7 +5341,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-41
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-41
 DOS Control Features Driver
 Function Directory
 
@@ -5363,7 +5363,7 @@ None
 
  
 
-5-42 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-42 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -5391,7 +5391,7 @@ right outputs can be mixed in the fashion described above.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-43
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-43
 DOS Control Features Driver
 Function Directory
 
@@ -5414,7 +5414,7 @@ None
 
  
 
-5-44 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-44 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -5442,7 +5442,7 @@ monophonic.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-45
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-45
 DOS Control Features Driver
 Function Directory
 
@@ -5467,7 +5467,7 @@ None
 
  
 
-5-46 Ad Lib Gold Â© Ad Lib Inc. 1992
+5-46 Ad Lib Gold © Ad Lib Inc. 1992
 
 Confidential
 
@@ -5491,7 +5491,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-47
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-47
 DOS Contro! Features Driver
 Function Directory
 
@@ -5515,7 +5515,7 @@ None
 
  
 
-9-48 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential
+9-48 Ad Lib Gold © Ad Lib Inc. 1992 Confidential
 
 Tue, Mar 24, 1992
 DOS Control Features Driver
@@ -5546,7 +5546,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidentia! 5-49
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidentia! 5-49
 DOS Control Features Driver
 
 Function Directory
@@ -5587,7 +5587,7 @@ the Volume Control Chip.
 Set to 1 when the Contro! Chip is busy writing its
 internal registers to the external EEPROM chip.
 This bit must be polled after activating the "Store
-configurationâ€ sequence to make sure that the
+configuration” sequence to make sure that the
 Control Chip is free to proceed with another
 operation.
 
@@ -5598,7 +5598,7 @@ to make sure that the Control Chip is free to proceed with another operation.
 
 5-50
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -5610,14 +5610,14 @@ Gets telephone status.
 Parameters
 None
 Return value
-bit 0: â€œRing signalâ€ (0 = no ring, 71 = ring)
+bit 0: “Ring signal” (0 = no ring, 71 = ring)
 Comments
 
 None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-51
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-51
 DOS Control Features Driver
 Function Directory
 
@@ -5641,7 +5641,7 @@ Useful utility mostly used when setting interrupt vectors.
 
  
 
-5-52 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-52 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -5665,7 +5665,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-53
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-53
 DOS Control Features Driver
 Function Directory
 
@@ -5687,7 +5687,7 @@ None
 
  
 
-5-54 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-54 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Control Features Driver
 Function Directory
 
@@ -5700,7 +5700,7 @@ This routine will store a preset into the surround module.
 The preset is defined by a 32 bytes array passed as argument.
 
 Parameters
-BYTE â€œptrData
+BYTE “ptrData
 Pointer to the array of 32 bytes.
 Return value 7
 0 if no error, otherwise 1, no surround module.
@@ -5711,7 +5711,7 @@ the Surround processor.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-55
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-55
 5.3 DOS FM Synthesis Driver
 
  
@@ -5729,7 +5729,7 @@ ways to create 1-, 2- or 4-operator voices. (You may wish to refer to the
 discussion.)
 
 The 4-operator voices offer the richest sound. Up to six 4-operator voices
-can be used simultanÃ©ously. In the FM Driver, the 4-operator voices are
+can be used simultanéously. In the FM Driver, the 4-operator voices are
 numbered 0, 2, 4, 6, 8 and 10. By default, all six 4-operator voices are
 enabled. They may be selectively disabled, thus creating two 2-operator
 voices. -
@@ -5757,7 +5757,7 @@ percussive mode.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-57
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-57
 DOS FM Synthesis Driver
 
 Voice Allocation
@@ -5840,7 +5840,7 @@ available in the FM Synthesis Driver.
 
 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential
 
@@ -5863,7 +5863,7 @@ are enabled.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-59
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-59
 DOS FM Synthesis Driver
 Function Directory
 
@@ -5884,7 +5884,7 @@ Position of the specified voice:
 
  
 
-5-60 Ad Lib Gold Â© Ad Lib Inc. 1992
+5-60 Ad Lib Gold © Ad Lib Inc. 1992
 
 Confidential
 
@@ -5911,7 +5911,7 @@ The volume is scaled linearly by the driver software.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-61
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-61
 DOS FM Synthesis Driver
 Function Directory
 
@@ -5921,12 +5921,12 @@ Syntax
 void NoteOffOPL3(voiceNum)
 Starts the decay of the timbre currently playing on the voice.
 Parameters
-â€˜int voiceNum
+‘int voiceNum
 VoiceNumber between 0 and 19.
 
  
 
-5-62 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-62 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS FM Synthesis Driver
 Function Directory
 
@@ -5952,7 +5952,7 @@ reattack the timbre on the specified voice, a NoteOffOPL3 must be issued.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-63
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-63
 DOS FM Synthesis Driver
 Function Directory
 
@@ -5978,7 +5978,7 @@ Percussive voices cannot be bent.
 
  
 
-5-64 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-64 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS FM Synthesis Driver
 Function Directory
 
@@ -5993,7 +5993,7 @@ int voiceNum
 
 voiceNumber between 0 and 19
 
-struct TIMBRE = Â«timbrePtr
+struct TIMBRE = «timbrePtr
 pointer to a description (28 bytes) of the patch assigned to the voice.
 
 Comments
@@ -6006,7 +6006,7 @@ timbrePtr.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-65
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-65
 DOS FM Synthesis Driver
 Function Directory
 
@@ -6016,7 +6016,7 @@ Syntax
 void QuitOPL3()
 Resets the FM chip in the compatible mode.
 Parameters
-â€˜None.
+‘None.
 Comments
 
 This should be called by all applications prior to leaving, in order to put the
@@ -6024,7 +6024,7 @@ OPL3 chip back in the Ad Lib compatible mode.
 
  
 
-5-66 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-66 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS FM Synthesis Driver
 Function Directory
 
@@ -6044,11 +6044,11 @@ Bit 0 corresponds to voice 0 (0-1 in 2 op), bit 1 to voice 2 (2-3 in 2 op) etc.
 (See to table 1 in the Voice Allocation section of this document).
 
 Comments
-â€™ There is a maximum of 6 4-op voices.
+’ There is a maximum of 6 4-op voices.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-67
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-67
 DOS FM Synthesis Driver
 Function Directory
 
@@ -6080,7 +6080,7 @@ Integer between 0-12.
 
  
 
-5-68 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-68 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS FM Synthesis Driver
 Function Directory
 
@@ -6108,7 +6108,7 @@ ussive
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-69
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-69
 5.4 DOS Wave Driver
 
  
@@ -6150,7 +6150,7 @@ available in the Wave Driver.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-71
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-71
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6170,7 +6170,7 @@ None
 
  
 
-5-72 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-72 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6190,7 +6190,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-73
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-73
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6223,7 +6223,7 @@ Specified device handle is invalid
 
  
 
-5-74 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-74 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6259,7 +6259,7 @@ mark all pending buffers as done.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-75
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-75
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6276,7 +6276,7 @@ Returns the number of waveform input devices in the system.
 
  
 
-5-76 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential! Tue, Mar 24, 1992
+5-76 Ad Lib Gold © Ad Lib Inc. 1992 Confidential! Tue, Mar 24, 1992
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6323,7 +6323,7 @@ function.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-77
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-77
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6373,7 +6373,7 @@ calling the appropriate functions in the control chip driver.
 
  
 
-5-78 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-78 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6400,7 +6400,7 @@ Specified device handle is invalid.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-79
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-79
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6434,7 +6434,7 @@ will be returned.
 
  
 
-5-80 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-80 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6474,7 +6474,7 @@ and 0 will be returned.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-81
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-81
 DOS Wave Driver
 
  
@@ -6514,7 +6514,7 @@ WaveOutReset to terminate playback before calling WaveOutClose.
 
  
 
-5-82 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-82 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6531,7 +6531,7 @@ Returns the number of waveform output devices in the system.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-83
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-83
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6575,7 +6575,7 @@ structure of WavelnOpen. :
 
  
 
-5-84 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-84 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6607,7 +6607,7 @@ LpWaveFormat lpFormat
 Specifies a pointer to a WaveFormat structure that identifies the format of
 the waveform that will be sent to the output device.
 
-The WaveFormat struciure is also used to specify the â€œmodeâ€ by which
+The WaveFormat struciure is also used to specify the “mode” by which
 the data will be sent to the hardware (WAVE_TRANF_POLLING,
 WAVE_TRANSF_INTERRUPT, WAVE_TRANSF_ DMA).
 
@@ -6625,7 +6625,7 @@ Specifies 32 bits of user defined data that is passed to the callback.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-85
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-85
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6677,7 +6677,7 @@ which DMA line it will use.
 
  
 
-5-86 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential! Tue, Mar 24, 1992
+5-86 Ad Lib Gold © Ad Lib Inc. 1992 Confidential! Tue, Mar 24, 1992
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6709,7 +6709,7 @@ will be returned.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-87
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-87
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6728,7 +6728,7 @@ Specifies a handle to the waveform output device that is to be reset.
 Return value
 
 Returns zero if the function was successful. Otherwise, it returns an error
-code. Possible error codes are: Â°
+code. Possible error codes are: °
 
 WERR_INVALIDHANDLE
 
@@ -6736,7 +6736,7 @@ Specified device handle is invalid.
 
  
 
-5-88 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-88 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6765,7 +6765,7 @@ will be returned.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-89
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-89
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6801,7 +6801,7 @@ channels are always output left and right.
 
  
 
-5-90 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-90 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6845,7 +6845,7 @@ Note that this controls output volume only.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-91
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-91
 DOS Wave Driver
 DOS Wave Driver Functions
 
@@ -6888,7 +6888,7 @@ application must write more than one buffer.
 
  
 
-5-92 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-92 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Timer Driver
 
  
@@ -6902,14 +6902,14 @@ similar.
 All timers have their own base clock (time resolution) and counter size
 (maximum period). The controls available for all timers are:
 
-Â¢ Write access in their register of different count values (divider).
+¢ Write access in their register of different count values (divider).
 
-Â¢ Stop and start (decrementing the initial stored count until it reach zero
+¢ Stop and start (decrementing the initial stored count until it reach zero
 and re-writing the original count, again and again).
 
-Â¢ Enable/disable interrupts to occur on zero count crossing.
+¢ Enable/disable interrupts to occur on zero count crossing.
 
-Â¢ Read the interrupt status (access on the zero count crossing).
+¢ Read the interrupt status (access on the zero count crossing).
 
 some differences exist and need to be noticed:
 The timer 2 from the MMA chip is the only timer whose current count
@@ -6964,7 +6964,7 @@ in msec
 counter size 8 8 16 42 4+12 16412
 in bits
 Table 1: Hardware specifications of timers
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential - 5-93
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential - 5-93
 DOS Timer Driver
 
 Remember that the MMA timer 1 and 2 are combined with the MMA base
@@ -6978,7 +6978,7 @@ Each timer function is presented in the following pages.
 
  
 
-5-94 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-94 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Timer Driver
 Function Directory
 
@@ -7014,7 +7014,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-95
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-95
 DOS Timer Driver
 Function Directory
 
@@ -7047,7 +7047,7 @@ None
 
  
 
-5-96 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-96 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Timer Driver
 Function Directory
 
@@ -7102,7 +7102,7 @@ bits in the count parameters.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-97
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-97
 DOS Timer Driver
 Function Directory
 
@@ -7143,7 +7143,7 @@ The period will be round to the precision of the timer.
 
  
 
-5-98 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-98 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Timer Driver
 Function Directory
 
@@ -7177,7 +7177,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-99
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-99
 DOS Timer Driver
 Function Directory
 
@@ -7213,7 +7213,7 @@ None
 
  
 
-5-100 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-100 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Timer Driver
 Function Directory
 
@@ -7258,11 +7258,11 @@ Comments
 The MMA chip has a special behavior: it will reset the interrupt bit after a
 status register reading. Note that this routine is automatically called by the
 main interrupt handler from the Control Chip Driver. Using
-GetOPL3TimerintStatus will not reset the OPL3 status register bits. â€”
+GetOPL3TimerintStatus will not reset the OPL3 status register bits. —
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-101
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-101
 DOS Timer Driver
 Function Directory
 
@@ -7311,7 +7311,7 @@ is a local DoNothing function that must be replaced by the application user.
 
  
 
-5-102 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-102 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Timer Driver
 Function Directory
 
@@ -7346,7 +7346,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-103
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-103
 DOS Timer Driver
 Function Directory
 
@@ -7373,7 +7373,7 @@ None
 
  
 
-5-104 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-104 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Timer Driver
 Function Directory
 
@@ -7396,7 +7396,7 @@ after each reading of the status register.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-105
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-105
 DOS Timer Driver
 Function Directory
 
@@ -7435,7 +7435,7 @@ should free the timer after use. |
 
  
 
-5-106 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-106 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Timer Driver
 Function Directory
 
@@ -7470,7 +7470,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad L.th Ine. 1992 Confidential 5-107
+Tue, Mar 24, 1992 Ad Lib Gold © Ad L.th Ine. 1992 Confidential 5-107
 DOS Timer Driver
 Function Directory
 
@@ -7495,7 +7495,7 @@ specification of Windows Multi-Media.
 
  
 
-5-108 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-108 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Timer Driver
 Function Directory
 
@@ -7513,10 +7513,10 @@ WORD GetOPL3Timeri1Caps
 (DWORD far *IPeriodMin, DWORD far *IPeriodMax)
 WORD GetOPL3Timer2Caps
 
-(DWORD far â€œiPeriodMin, DWORD far â€œIPeriodMax)
+(DWORD far “iPeriodMin, DWORD far “IPeriodMax)
 WORD GetMMATimerOCaps
 
-(DWORD far â€œIPeriodMin, DWORD far *iPeriodMax)
+(DWORD far “IPeriodMin, DWORD far *iPeriodMax)
 WORD GetMMATimer1Caps
 
 (DWORD far *IPeriodMin, DWORD far *!|PeriodMax)
@@ -7547,7 +7547,7 @@ None
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 5-109
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 5-109
 DOS Timer Driver
 Function Directory
 
@@ -7572,7 +7572,7 @@ None
 
  
 
-5-110 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+5-110 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 DOS Timer Driver
 Function Directory
 
@@ -7608,7 +7608,7 @@ See TimerDrv.h for all ID of services.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gald Â© Ad Lib Inc. 1992 Confidential 5-111
+Tue, Mar 24, 1992 Ad Lib Gald © Ad Lib Inc. 1992 Confidential 5-111
 Chapter 7 - Low-level Programming
 
  
@@ -7643,7 +7643,7 @@ Surround 13
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-i
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-i
 Low-level Programming
 
 Table of Contents
@@ -7678,7 +7678,7 @@ Register Array 1 33
 
  
 
-7-ii Ad Lib Gold Â© Ad Lib Inc. 1992
+7-ii Ad Lib Gold © Ad Lib Inc. 1992
 
 Confidential
 
@@ -7728,7 +7728,7 @@ MMA Programming Tips 47
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-iii
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-iii
 7.1 Mixer and Setup Features
 
  
@@ -7751,7 +7751,7 @@ address, 38Bh, is the data address. Values written to this address are
 directed to the register number specified by the previous write to the
 address register. There are delays that must be respected when writing
 to certain registers. These delays are explained in detail-in the Status
-â€˜Register section.
+‘Register section.
 
 By default, the control chip is located at 38Ah and 38Bh. However, the
 chip may be relocated (as explained in the section Audio Relocalization).
@@ -7767,7 +7767,7 @@ up values for all registers are stored.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-1
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-1
 Mixer and Setup Features
 
 Status Register
@@ -7837,7 +7837,7 @@ are indicated by a"1" in the register map.
 
 7-2
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Mixer and Setup Features
 Register Map, Control Chip
 
@@ -7952,7 +7952,7 @@ REG D7 D6 D5 D4 D3 D2 D1 DO
 03 SAMPLING GAIN - RIGHT
 04 1 1 FINAL OUTPUT VOLUME - LEFT
 05 1 1 FINAL. OUTPUT VOLUME -RIGHT
-06 1 1 â€˜2 1 BASS
+06 1 1 ‘2 1 BASS
 07 1 1 1 1 TREBLE
 08 1 1 MU ST-MONO SOURCE
 09 FM VOLUME - LEFT
@@ -7972,7 +7972,7 @@ OF MICROPHONE VOLUME
 17 SCSI RELOCATE
 18 SURROUND
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-3
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-3
 Mixer and Setup Features
 Register Reference
 
@@ -8096,7 +8096,7 @@ OP2 SCSI
 
  
 
-7-4 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+7-4 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Mixer and Setup Features
 Register Reference
 
@@ -8161,7 +8161,7 @@ step gives -80 dB (off). IMPORTANT: Bits D6 and D7 must be set to 1.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-5
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-5
 Mixer and Setup Features
 Register Reference
 
@@ -8196,7 +8196,7 @@ dB D5-D0
 3E
 -62 1D
 -64 1C
-â€œ80 1B
+“80 1B
 -80 0
 Registers #4 and #5
 
@@ -8248,7 +8248,7 @@ Register #6
 
  
 
-7-6 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+7-6 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Treble
 
 Mixer and Setup Features
@@ -8353,7 +8353,7 @@ Left only
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992
 
 Confidential
 
@@ -8444,7 +8444,7 @@ set for input (recording); clearing the bit sets the filter for output
 
 7-8
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential! Tue, Mar 24, 1992
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential! Tue, Mar 24, 1992
 Mixer and Setup Features
 Register Reference
 
@@ -8501,7 +8501,7 @@ interrupt line:
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-9
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-9
 Mixer and Setup Features
 Register Reference
 
@@ -8606,7 +8606,7 @@ Register #14
 
  
 
-7-10 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+7-10 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Mixer and Setup Features
 Register Reference
 
@@ -8707,7 +8707,7 @@ Address Section
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-11
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-11
 Mixer and Setup Features
 Register Reference
 
@@ -8780,7 +8780,7 @@ Only IRQ 3, 4, 5, and 7 are available on the model Gold 1000. All listed
 interrupts are available on the Gold 2000 and the Gold 2000MC.
 
 SCSI DMA is enabled when DENS is set. The following values for DMA
-SEL Â§S select the corresponding DMA line:
+SEL §S select the corresponding DMA line:
 
  
 
@@ -8811,7 +8811,7 @@ lines are available on the Gold 2000 and the Gold 2000MC.
 
  
 
-7-12 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+7-12 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Mixer and Setup Features
 Register Reference
 
@@ -8882,7 +8882,7 @@ be documented at a later date.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-13
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-13
 7.2 FM Synthesis
 
  
@@ -8898,7 +8898,7 @@ the two chips.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-15
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-15
 Programming the YM3812
 
  
@@ -8936,7 +8936,7 @@ instruments.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-17
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-17
  
 
 Programming the Synthesizer
@@ -9002,32 +9002,32 @@ wt # E(t)
 The operators can be connected in three different ways: additive,
 frequency modulation and composite sine wave.
 
-Â¢ FM synthesis
+¢ FM synthesis
 FM synthesis uses two operators in series. The first operator, the
 modulator, modulates the second operator via its modulation
 input. The name given to the second operator is the carrier. The
 modulator can feed back its output into its modulation data input;
 
-F(t) = Em(t) sin(Wmt + BF ,Â»(t)) Modulator and feedback
-F,(t) = EÂ¢(t) sin(wet + Fm(t)) Carrier and Modulator
+F(t) = Em(t) sin(Wmt + BF ,»(t)) Modulator and feedback
+F,(t) = E¢(t) sin(wet + Fm(t)) Carrier and Modulator
 
  
 
 7-18
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Programming the Synthesizer
 Operators
 
-Â¢ Additive synthesis
+¢ Additive synthesis
 Additive synthesis connects two operators in parallel, adding both
 outputs together. This method of synthesis is not as interesting as
 FM synthesis, but it can generate good organ type sounds.
 
 The simplified formula for the additive synthesis is:
-F(t) = E(t) sin(wt + Q;) + E(t) sin(wt + QOÂ»)
+F(t) = E(t) sin(wt + Q;) + E(t) sin(wt + QO»)
 
-Â¢ Composite sine wave synthesis
+¢ Composite sine wave synthesis
 Composite sine wave synthesis (CSW) may be used to generate
 speech or other related sounds by playing all voices
 simultaneously. When using this mode the card cannot generate
@@ -9047,7 +9047,7 @@ programming. Here is a register map of the ALMSC:
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-19
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-19
 Programming the Synthesizer
 ALMSC Input/Output Map
 
@@ -9160,7 +9160,7 @@ used as an offset into the map. The operator offsets are as follows:
 
 7-20
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Programming the Synthesizer
 ALMSC Input/Output Map
 
@@ -9246,7 +9246,7 @@ usec.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-21
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-21
 Programming the Synthesizer
 Register Reference
 
@@ -9309,7 +9309,7 @@ OCONOARO NHN
 
 7-22
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Programming the Synthesizer
 Register Reference
 
@@ -9446,7 +9446,7 @@ multiplication factors are given in the following table:
 
 Tue, Mar 24, 1992
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-23
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-23
 Programming the Synthesizer
 Register Reference
 
@@ -9601,7 +9601,7 @@ Rate | KSR=0 |KSR=1 Rate |KSR=0|KSR=1
 
 7-24
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Programming the Synthesizer
 Register Reference
 
@@ -9648,7 +9648,7 @@ Output level = (63 - TL) * 0.75dB
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-25
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-25
 Programming the Synthesizer
 Register Reference
 
@@ -9699,7 +9699,7 @@ addresses BOH to B8H.
 
 7-26
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Programming the Synthesizer
 Register Reference
 
@@ -9726,9 +9726,9 @@ Register Reference
 REG | D7 | D6 | D5 | D4 | D3 | D2 | D1 | Do
 AOH- F-Number
 
-A8H}| 2â€? 2Â° 25 24 oS 92 2! 29
+A8H}| 2”? 2° 25 24 oS 92 2! 29
 BOH- KEY Block F-Number
-B8H IN] 27 2!' pÂ®}]2% 28
+B8H IN] 27 2!' p®}]2% 28
 
  
 
@@ -9778,7 +9778,7 @@ feedback loop:
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc, 1992 Confidential 7-27
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc, 1992 Confidential 7-27
 Programming the Synthesizer
 
 Register Reference
@@ -9852,7 +9852,7 @@ Di |} DO Wave Form
 0 1 bode Half-sine
 1 0 [YY Abs-sine
 1 1 C71 Pulse-sine
-7-28 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+7-28 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Programming the YMF262
 
  
@@ -9897,7 +9897,7 @@ Timers section of Programming the Synthesizer.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-29
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-29
 New FM Features
 
  
@@ -10006,7 +10006,7 @@ DEP | DEP
 BD | ay | ve | R | BD | SD | TOM] TC | HH
 C0-C8 SRL | STR FB C
 E0Q-F5 WS
-7-30 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+7-30 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 
  
 New FM Features
@@ -10125,7 +10125,7 @@ EO-F5 WS
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-31
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-31
 New FM Features
 4-Operator Voices
 
@@ -10153,7 +10153,7 @@ D2 - DO Waveform
 
 0 f\W5 Sine
 
-{ Â£N\ _ walt-sine
+{ £N\ _ walt-sine
 
  
 
@@ -10185,7 +10185,7 @@ D2 - DO Waveform
 
  
 
-7-32 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+7-32 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 New FM Features
 Register Array 1
 
@@ -10259,7 +10259,7 @@ D5 D4 D3 D2 D1 DO
 4-op voice 6 5 4, 3 2 1
 2-op voices 3,6 2,5 1,4 3,6 2,5 1,4
 Array 1 Array 0
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-33
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-33
 New FM Features
 4-Operator Voices
 
@@ -10367,7 +10367,7 @@ C3 is 0, then this 4-operator voice will not be output to the left channel.
 
 7-34
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 New FM Features
 Connection Methods
 
@@ -10387,7 +10387,7 @@ Cx=0, Cx+3=0
 
  
 
-4 Operator 1 Operator 2}â€”â€” Operator 3}â€”â€”Â® Operator 4|â€”Â»
+4 Operator 1 Operator 2}—— Operator 3}——® Operator 4|—»
 
  
 
@@ -10417,7 +10417,7 @@ Cx=0, Ox+3=1
 
 Niooen 1 >lOperator 2
 
-â€”â€”Â¥)| Operator 3}+â€”â€”Â® Operator -4
+——¥)| Operator 3}+——® Operator -4
 
  
 
@@ -10459,7 +10459,7 @@ Cx=1, Cx+3=0
 
 Al Operator 1
 
-â€”â€”* | Operator 2}â€”â€”|Operator 3}â€”â€” /Operator 4
+——* | Operator 2}——|Operator 3}—— /Operator 4
 
  
 
@@ -10499,7 +10499,7 @@ Cx=1, Ox+3=1
 
 4 Operator 1
 
-â€”â€” Operator 2}â€”â€”s/Operator 3 >
+—— Operator 2}——s/Operator 3 >
 
  
 
@@ -10529,7 +10529,7 @@ Cx=1, Ox+3=1
 
  
 
-â€”â€”Â¥| Operator 4
+——¥| Operator 4
 
  
 
@@ -10541,7 +10541,7 @@ Connection Methods
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-35
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-35
 7.3 Digital Input and Output
 (Digital Audio and MIDI)
 
@@ -10563,7 +10563,7 @@ default). ,
 
 Accessing a MMA register is done in two steps:
 
-1) write the index of the register to be accesed to the â€œregister selectâ€ port,
+1) write the index of the register to be accesed to the “register select” port,
 located at 38CH
 
 2) write or read the desired value for the selected register, either in the
@@ -10574,7 +10574,7 @@ of the MMA
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-37
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-37
 Digital_Input_and Output
 
  
@@ -10684,7 +10684,7 @@ POV | MOV | TRS | TRQ | RCV | RRQ
 RST RST
 OE RW MIDI DATA
 Register Map, Channel 0
-7-38 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+7-38 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 
  
 Digital input and Output
@@ -10844,7 +10844,7 @@ Tue, Mar 24, 1992
 
 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential
 
@@ -10904,7 +10904,7 @@ accessed.
 
  
 
-7-40 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+7-40 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Digital Input and Output
 Select Frequency
 
@@ -10936,7 +10936,7 @@ t1 = TIMER1 * be
 
 Timer 2 (Register #6 and 7, Channel 0) is a 16-bit programmable down
 counter that is controlled by the base counter clock. The interrupt is
-triggerred when the countÃ©r value reaches 0. The time t2, in usec, until
+triggerred when the countér value reaches 0. The time t2, in usec, until
 IRQ is generated may be calculated as follows:
 
 t2 = (TIMER2(H) * 256 + TIMERO(L) * be
@@ -10950,7 +10950,7 @@ which triggers the latching mechanism.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-41
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-41
 Digital Input and Output
 Select Frequency
 
@@ -11040,7 +11040,7 @@ Setting L or R enables output from the left or right channel respectively.
 
 Clearing the bit disables output.
 
-7-42 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+7-42 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Digital _Input and Output
 Register Reference
 
@@ -11096,7 +11096,7 @@ FF is the maximum ouput volume.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-43
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-43
 Digital _Input_and Output
 Register Reference
 
@@ -11116,7 +11116,7 @@ Register OCH: Sampling Format and Control
 
  
 
-D7 DÃ©. | Â°Ds D4 D3 D2 Di DO
+D7 Dé. | °Ds D4 D3 D2 Di DO
 iL\v | DATA FORMAT FIFO INT MSK | ENB |
 Register #0Ch: Channels 0 & 1 |
 
@@ -11167,7 +11167,7 @@ upper nibble.
 
 7-44
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Digital _Input_and Output
 Register Reference
 
@@ -11236,7 +11236,7 @@ Prohibited
 
  
 
-NN] Â©] O17 BB] GC] MO
+NN] ©] O17 BB] GC] MO
 
  
 
@@ -11251,7 +11251,7 @@ Setting MSK disables the FIFO interrupt.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-45
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-45
 Digital Input and Output
 Reaister Reference
 
@@ -11322,7 +11322,7 @@ can be read from this register.
 
  
 
-7-46 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
+7-46 Ad Lib Gold © Ad Lib Inc. 1992 Confidential Tue, Mar 24, 1992
 Digital _Input_and_ Output
 MMA Programming Tips
 
@@ -11330,11 +11330,11 @@ MMA Programming Tips
 
  
 
-Â¢ Reset a MMA channel after each sample (using the RST bit in register 9), after
+¢ Reset a MMA channel after each sample (using the RST bit in register 9), after
 stopping the sample playback. This makes sure that the FIFO buffer for the channel
 is emptied.
 
-Â¢ In playback mode, when processing a FIFO interrupt, a situation occurs where your
+¢ In playback mode, when processing a FIFO interrupt, a situation occurs where your
 application is filling in the FIFO while the playback mechanism is emptying the FIFO
 at the same time. In some cases this can cause "false triggers" of the FIFO interrupt.
 In order to avoid this, a simple trick is to temporarily lower the FIFO level, while your
@@ -11343,26 +11343,26 @@ interrupt procedure. :;
 
 * A similar situation can occur in recording mode.
 
-Â¢ To avoid the same situation during playback and recording using DMA transfers,
+¢ To avoid the same situation during playback and recording using DMA transfers,
 you can double-check if the interrupt is valid by reading the DMA controller's
 counters or status register. they should indicate that data transfer is over.
 
-Â¢ The MMA FIFO buffers should never be left to empty themselves during playback
+¢ The MMA FIFO buffers should never be left to empty themselves during playback
 (tht is wen GO bit is set) This implies that the FIFO buffers should be filled to a level
 exceeding the FIFO interrupt level before the GO bit is set.
 
 Special care should be taken during high-speed transfers (44.1K, 12 bit stereo
 samples, for example) on slower computers.
 
-Â¢ All masks (mask T2, T1, TO, FIFO, POV, MOV, TRQ and RRQ) have no effect
+¢ All masks (mask T2, T1, TO, FIFO, POV, MOV, TRQ and RRQ) have no effect
 whatsoever on the status register. They are only used to disable the hardware
 interrupt.
 
-Â¢ Respect the 470ns delay between writes to the MMA registers.
+¢ Respect the 470ns delay between writes to the MMA registers.
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential 7-47
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential 7-47
  
 
 YAMAHA
@@ -11399,7 +11399,7 @@ CONCLUSION .......ccesscsssseescssssescncenesnssescnsceseseeaes 28
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
  
 
 YAMAHA GOLD SOUND STANDARD
@@ -11410,13 +11410,13 @@ The rapid evolution of multimedia has necessitated an
 audio standard to be defined. Although Windows allevi-
 ates some of the need for compatibility, it is important that
 an audio standard is established for DOS, game, and
-â€œedutainmentâ€ applications. The implementation of an
+“edutainment” applications. The implementation of an
 audio multimedia standard lessens the concerns of both
 hardware and software developers.
 
 This document describes recommended procedures and
 practices for implementing multimedia audio hardware
-using the â€œMagicâ€ chip set from YAMAHA. By conform-
+using the “Magic” chip set from YAMAHA. By conform-
 ing to the Gold Sound Standard, hardware manufacturers
 can be assured that software written for Gold Sound
 Standard compatible cards will run on their product.
@@ -11436,7 +11436,7 @@ both software and hardware designers.
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
  
 
 YAMAHA GOLD SOUND STANDARD
@@ -11444,11 +11444,11 @@ YAMAHA GOLD SOUND STANDARD
 Overview
 
 The Gold Sound Standard (GSS) is composed of the
-YAMAHA â€œMagicâ€ chip set and a form of mixer and set
-up circuitry. In the case of the YAMAHA â€œMagicâ€ chip set,
+YAMAHA “Magic” chip set and a form of mixer and set
+up circuitry. In the case of the YAMAHA “Magic” chip set,
 this document will summarize its functions. A more
 detailed reference for the individual registers of the
-â€œMagicâ€ chip set may be found in the YAMAHA reference
+“Magic” chip set may be found in the YAMAHA reference
 manual for the particular chip.
 
 Only the minimum requirements are defined in this
@@ -11456,10 +11456,10 @@ document. The individual hardware designer may imple-
 ment additional features. The GSS provides the necessary
 functionality to be Level 1 MPC compatible.
 
-The â€œMagicâ€ chip set is designed as a highly integrated
+The “Magic” chip set is designed as a highly integrated
 solution to developing a Level-1 MPC compatible audio
 subsystem. The following sections illustrate design con-
-cerns when using the â€œMagicâ€ chip set. They also provide
+cerns when using the “Magic” chip set. They also provide
 the I/O register map requirements to be Gold Sound
 Standard compatible.
 
@@ -11467,7 +11467,7 @@ Standard compatible.
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
  
 
 YAMAHA GOLD SOUND STANDARD
@@ -11481,12 +11481,12 @@ Optionally, a SCSI interface may be implemented for use
 with CD-ROM drives. A hardware design conforming to
 the GSS will allow software that directly accesses the
 hardware to run on all GSS compatible cards. The design
-concerns are minimized by implementing the â€œMagicâ€
+concerns are minimized by implementing the “Magic”
 chip set, which includes the YMZ263 (MMA) Multimedia
 Audio LSI, the YMF262 (OPL3) Advanced Algorithm
 Synthesizer LSJ, and the YAC512-M Stereo Serial DAC.
 The following figure illustrates the hardware components
-of a typical Level 1 multimedia PC using the â€œMagicâ€ chip
+of a typical Level 1 multimedia PC using the “Magic” chip
 set.
 
  
@@ -11612,7 +11612,7 @@ Game Port
  
  
 
-â€œ| PCM/ADPCM
+“| PCM/ADPCM
 
      
  
@@ -11726,7 +11726,7 @@ PC BUS
 
  
 
-Â© YAMAHA Corporation of America 1992
+© YAMAHA Corporation of America 1992
 
 GSSV031792
 
@@ -11805,7 +11805,7 @@ RESET X1 XO
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
 
  
  
@@ -11862,7 +11862,7 @@ filter before final output.
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
 YAMAHA GOLD SOUND STANDARD
 
  
@@ -11874,7 +11874,7 @@ an asynchronous UART, and two 16 byte FIFOs for send-
 ing and receiving MIDI data. The MIDI output channel
 (TXD) is inverted and sent through an external 5 mA
 current loop to the external MIDI output connector. The
-external MIDI input connectorâ€™s RXD signal is optically
+external MIDI input connector’s RXD signal is optically
 isolated to avoid ground loops. An optional MIDI thru
 port may be added by transferring the MIDI input signal
 through two inverters out an additional MIDI output port.
@@ -11927,7 +11927,7 @@ Generator Modulation
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
 YAMAHA GOLD SOUND STANDARD
 
  
@@ -11983,11 +11983,11 @@ when the channel sampling lines of the OPL3 fall.
 The serial data output and sample/hold channel signals
 are directly connected to the YAC512-M. The serial data
 between the OPL3 and the YAC512-M is synchronized
-using the OPL3â€™s SY clock signal. This data is then latched
+using the OPL3’s SY clock signal. This data is then latched
 
  
 
-Â© YAMAHA Corporation of America 1992
+© YAMAHA Corporation of America 1992
 
 GSSV031792
 
@@ -12009,7 +12009,7 @@ and is used for channel 1/2 common input.
 The YAC512-M converts the digital serial stream into an
 analog signal. The YAC512-M requires external capacitors
 for stabilizing the analog output. The stereo output of the
-YAC512-M is ready for mixing with the MMAâ€™s stereo
+YAC512-M is ready for mixing with the MMA’s stereo
 audio output. The block diagram below illustrates the
 simple connections between the OPL3 and the YAC512-M.
 
@@ -12064,7 +12064,7 @@ Zz 7) smP2  CH2 1 @ R Channel
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
 
  
  
@@ -12103,7 +12103,7 @@ the OPL3.
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
 YAMAHA GOLD SOUND STANDARD
 
  
@@ -12171,11 +12171,11 @@ As is the case with all other aspects of the GSS hardware,
 special care must be taken for the possibility of reentrance
 when separate applications access the mixer section and
 the OPL3 chip simultaneously. This is discussed in the
-section entitled â€œSoftware Issuesâ€ below.
+section entitled “Software Issues” below.
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
 
 10
  
@@ -12213,7 +12213,7 @@ written, the audio hardware is GSS compatible.
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
  
 
 YAMAHA GOLD SOUND STANDARD
@@ -12233,24 +12233,24 @@ being an index into the register map with the next address
 for data.
 
 A delay of 450 microseconds is recommended after writing
-to the output volume registers (04H â€” 08H).
+to the output volume registers (04H — 08H).
 
 A delay of 5 microseconds is recommended after writing
 to the mixing volume registers and channel/IRQ registers
-(09H â€” 15H).
+(09H — 15H).
 
 In order to ensure these delays, the mixer access status
 register should be polled.
 
 While writing the mixer registers to memory the mixer
 must not be accessed. This is achieved by polling the mixer
-register write status bit, checking fora â€œ0â€.
+register write status bit, checking fora “0”.
 
  
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792 12
+© YAMAHA Corporation of America 1992 GSSV031792 12
  
 
 YAMAHA GOLD SOUND STANDARD
@@ -12261,7 +12261,7 @@ The index address register of the mixer is used as a status
 register. Reading the status register returns information as
 defined in the following figure.
 
-OO â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+OO ————————————
 
 tatus Register
 
@@ -12339,7 +12339,7 @@ portable devices utilizing power saving features.
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792 13
+© YAMAHA Corporation of America 1992 GSSV031792 13
 YAMAHA GOLD SOUND STANDARD
 
  
@@ -12419,7 +12419,7 @@ OB R/W Left Sampling Volume
 OE RW Right Auxiliary Volume
 7 OF R/W Microphone Volume
 11 R/W Audio Selection
-13 R/W Audio IRQ/DMA Selectâ€”Channel 0
+13 R/W Audio IRQ/DMA Select—Channel 0
 14 R/W DMA Select Channel 1
 15 R/V Audio Relocation 7 /
 
@@ -12429,7 +12429,7 @@ OE RW Right Auxiliary Volume
 
  
 
-Â© YAMAHA Corporation of America 1992
+© YAMAHA Corporation of America 1992
 
 GSSV031792
 
@@ -12508,7 +12508,7 @@ Gain = (Register Value * 10)/256
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792 15
+© YAMAHA Corporation of America 1992 GSSV031792 15
  
 
 YAMAHA GOLD SOUND STANDARD
@@ -12604,7 +12604,7 @@ Gain
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
 
 16
  
@@ -12625,7 +12625,7 @@ fied in the following figure.
 
  
 
-D7 | DÃ© | DS | D4 | D3 | D2 | DI | Do Function
+D7 | Dé | DS | D4 | D3 | D2 | DI | Do Function
 X x x X x X Left Channel Output
 Volume
 x x Reserved = 1
@@ -12654,7 +12654,7 @@ x x Reserved = 1
 
 The left channel volume may range from 0 to 64 dB. The
 recommended volume range is from +6 dB to -64 dB, in
-two dB steps. The decibel values are listed in thÃ© following
+two dB steps. The decibel values are listed in thé following
 
  
 
@@ -12666,8 +12666,8 @@ figure.
 BOIS ce ee se oe
 Decibels D5-D0
 6 3F
-â€”62 1D
-â€”80 )
+—62 1D
+—80 )
 
  
 
@@ -12681,7 +12681,7 @@ Decibels D5-D0
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
 YAMAHA GOLD SOUND STANDARD
 
  
@@ -12747,8 +12747,8 @@ Decibels DS5-D0
  
 
 6 3F
-â€”62 iD
-â€”80 0
+—62 iD
+—80 0
 
  
 
@@ -12758,7 +12758,7 @@ Decibels DS5-D0
 
  
 
-Â© YAMAHA Corporation of America 1992
+© YAMAHA Corporation of America 1992
 
 GSSV031792
 
@@ -12827,7 +12827,7 @@ Decibels D3-D0
 15 F
 15 B
 0 6
-â€”12 2
+—12 2
 -12 0
 
  
@@ -12842,7 +12842,7 @@ Decibels D3-D0
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
 
 19
  
@@ -12867,7 +12867,7 @@ register are identified in the following figure.
 
  
 
-â€˜D7 D6 DS D4 D3 D2 D1 DO Function
+‘D7 D6 DS D4 D3 D2 D1 DO Function
 X xX X X | Treble Output
 Xx Xx x X Reserved = |
 
@@ -12909,7 +12909,7 @@ Decibels D3-D0
 12 A
 0 6
 -12 2
-â€”12 0
+—12 0
 
  
 
@@ -12923,7 +12923,7 @@ Decibels D3-D0
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
  
 
 YAMAHA GOLD SOUND STANDARD
@@ -13009,7 +13009,7 @@ following figure defines the signal configurations.
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792 21
+© YAMAHA Corporation of America 1992 GSSV031792 21
  
 
 YAMAHA GOLD SOUND STANDARD
@@ -13045,14 +13045,14 @@ D5. This bit enables or disables mute.
 
 D7-D6. These bits are reserved and set to 1.
 
-09H â€” 0FH
+09H — 0FH
 Registers 09H through OFH are the individual mixing
 
 The following figure provides descriptions for these
 registers.
 
 PSSST AE Ee ea rer
-09H â€” OFH
+09H — OFH
 
  
 
@@ -13100,7 +13100,7 @@ controls, and comprise the mixer section of the audio card.
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
 
 22
 YAMAHA GOLD SOUND STANDARD
@@ -13190,7 +13190,7 @@ X X x { X Reserved
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
 
 23
  
@@ -13215,9 +13215,9 @@ D3-D4. These bits are reserved.
 D5. This bit enables or disables the internal speaker of
 the PC to be mixed with the final audio output.
 
-D7â€”D6. These bits are available.
+D7—D6. These bits are available.
 
-13H: Audio IRQ/DMA Selectâ€”Left Channel
+13H: Audio IRQ/DMA Select—Left Channel
 
 This read/write register controls the interrupt and DMA
 functionality of the FM and sampling features. The bit
@@ -13227,7 +13227,7 @@ figure and defined below.
  
 
 (a OS Ss ee ea a ei ee al
-13H: Audio IRQ/DMA Select â€”Channel 0
+13H: Audio IRQ/DMA Select —Channel 0
 
  
 
@@ -13281,12 +13281,12 @@ DMA
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
  
 
 YAMAHA GOLD SOUND STANDARD
 
-D2â€”D0. These bits control the IRQ selection, as
+D2—D0. These bits control the IRQ selection, as
 defined in the following figure.
 
  
@@ -13311,7 +13311,7 @@ interrupt Select IRQ
 2 5
 3 7 .
 4 : 10 -
-5 7 11 â€”_
+5 7 11 —_
 6 12
 7 7 15
 
@@ -13358,7 +13358,7 @@ nel is enabled.
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792 25
+© YAMAHA Corporation of America 1992 GSSV031792 25
 YAMAHA GOLD SOUND STANDARD
 
  
@@ -13414,7 +13414,7 @@ DMA
 
 D4-D0. These bits are reserved.
 
-D6â€”-D5. These bits select the DMA line for Right
+D6—-D5. These bits select the DMA line for Right
 Channel, as shown in the following figure.
 
  
@@ -13444,7 +13444,7 @@ Channel is enabled.
 
  
 
-Â© YAMAHA Corporation of America 1992
+© YAMAHA Corporation of America 1992
 
 GSSV031792 26
  
@@ -13533,7 +13533,7 @@ Address Section
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
 
 27
  
@@ -13548,10 +13548,10 @@ low level of compatibility provides the software developer,
 who writes directly to the hardware, with a large variety of
 implementations based on a common audio platform. The
 Gold Sound Standard is a minimum implementation
-standard, offering a safe migration path for todayâ€™s hard-
+standard, offering a safe migration path for today’s hard-
 ware and software designs.
 
-For more information on the â€œMagicâ€ chip set and imple-
+For more information on the “Magic” chip set and imple-
 menting the Gold Sound Standard, call your local
 YAMAHA representative or contact YAMAHA at:
 
@@ -13565,7 +13565,7 @@ FAX (408) 437-8791
 
  
 
-Â© YAMAHA Corporation of America 1992 GSSV031792
+© YAMAHA Corporation of America 1992 GSSV031792
  
 
  
@@ -13603,7 +13603,7 @@ Surround Processor.
 
 Communication with the SP2 is done using a bit-serial protocol.
 
-Modifying a register value to the SP2 involves sending a â€œregister address
+Modifying a register value to the SP2 involves sending a “register address
 - register value" pair to the SP2 using a special bit-serial protocol through
 register 18H.
 
@@ -13662,7 +13662,7 @@ YAMAHA & Si
 YM7128
 
 Surround Processor
-â€” (SP2)
+— (SP2)
 
  
 
@@ -13676,12 +13676,12 @@ a wide range of application.
 a FEATURES |
 @ The built-in RAM realizes digital delay time of 100 msec.* at the maximum.
 e@ Feedback loop can be constructed for reverberation.
-Â® Various surround effect can be obtained by controlling this LSI with serial data from
+® Various surround effect can be obtained by controlling this LSI with serial data from
 microprocessor.
 @ Digital attenuator is built in for surround sound volume control.
-Â® Sampling frequency is 28.6 kHz*, and 14 bit floating A/D converter is built in.
+® Sampling frequency is 28.6 kHz*, and 14 bit floating A/D converter is built in.
 e Two-times oversampling digital filter and 14 bit floating D/A converter are built in,
-Â® 16 pin DIP package, silicone gate CMOS 5V power supply.
+® 16 pin DIP package, silicone gate CMOS 5V power supply.
 
 Note) When XI clock frequency-is 7.16 MHz (804 fs is required for XI clock).
 
@@ -13689,14 +13689,14 @@ Note) When XI clock frequency-is 7.16 MHz (804 fs is required for XI clock).
 
  
 
-YAMAHA CORPORATIONâ€”â€”â€”=== ===
+YAMAHA CORPORATION———=== ===
 
  
 - VAMARA
 
 YM7128
 
-=Â» PIN CONFIGURATIONS Â«# PIN DESCRIPTIONS
+=» PIN CONFIGURATIONS «# PIN DESCRIPTIONS
 
  
 
@@ -13713,7 +13713,7 @@ AIN [4 131] SCI
 CV C 6 | 12 C XI
 ITI Cs nf] XO
 LO[)? 101] VSS
-ROCI}s â€” es! } AVES
+ROCI}s — es! } AVES
 TOP VIEW
 
 a BLOCK DIAGRAM
@@ -13778,17 +13778,17 @@ TY
 
 Pin No.| Name 1/0 Function
 
-1 VDD â€” | Digital +65V power supply
-2 AVDD â€” | Analog +5V power supply
+1 VDD — | Digital +65V power supply
+2 AVDD — | Analog +5V power supply
 3 CH QO | Sample/hold capacitor terminal
 
 : 4 AIN I | Analog signal input
 5 CV O | Center voltage of A/D
 6 Tl I+ | Test terminal (without connection)
-q LO O |i chennel, analog out â€”
+q LO O |i chennel, analog out —
 8 RO Q |R channel, anelog cut
-9 AV&S â€” | Analog ground
-10 | vss â€” | Digitel ground
+9 AV&S — | Analog ground
+10 | vss — | Digitel ground
 I. xO O
 
 X'tal oscillator terminal (7.16 MHz typ.)
@@ -13838,17 +13838,17 @@ low pass filter. Digital input to D/A converter shall be with doubled value, whi
 MICROPROCESSOR INTERFACE
 
 Digital attenuation value, delay time and FIR type low pass filter coefficients are all set by writing data
-into registers. | â€˜.
+into registers. | ‘.
 
-With AO=â€˜L", 8 bit address data are sent synchronizing with SCI, At the rising edge of AO, register
-address is taken in. With AO ~ â€œHHâ€, 8 bit data are sent synchronizing with SCI, then register data are changed
+With AO=‘L", 8 bit address data are sent synchronizing with SCI, At the rising edge of AO, register
+address is taken in. With AO ~ “HH”, 8 bit data are sent synchronizing with SCI, then register data are changed
 at the falling edge of AO.
 
 SCI WLLL LL LPL LLL LPL
 Address cycle ;
 AO ? Data cycle |
 
-(7X 6X SX4K3K2K1 XO 7Â¥6X5X4X3X2N1 KO
+(7X 6X SX4K3K2K1 XO 7¥6X5X4X3X2N1 KO
 
 MSB LSB MSB LSB
 
@@ -13911,21 +13911,21 @@ a REGISTER DATA DESCRIPTION
 (1) Attenuation value setting (GL1 to GL8, GR1 to GR8, VM, VG, VL, VR}
 
 e Output polarity (bit 5) ,
-When bit 5 = â€œ1': Output signal is in phase with input signal. |
+When bit 5 = “1': Output signal is in phase with input signal. |
 
 When bit 5= 0's Output signal is reversed phase with input signal.
 
-@ Attenuation value (bit 4â€”0)
+@ Attenuation value (bit 4—0)
 
 Data
-â€œHEXD 76543210 Function EES 766 ae 71 Function
+“HEXD 76543210 Function EES 766 ae 71 Function
 00 x x GLi 10 x x VM
-01 x x GL2 | 11 x x VC Attenuation value â€”
+01 x x GL2 | 11 x x VC Attenuation value —
 02 x x GL3 Lich Tap | 12 x x VL (bit. 5; sign)
 03 x x GL4 18 x x VR
 attenuation value
 04 |x x GL6 . 14 x xX CO ..
-Ob x x GLÃ© (bit 5; sign) 15 x oO FIR coefficient
+Ob x x GLé (bit 5; sign) 15 x oO FIR coefficient
 06 x x GL? 16 x x X TO
 07 x x GL8 17 x x x Tl
 08 x x GR1 18 x xX Xx T2
@@ -13938,7 +13938,7 @@ op |x| GR (bit 6; sign}: ww ixxx! 77
 OF x x GR8
 Note 1) x; Don't Care
 
-Note 2) Donâ€™t write to the other addresa
+Note 2) Don’t write to the other addresa
 
  
 
@@ -13972,21 +13972,21 @@ Note 2) Donâ€™t write to the other addresa
 
 Level Data Level - Data
 (dB) 43210! (HEX) (dB) 48210] (HEX)
-0 1ddqdi1i lF â€” 82 9011211 OF
+0 1ddqdi1i lF — 82 9011211 OF
 ~ 2 11110 1E -34 01110 OE
-~ 4 11101 1D â€”36 91101 oD
-- 6 11:00 1C â€” $88 01100 oC
+~ 4 11101 1D —36 91101 oD
+- 6 11:00 1C — $88 01100 oC
 - 8 11011 1B - 40 01011 OB
--10 11010 1A â€” 49 01010 OA
--12 11001 19 â€”44 01001 09
-â€”14 J} 1900 18 â€” 46 01000 08
-â€”18 10311 17 ~48 0011121 Q7
--18 10110 16 -â€” 60 00110 06
-- 20 10101 15 â€”~ 62 00101 O65
-+22 10100 14 ~BÂ¢ 00100 04
-â€” 24 1001] 18 â€” 66 00011 03
-â€”28 10010 12 â€” 68 00010 02
-â€” 28 10Â¢01 1] - 60 00001 01
+-10 11010 1A — 49 01010 OA
+-12 11001 19 —44 01001 09
+—14 J} 1900 18 — 46 01000 08
+—18 10311 17 ~48 0011121 Q7
+-18 10110 16 -— 60 00110 06
+- 20 10101 15 —~ 62 00101 O65
++22 10100 14 ~B¢ 00100 04
+— 24 1001] 18 — 66 00011 03
+—28 10010 12 — 68 00010 02
+— 28 10¢01 1] - 60 00001 01
 -30 10000 10 ~ 90 00000 00
 
  
@@ -14016,10 +14016,10 @@ a2 |00001 O1 54.9 10001 11
 6.6 00010 02 68.1 10010 12
 9.7 00011 03 61.9 10011 18
 12.9 00100 04 64.5 10100 14
-161 Â°-|/00101 05 67.8 10101 15
+161 °-|/00101 05 67.8 10101 15
 19.3 00110 06 71.0 10110 16
 22.6. oo111 07 14.2 10111 17
-25.8 o1G06 08 17.4 11000 18Â°
+25.8 o1G06 08 17.4 11000 18°
 29,0 01001 09 80.7 11001 19
 82.3 01010 0A 83.9 11010 1A
 35.5 61011 0B . 87.1 11011 18
@@ -14157,19 +14157,19 @@ TT YM7128
  
 
 LPF et | pS :
-INoâ€” | AIN C LPF
-(6th order) a f , LO| + (8rd order) [7Â° L out
+INo— | AIN C LPF
+(6th order) a f , LO| + (8rd order) [7° L out
 ov I
 -
 z, CH RO 4 4 . a order) R out
 I | I |
-| | x1 scl -â€”
+| | x1 scl -—
 J : AO microprocessor
-in â€”- xO DIN
-- 11 -}â€”++-â€”wvâ€”
+in —- xO DIN
+- 11 -}—++-—wv—
 AIT _ = T
-Ives VDD} â€”
-AVSS avpp}â€”
+Ives VDD} —
+AVSS avpp}—
 
  
 
@@ -14200,7 +14200,7 @@ fi Oe
 
 }___/ ,
 7.8271P
-6.35â€”0,2
+6.35—0,2
 
  
 
@@ -14231,10 +14231,10 @@ ime
  
 
 ="
-â€œeC
-â€œa
+“eC
+“a
 -o_
-â€œ|
+“|
 -o
 aT
 _{[025#008
@@ -14266,7 +14266,7 @@ O.5MIN
 :
 
 P2.64TYP 2 | | 0.4640.1
-~-YM7128 Â©
+~-YM7128 ©
 
 YAMATA
 
@@ -14297,17 +14297,17 @@ e Absolute maximum ratings
  
 
 Parameter Symbol Rating Unit
-Supply voltage | Vpn, â€”0.8~ +7.0 V
+Supply voltage | Vpn, —0.8~ +7.0 V
 0 erating e
-tennerainive Top â€”20~ +86 Cc
+tennerainive Top —20~ +86 Cc
 Storage ts P
-temiperarure. | Tata â€”60~- +125 C.
+temiperarure. | Tata —60~- +125 C.
 @ Recommended operating conditions
 
 Parameter Symbol Min. Typ. Max. Unit
 Supply voltaga| VDD 4.75 5.0 8.25 Vv
 Operatin .
-temperature Top 9 26 70 Â°C
+temperature Top 9 26 70 °C
 
  
 
@@ -14325,7 +14325,7 @@ temperature Top 9 26 70 Â°C
 
  
 
-Â© DC characteristics (Conditions: Ta= 25Â°C, Vop=5.0V)
+© DC characteristics (Conditions: Ta= 25°C, Vop=5.0V)
 
  
 
@@ -14346,7 +14346,7 @@ temperature Top 9 26 70 Â°C
  
 
 _ Parameter Symbol Condition Min. Typ. Max Unit
-Supply current _ â€˜Ipp 50 mA
+Supply current _ ‘Ipp 50 mA
 High-level input voltage (1) Voi 2.0 Vv *]
 Low-level input voltage (1) VIL 0.8 Vv #1
 High-level input voltage (2) VIH2 4.0 Vv *2
@@ -14362,7 +14362,7 @@ Output capacitance Co 10.0 pF
 Note i: Applicable to the input terminals except XI
 Note 2; Applicable to XI terminal
 
-Â® AC characteristics (Conditions:.Ta= 25Â°C, Vpn =5.0V)
+® AC characteristics (Conditions:.Ta= 25°C, Vpn =5.0V)
 
  
 
@@ -14381,7 +14381,7 @@ Note 2; Applicable to XI terminal
  
 
 Parameter Symbol Min. Typ. Max Unit
-XI â€”s Input frequency fe 3.6 7.16 8.6 MHz
+XI —s Input frequency fe 3.6 7.16 8.6 MHz
 Duty ae 40 50 60 %
 Rise time TCR ; 60 ns
 Fall time Tor 50 ns
@@ -14399,7 +14399,7 @@ Fall time TSF 200 ng
  
 VAMABA YM7128
 
-@Â¢ ANALOG characteristics (Conditions: Ta= 25Â°C, Von -6Â§.0V)
+@¢ ANALOG characteristics (Conditions: Ta= 25°C, Von -6§.0V)
 
  
 
@@ -14414,15 +14414,15 @@ Fall time TSF 200 ng
  
 
 Parameter Symbol Condition Min, Typ. Max. Unit
-Analog input voltage VIA AIN terminal 4,Â§ Vp-p
+Analog input voltage VIA AIN terminal 4,§ Vp-p
 Analog output voltage VOA LO, RO terminal 4.6 Vp-p
 DC offset voltage CV 2.6 Vv
 Total harmonic distortion THD output voltage 0dB 0.8 0.4 %
 
-â€”10dB 0.4 0.8 %
+—10dB 0.4 0.8 %
 - 20dB 0.4 0.5 %
-â€”30dB 0.8 0.8 %
-S/N S/N Â§=Â«0d8 75 80 dB
+—30dB 0.8 0.8 %
+S/N S/N §=«0d8 75 80 dB
 
  
 
@@ -14438,7 +14438,7 @@ S/N S/N Â§=Â«0d8 75 80 dB
 
 Note) 0dB=1.5Vrms
 
-mâ„¢ REFERENCE CHARACTERISTICS
+m™ REFERENCE CHARACTERISTICS
 2 times oversampling filter | Output vs THD + NOISE
 
 (da) OUTPUT THO +N
@@ -14463,12 +14463,12 @@ FREQUENCY OUTPUT (Vrms)
 
 The specifications of this product are subject to improvement changes without prior notice.
 
-ren YAMAHA CORPORATION-â€”â€”
+ren YAMAHA CORPORATION-——
 
 Address inquiries to:
 Semi-conductor Sales Department
 
-Â© Head Office 209. Mataunolkdjima, Toyooka-mura,
+© Head Office 209. Mataunolkdjima, Toyooka-mura,
 Ywata-gun, Shizucka-ken, 438-01
 
  
@@ -14478,12 +14478,12 @@ Ywata-gun, Shizucka-ken, 438-01
 Electronic Equipment business seotion
 Tel. 0699-62-4918 Fax. 0539-63-5054
 
-Â¥ Tokyo Offica 8-4, Surugadal Kanda, Chiyoda-ku,
+¥ Tokyo Offica 8-4, Surugadal Kanda, Chiyoda-ku,
 Tokyo, 101
-â€œRyumeikan Bldg. 4F
+“Ryumeikan Bldg. 4F
 Tel, 038-265-4481 Fax. 038-255-4488
 
-Â® Osaka Offfce 8-12-9, Minami! Senba, Chuo-ku.
+® Osaka Offfce 8-12-9, Minami! Senba, Chuo-ku.
 Oaaka City, Osaka, 642
 Shinsaibaah! Plaza Bldg. +F
 Tel, 086-262-7980 Fax. 06-252-5616
@@ -14499,7 +14499,7 @@ Tel. 408-487-3183 Fax. 408-487-8791
 
  
 
-COPYING PROHIBITED Â© 1988 YAMAHA CORPORATION 0.3K $003 Printed in Jacen (a
+COPYING PROHIBITED © 1988 YAMAHA CORPORATION 0.3K $003 Printed in Jacen (a
 Appendix B: Surround Sound
 Sample Source Code
 
@@ -14520,7 +14520,7 @@ Copyright 1992, Ad Lib Inc.
 */
 unsigned control_io = 0x38a; /* address of control chip-section */
 
-/* Write â€˜valâ€™ to the surround register in the control chip. */
+/* Write ‘val’ to the surround register in the control chip. */
 static void fastcall Write_Srnd_Reg (unsigned val)
 
 {
@@ -14539,7 +14539,7 @@ out ax, al
 
  
 
-Mon, Mar 23, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential
+Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential
 Appendix B: Surround Sound
 Sample Source Code
 
@@ -14615,7 +14615,7 @@ an
 
  
 
-Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential Mon, Mar 23, 1992
+Ad Lib Gold © Ad Lib Inc. 1992 Confidential Mon, Mar 23, 1992
 Appendix C:
 Pin Out for Joystick-MIDI Connector
 
@@ -14663,7 +14663,7 @@ MIDI OUT
 
  
 
-Tue, Mar 24, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992 Confidential C-1
+Tue, Mar 24, 1992 Ad Lib Gold © Ad Lib Inc. 1992 Confidential C-1
 Appendix D: List of Installed Files
 
  
@@ -14683,7 +14683,7 @@ contains information on the latest program
 updates, if there are any, and any other
 pertinent information.
 
-Â« CTRLDRV.EXE
+« CTRLDRV.EXE
 This file is not compressed on the diskette. It
 contains the Ad Lib Gold Control chip driver.
 This low Jevel driver is used by other programs,
@@ -14740,7 +14740,7 @@ level TSR driver implernents: playback of the
 
  
 
-Mon, Mar 23, 1992 Ad Lib Gold Â© Ad Lib Inc. 1992
+Mon, Mar 23, 1992 Ad Lib Gold © Ad Lib Inc. 1992
 
 Confidential D-1
 Appendix D
@@ -14819,7 +14819,7 @@ D-2
 
 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential Mon, Mar 23, 1992
 DRIVERS.BAT
@@ -14829,12 +14829,12 @@ sequence which loads all Ad Lib Gold drivers.
 Other Files
 
 * RL2
-The â€œ.RL2â€ files contain the pieces of music
+The “.RL2” files contain the pieces of music
 that will be played with the Juke Box Gold.
 
 * SMP
 
-The â€œSMPâ€ files contain the PCM digitized
+The “SMP” files contain the PCM digitized
 sounds. TESTGLD1.SMP is the sound file
 that will be used by the Test Program.
 
@@ -14886,6 +14886,6 @@ Mon, Mar 23, 1992
 
 Ad Lib Gold
 
-Â© Ad Lib Inc. 1992
+© Ad Lib Inc. 1992
 
 Confidential D-3
