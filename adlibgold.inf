@@ -1,0 +1,200 @@
+;
+; Copyright (c) 2026.  All rights reserved.
+;
+; Module Name:
+;    adlibgold.INF
+;
+; Abstract:
+;    INF file for installing the Ad Lib Gold WDM Audio Driver
+;
+; Installation:
+;    The Ad Lib Gold is a non-PnP ISA card (predates ISA PnP).
+;    Install via Add Hardware Wizard -> Have Disk -> point to this INF.
+
+[Version]
+Signature="$CHICAGO$"
+Class=MEDIA
+ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
+provider=%MfgName%
+DriverVer=02/12/2026,1.00.0000.1
+
+[SourceDisksNames.x86]
+222=%DiskDescription%,,,
+
+[SourceDisksFiles.x86]
+adlibgold.sys=222
+
+[Manufacturer]
+%MfgName%=AdLibGold
+
+[ControlFlags]
+
+;;
+;; The Ad Lib Gold is a non-PnP ISA card.
+;; ALG1000 is a vendor-assigned device ID for manual installation.
+;;
+[AdLibGold]
+%AdLibGold.DeviceDesc%=AdLibGold_Device, , ALG1000
+
+[AdLibGold_Device]
+AlsoInstall=ks.registration(ks.inf),wdmaudio.registration(wdmaudio.inf)
+LogConfig=ALG.LC1,ALG.LC2
+CopyFiles=AdLibGold.CopyList
+AddReg=AdLibGold.AddReg
+
+[AdLibGold_Device.Interfaces]
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Wave%,AdLibGold.Interface.Wave
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_Wave%,AdLibGold.Interface.Wave
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Topology%,AdLibGold.Interface.Topology
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_FMSynth%,AdLibGold.Interface.FMSynth
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_FMSynth%,AdLibGold.Interface.FMSynth
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_MIDI%,AdLibGold.Interface.MIDI
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_MIDI%,AdLibGold.Interface.MIDI
+AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_MIDI%,AdLibGold.Interface.MIDI
+
+[AdLibGold.Interface.Wave]
+AddReg=AdLibGold.Interface.Wave.AddReg
+[AdLibGold.Interface.Wave.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%AdLibGold.Wave.szPname%
+
+[AdLibGold.Interface.Topology]
+AddReg=AdLibGold.Interface.Topo.AddReg
+;; warning!! must be "Topo" because "Topology" is too long
+[AdLibGold.Interface.Topo.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%AdLibGold.Topology.szPname%
+
+[AdLibGold.Interface.FMSynth]
+AddReg=AdLibGold.Interface.FMSynth.AddReg
+[AdLibGold.Interface.FMSynth.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%AdLibGold.FMSynth.szPname%
+
+[AdLibGold.Interface.MIDI]
+AddReg=AdLibGold.Interface.MIDI.AddReg
+[AdLibGold.Interface.MIDI.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%AdLibGold.MIDI.szPname%
+
+[AdLibGold.AddReg]
+HKR,,AssociatedFilters,,"wdmaud,swmidi,redbook"
+HKR,,Driver,,adlibgold.sys
+HKR,,NTMPDriver,,"adlibgold.sys"
+
+HKR,Drivers,SubClasses,,"wave,midi,mixer"
+
+HKR,Drivers\wave\wdmaud.drv, Driver,,wdmaud.drv
+HKR,Drivers\midi\wdmaud.drv, Driver,,wdmaud.drv
+HKR,Drivers\mixer\wdmaud.drv,Driver,,wdmaud.drv
+
+HKR,Drivers\wave\wdmaud.drv,Description,,%AdLibGold.DeviceDesc%
+HKR,Drivers\midi\wdmaud.drv,Description,,%WDM_MIDI%
+HKR,Drivers\mixer\wdmaud.drv,Description,,%AdLibGold.DeviceDesc%
+
+[DestinationDirs]
+AdLibGold.CopyList = 10,system32\drivers ; %SystemRoot%\system32\drivers
+
+[AdLibGold.CopyList]
+adlibgold.sys
+
+;;
+;; Factory defaults for the Ad Lib Gold card.
+;; I/O base 388h, 8 ports (388h-38Fh). IRQ 7. DMA 1 (playback).
+;;
+[AdLibGold_Device.FactDef]
+ConfigPriority=NORMAL
+IOConfig=388-38F
+IRQConfig=7
+DMAConfig=1
+
+;;
+;; Logical configurations.
+;;
+;; Audio subsystem I/O: 8 ports (base+0 through base+7)
+;;   base+0/1: OPL3 bank 0 (address/data)
+;;   base+2/3: OPL3 bank 1 / Control Chip (bank-switched)
+;;   base+4/5: MMA channel 0 (address/data)
+;;   base+6/7: MMA channel 1 (address/data)
+;;
+;; IRQ: Gold 1000 supports 3, 4, 5, 7
+;;      Gold 2000 supports 3, 4, 5, 7, 10, 11, 12, 15
+;;
+;; DMA: Gold 1000 supports channels 1, 2, 3
+;;      Gold 2000 supports channels 0, 1, 2, 3
+;;
+;; Single DMA channel for playback.
+;;
+
+;; Gold 2000/2000MC — full IRQ and DMA range
+[ALG.LC1]
+ConfigPriority=NORMAL
+IOConfig=388-38F
+IRQConfig=3 , 4 , 5 , 7 , 10 , 11 , 12 , 15
+DMAConfig=0 , 1 , 2 , 3
+
+;; Gold 1000 — restricted IRQ and DMA range
+[ALG.LC2]
+ConfigPriority=NORMAL
+IOConfig=388-38F
+IRQConfig=3 , 4 , 5 , 7
+DMAConfig=1 , 2 , 3
+
+;;**************** NT Install ****************
+
+[AdLibGold_Device.NT]
+Include=ks.inf, wdmaudio.inf
+Needs=KS.Registration, WDMAUDIO.Registration
+LogConfig=ALG.LC1,ALG.LC2
+CopyFiles=AdLibGold.CopyList
+AddReg=AdLibGold.AddReg
+
+[AdLibGold_Device.NT.FactDef]
+ConfigPriority=NORMAL
+IOConfig=388-38F
+IRQConfig=7
+DMAConfig=1
+
+[AdLibGold_Device.NT.Interfaces]
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Wave%,AdLibGold.Interface.Wave
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_Wave%,AdLibGold.Interface.Wave
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Topology%,AdLibGold.Interface.Topology
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_FMSynth%,AdLibGold.Interface.FMSynth
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_FMSynth%,AdLibGold.Interface.FMSynth
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_MIDI%,AdLibGold.Interface.MIDI
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_MIDI%,AdLibGold.Interface.MIDI
+AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_MIDI%,AdLibGold.Interface.MIDI
+
+[AdLibGold_Device.NT.Services]
+AddService = adlibgold, 0x00000002, AdLibGold_Service_Inst
+
+[AdLibGold_Service_Inst]
+DisplayName    = %AdLibGold.SvcDesc%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\system32\drivers\adlibgold.sys
+
+[Strings]
+MfgName="Ad Lib Inc."
+DiskDescription="Ad Lib Gold WDM Audio Driver Disk"
+AdLibGold.DeviceDesc="Ad Lib Gold Sound Card"
+
+AdLibGold.Wave.szPname="Ad Lib Gold Audio"
+AdLibGold.Topology.szPname="Ad Lib Gold Mixer"
+AdLibGold.FMSynth.szPname="Ad Lib Gold FM Synthesizer"
+AdLibGold.MIDI.szPname="Ad Lib Gold MIDI"
+
+MediaCategories="SYSTEM\CurrentControlSet\Control\MediaCategories"
+WDM_MIDI="WDM-based Device"
+
+Proxy.CLSID=        "{17CCA71B-ECD7-11D0-B908-00A0C9223196}"
+KSCATEGORY_AUDIO=   "{6994AD04-93EF-11D0-A3CC-00A0C9223196}"
+KSCATEGORY_RENDER=  "{65E8773E-8F56-11D0-A3B9-00A0C9223196}"
+KSCATEGORY_CAPTURE= "{65E8773D-8F56-11D0-A3B9-00A0C9223196}"
+KSNAME_Wave="Wave"
+KSNAME_Topology="Topology"
+KSNAME_FMSynth="FMSynth"
+KSNAME_MIDI="MIDI"
+
+AdLibGold.SvcDesc = "Ad Lib Gold WDM Audio Driver"
