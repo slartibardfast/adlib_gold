@@ -580,3 +580,53 @@ The card's I/O range is 16 ports starting at 388h by default (relocatable via Co
 | AdLib Gold MMA (YMZ263) programming | output.txt | ~10600–12500 |
 | AdLib Gold hardware description | output.txt | ~536–900 |
 | AdLib Gold surround (YM7128) | output.txt | ~14826–14930 |
+
+---
+
+## 11. Host Environment
+
+### Target Platform
+
+This is a **32-bit WDM kernel-mode driver** targeting **Windows 98 SE and above** (Windows 98 SE, Windows Me, Windows 2000, Windows XP). All code must be i386/x86 only — no 64-bit considerations apply.
+
+### Build Toolchain
+
+The driver is built using the **Microsoft Windows 2000 DDK** (Device Driver Kit) build environment. This is a strict requirement — the DDK's `build.exe` utility and associated toolchain must be used, not a standalone Visual Studio project.
+
+The Windows 2000 DDK ships with **Microsoft Visual C++ 6.0 (cl.exe version 12.00)**. This is the only supported compiler. All code must compile cleanly under MSVC 6.0's C++ front-end. Key constraints:
+
+| Constraint | Detail |
+|-----------|--------|
+| C++ standard | Pre-C++98 in practice; MSVC 6.0 has incomplete C++98 support |
+| No `typename` in dependent contexts | MSVC 6.0 often rejects or ignores `typename` where the standard requires it |
+| No partial template specialization | Not supported |
+| No member templates | Severely limited support |
+| No `explicit` on multi-arg constructors | Only single-arg supported |
+| No covariant return types | Not supported |
+| No `for`-scoped variables | `for(int i=...)` leaks `i` into the enclosing scope (non-conforming) |
+| No `__int64` in switch cases | Use `if`/`else` chains instead |
+| No C99 features in C mode | No `//` comments in .c files (use `/* */`), no mixed declarations and code, no `__func__` |
+| Struct/class member alignment | Default is 8-byte; DDK headers assume this — do not change `/Zp` |
+
+### DDK Build Environment Usage
+
+Builds are invoked from a DDK command shell (`setenv.bat`), not from a regular command prompt:
+
+- **Checked (debug) build**: `build -ceZ` from a Checked Build Environment shell
+- **Free (release) build**: `build -ceZ` from a Free Build Environment shell
+
+The `sources` file (not a Makefile) controls compilation. It specifies `TARGETNAME`, `TARGETTYPE=DRIVER`, source file lists, include paths, and link libraries. The DDK's `build.exe` reads `sources` and invokes `cl.exe` and `link.exe` with the correct kernel-mode flags (`/Gz` for `__stdcall`, `/GF` for string pooling, `/Oy` for frame pointer omission in free builds, etc.).
+
+### Coding Rules Imposed by the Toolchain
+
+- **No C++ exceptions** (`/EHs-c-` is implicit in kernel mode). Do not use `try`/`catch`/`throw`.
+- **No RTTI** (`/GR-` is implicit). Do not use `dynamic_cast` or `typeid`.
+- **No C++ standard library**. No `<iostream>`, `<vector>`, `<string>`, etc. Use DDK/NT kernel APIs only.
+- **No floating point** in kernel mode (no FPU context is saved across interrupts). All volume/gain calculations must use integer or fixed-point arithmetic.
+- **`extern "C"`** is required for `DriverEntry` and any functions called by the kernel or PortCls.
+- **`#pragma code_seg("PAGE")`** for pageable code; **`#pragma code_seg()`** for non-paged (IRQL >= DISPATCH_LEVEL) code. Incorrect segment placement causes blue screens.
+- All DDK headers expect `_X86_` to be defined (set automatically by the build environment).
+
+### Summary
+
+Write plain C++ that would compile under MSVC 6.0. Prefer C-style constructs in ambiguous cases. Do not use any language feature introduced after Visual C++ 6.0 (1998). When in doubt, keep it simple — the DDK compiler will reject anything it does not understand, and its error messages are often unhelpful.
