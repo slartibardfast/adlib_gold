@@ -54,6 +54,15 @@ CreateMiniportWaveCyclicAdLibGold
     IN      POOL_TYPE   PoolType
 );
 
+NTSTATUS
+CreateMiniportMidiUartAdLibGold
+(
+    OUT     PUNKNOWN *  Unknown,
+    IN      REFCLSID,
+    IN      PUNKNOWN    UnknownOuter    OPTIONAL,
+    IN      POOL_TYPE   PoolType
+);
+
 
 /*****************************************************************************
  * Referenced forward
@@ -318,6 +327,7 @@ StartDevice
     PUNKNOWN    unknownTopology = NULL;
     PUNKNOWN    unknownWave     = NULL;
     PUNKNOWN    unknownFmSynth  = NULL;
+    PUNKNOWN    unknownMidi     = NULL;
 
     //
     // Build the resource sub-list for the adapter common object.
@@ -539,10 +549,49 @@ StartDevice
     }
 
     //
-    // Future phases will install additional subdevices here:
+    // Install MIDI UART miniport (YMZ263 MIDI subsystem).
+    // Needs ports + IRQ (shared with wave).  No DMA required.
     //
-    //   MIDI (CLSID_PortMidi) — needs ports + IRQ
-    //
+    if (NT_SUCCESS(ntStatus))
+    {
+        PRESOURCELIST resourceListMidi = NULL;
+        ntStatus = PcNewResourceSublist(&resourceListMidi,
+                                        NULL,
+                                        PagedPool,
+                                        ResourceList,
+                                        2);
+        if (NT_SUCCESS(ntStatus))
+        {
+            SUCCEEDS(resourceListMidi->AddPortFromParent(ResourceList, 0));
+            SUCCEEDS(resourceListMidi->AddInterruptFromParent(ResourceList, 0));
+        }
+
+        if (NT_SUCCESS(ntStatus) && resourceListMidi)
+        {
+            ntStatus = InstallSubdevice(DeviceObject,
+                                        Irp,
+                                        L"MIDI",
+                                        CLSID_PortMidi,
+                                        CLSID_PortMidi,     /* not used */
+                                        CreateMiniportMidiUartAdLibGold,
+                                        pAdapterCommon,
+                                        resourceListMidi,
+                                        GUID_NULL,
+                                        NULL,
+                                        &unknownMidi);
+
+            if (!NT_SUCCESS(ntStatus))
+            {
+                _DbgPrintF(DEBUGLVL_TERSE, ("StartDevice: MIDI install failed (0x%08X)", ntStatus));
+                ntStatus = STATUS_SUCCESS;  /* Non-fatal */
+            }
+        }
+
+        if (resourceListMidi)
+        {
+            resourceListMidi->Release();
+        }
+    }
 
     //
     // Release the adapter common object.
@@ -566,6 +615,10 @@ StartDevice
     if (unknownFmSynth)
     {
         unknownFmSynth->Release();
+    }
+    if (unknownMidi)
+    {
+        unknownMidi->Release();
     }
 
     return ntStatus;
