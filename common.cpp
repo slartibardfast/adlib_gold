@@ -744,13 +744,21 @@ InterruptServiceRoutine
     /* Sampling/MMA interrupt (D1 = 0 means pending) */
     if (!(status & ALG_STATUS_SMP_IRQ))
     {
+        /*
+         * Read MMA status once.  Status bits auto-clear on read,
+         * so a single read must serve both wave (PRQ) and MIDI (RRQ).
+         */
+        UCHAR mmaStatus = READ_PORT_UCHAR(that->m_pPortBase + ALG_REG_MMA0_ADDR);
+
         if (that->m_pWaveMiniport)
         {
             that->m_pWaveMiniport->ServiceWaveISR();
         }
 
-        /* Read MMA status to clear the interrupt source (auto-clears on read) */
-        READ_PORT_UCHAR(that->m_pPortBase + ALG_REG_MMA0_ADDR);
+        if ((mmaStatus & MMA_STATUS_RRQ) && that->m_pMidiMiniport)
+        {
+            that->m_pMidiMiniport->ServiceMidiISR();
+        }
     }
 
     /* FM/OPL3 timer interrupt (D0 = 0 means pending) */
@@ -758,16 +766,6 @@ InterruptServiceRoutine
     {
         /* Read OPL3 status to acknowledge */
         READ_PORT_UCHAR(that->m_pPortBase + ALG_REG_FM0_ADDR);
-    }
-
-    /* Check MMA status for MIDI receive data */
-    if (that->m_pMidiMiniport)
-    {
-        UCHAR mmaStatus = READ_PORT_UCHAR(that->m_pPortBase + ALG_REG_MMA0_ADDR);
-        if (mmaStatus & MMA_STATUS_RRQ)
-        {
-            that->m_pMidiMiniport->ServiceMidiISR();
-        }
     }
 
     return STATUS_SUCCESS;
