@@ -6,9 +6,8 @@
  * Property handlers translate between KS volume/mute/tone properties
  * and Control Chip register reads/writes via the adapter common object.
  *
- * Phase 1: Minimal stub — filter descriptor defines the topology graph,
- * property handlers for volume (Level) and mute (OnOff) are functional.
- * Bass/treble (Tone) handlers are stubbed for Phase 2.
+ * Phase 2: All property handlers functional — volume (Level), mute (OnOff),
+ * bass/treble (Tone) with dB-scaled get/set/basicsupport, CPU resources.
  */
 
 #include "mintopo.h"
@@ -216,7 +215,7 @@ PCPROPERTY_ITEM PropertiesMute[] =
 DEFINE_PCAUTOMATION_TABLE_PROP(AutomationMute, PropertiesMute);
 
 
-/* Tone property (bass/treble — stubbed for Phase 2) */
+/* Tone property (bass/treble) */
 static NTSTATUS PropertyHandler_Tone(PPCPROPERTY_REQUEST);
 
 static
@@ -225,6 +224,12 @@ PCPROPERTY_ITEM PropertiesTone[] =
     {
         &KSPROPSETID_Audio,
         KSPROPERTY_AUDIO_BASS,
+        KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET | KSPROPERTY_TYPE_BASICSUPPORT,
+        PropertyHandler_Tone
+    },
+    {
+        &KSPROPSETID_Audio,
+        KSPROPERTY_AUDIO_TREBLE,
         KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET | KSPROPERTY_TYPE_BASICSUPPORT,
         PropertyHandler_Tone
     },
@@ -682,21 +687,70 @@ PropertyHandler_Level
     }
     else if (PropertyRequest->Verb & KSPROPERTY_TYPE_BASICSUPPORT)
     {
-        if (PropertyRequest->ValueSize >= sizeof(KSPROPERTY_DESCRIPTION))
+        if (PropertyRequest->ValueSize >= (sizeof(KSPROPERTY_DESCRIPTION) +
+                                           sizeof(KSPROPERTY_MEMBERSHEADER) +
+                                           sizeof(KSPROPERTY_STEPPING_LONG)))
         {
             PKSPROPERTY_DESCRIPTION desc =
                 PKSPROPERTY_DESCRIPTION(PropertyRequest->Value);
 
             desc->AccessFlags       = KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET |
                                       KSPROPERTY_TYPE_BASICSUPPORT;
-            desc->DescriptionSize   = sizeof(KSPROPERTY_DESCRIPTION);
+            desc->DescriptionSize   = sizeof(KSPROPERTY_DESCRIPTION) +
+                                      sizeof(KSPROPERTY_MEMBERSHEADER) +
+                                      sizeof(KSPROPERTY_STEPPING_LONG);
             desc->PropTypeSet.Set   = KSPROPTYPESETID_General;
             desc->PropTypeSet.Id    = VT_I4;
             desc->PropTypeSet.Flags = 0;
-            desc->MembersListCount  = 0;
+            desc->MembersListCount  = 1;
+            desc->Reserved          = 0;
+
+            PKSPROPERTY_MEMBERSHEADER members =
+                PKSPROPERTY_MEMBERSHEADER(desc + 1);
+
+            members->MembersFlags   = KSPROPERTY_MEMBER_STEPPEDRANGES;
+            members->MembersSize    = sizeof(KSPROPERTY_STEPPING_LONG);
+            members->MembersCount   = 1;
+            members->Flags          = 0;
+
+            PKSPROPERTY_STEPPING_LONG range =
+                PKSPROPERTY_STEPPING_LONG(members + 1);
+
+            range->Bounds.SignedMinimum = (LONG)map->MinVal;
+            range->Bounds.SignedMaximum = (LONG)map->MaxVal;
+            range->SteppingDelta        = 1;
+            range->Reserved             = 0;
+
+            PropertyRequest->ValueSize = sizeof(KSPROPERTY_DESCRIPTION) +
+                                         sizeof(KSPROPERTY_MEMBERSHEADER) +
+                                         sizeof(KSPROPERTY_STEPPING_LONG);
+            ntStatus = STATUS_SUCCESS;
+        }
+        else if (PropertyRequest->ValueSize >= sizeof(KSPROPERTY_DESCRIPTION))
+        {
+            PKSPROPERTY_DESCRIPTION desc =
+                PKSPROPERTY_DESCRIPTION(PropertyRequest->Value);
+
+            desc->AccessFlags       = KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET |
+                                      KSPROPERTY_TYPE_BASICSUPPORT;
+            desc->DescriptionSize   = sizeof(KSPROPERTY_DESCRIPTION) +
+                                      sizeof(KSPROPERTY_MEMBERSHEADER) +
+                                      sizeof(KSPROPERTY_STEPPING_LONG);
+            desc->PropTypeSet.Set   = KSPROPTYPESETID_General;
+            desc->PropTypeSet.Id    = VT_I4;
+            desc->PropTypeSet.Flags = 0;
+            desc->MembersListCount  = 1;
             desc->Reserved          = 0;
 
             PropertyRequest->ValueSize = sizeof(KSPROPERTY_DESCRIPTION);
+            ntStatus = STATUS_SUCCESS;
+        }
+        else if (PropertyRequest->ValueSize >= sizeof(ULONG))
+        {
+            *(PULONG(PropertyRequest->Value)) =
+                KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET |
+                KSPROPERTY_TYPE_BASICSUPPORT;
+            PropertyRequest->ValueSize = sizeof(ULONG);
             ntStatus = STATUS_SUCCESS;
         }
     }
@@ -774,7 +828,15 @@ PropertyHandler_OnOff
 /*****************************************************************************
  * PropertyHandler_Tone()
  *****************************************************************************
- * Bass/Treble get/set.  Stubbed for Phase 2.
+ * Bass/Treble get/set/basicsupport.
+ *
+ * Hardware encoding (Control Chip regs 06h/07h):
+ *   D3-D0 = tone nibble, D7-D4 must be 1.
+ *   Nibble 0x6 = 0 dB (flat), each step = 3 dB.
+ *   Bass  range: -12 dB (0x2) to +15 dB (0xB).
+ *   Treble range: -12 dB (0x2) to +12 dB (0xA).
+ *
+ * KS values are LONG in 1/65536 dB units (dB << 16).
  */
 static
 NTSTATUS
@@ -785,7 +847,152 @@ PropertyHandler_Tone
 {
     PAGED_CODE();
 
-    return STATUS_NOT_IMPLEMENTED;
+    ASSERT(PropertyRequest);
+
+    CMiniportTopologyAdLibGold *that =
+        (CMiniportTopologyAdLibGold *)PropertyRequest->MajorTarget;
+
+    NTSTATUS ntStatus = STATUS_INVALID_PARAMETER;
+
+    if (PropertyRequest->Node == ULONG(-1))
+        return ntStatus;
+
+    /* Validate node/property ID match and set per-node parameters */
+    BYTE reg;
+    LONG dBMin;
+    LONG dBMax;
+
+    if (PropertyRequest->Node == NODE_BASS &&
+        PropertyRequest->PropertyItem->Id == KSPROPERTY_AUDIO_BASS)
+    {
+        reg   = CTRL_REG_BASS;
+        dBMin = -12;
+        dBMax = 15;
+    }
+    else if (PropertyRequest->Node == NODE_TREBLE &&
+             PropertyRequest->PropertyItem->Id == KSPROPERTY_AUDIO_TREBLE)
+    {
+        reg   = CTRL_REG_TREBLE;
+        dBMin = -12;
+        dBMax = 12;
+    }
+    else
+    {
+        return ntStatus;
+    }
+
+    if (PropertyRequest->Verb & KSPROPERTY_TYPE_GET)
+    {
+        if (PropertyRequest->ValueSize < sizeof(LONG))
+            return STATUS_BUFFER_TOO_SMALL;
+
+        BYTE val = that->AdapterCommon->ControlRegRead(reg);
+        LONG nibble = (LONG)(val & CTRL_TONE_MASK);
+
+        /* Nibble to dB: 0x6 = 0 dB, 3 dB per step */
+        LONG dB = (nibble - 6) * 3;
+        if (dB < dBMin) dB = dBMin;
+        if (dB > dBMax) dB = dBMax;
+
+        /* Return as KS fixed-point (1/65536 dB units) */
+        *(PLONG(PropertyRequest->Value)) = dB << 16;
+        PropertyRequest->ValueSize = sizeof(LONG);
+        ntStatus = STATUS_SUCCESS;
+    }
+    else if (PropertyRequest->Verb & KSPROPERTY_TYPE_SET)
+    {
+        if (PropertyRequest->ValueSize < sizeof(LONG))
+            return STATUS_BUFFER_TOO_SMALL;
+
+        /* Extract dB from KS fixed-point */
+        LONG ksValue = *(PLONG(PropertyRequest->Value));
+        LONG dB = ksValue >> 16;
+
+        /* Clamp to hardware range */
+        if (dB < dBMin) dB = dBMin;
+        if (dB > dBMax) dB = dBMax;
+
+        /* dB to nibble: 0 dB = 0x6, 3 dB per step */
+        LONG nibble = (dB / 3) + 6;
+        if (nibble < 0)   nibble = 0;
+        if (nibble > 0xF) nibble = 0xF;
+
+        BYTE regVal = CTRL_TONE_FORCED_BITS | (BYTE)(nibble & CTRL_TONE_MASK);
+        that->AdapterCommon->ControlRegWrite(reg, regVal);
+
+        ntStatus = STATUS_SUCCESS;
+    }
+    else if (PropertyRequest->Verb & KSPROPERTY_TYPE_BASICSUPPORT)
+    {
+        if (PropertyRequest->ValueSize >= (sizeof(KSPROPERTY_DESCRIPTION) +
+                                           sizeof(KSPROPERTY_MEMBERSHEADER) +
+                                           sizeof(KSPROPERTY_STEPPING_LONG)))
+        {
+            PKSPROPERTY_DESCRIPTION desc =
+                PKSPROPERTY_DESCRIPTION(PropertyRequest->Value);
+
+            desc->AccessFlags       = KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET |
+                                      KSPROPERTY_TYPE_BASICSUPPORT;
+            desc->DescriptionSize   = sizeof(KSPROPERTY_DESCRIPTION) +
+                                      sizeof(KSPROPERTY_MEMBERSHEADER) +
+                                      sizeof(KSPROPERTY_STEPPING_LONG);
+            desc->PropTypeSet.Set   = KSPROPTYPESETID_General;
+            desc->PropTypeSet.Id    = VT_I4;
+            desc->PropTypeSet.Flags = 0;
+            desc->MembersListCount  = 1;
+            desc->Reserved          = 0;
+
+            PKSPROPERTY_MEMBERSHEADER members =
+                PKSPROPERTY_MEMBERSHEADER(desc + 1);
+
+            members->MembersFlags   = KSPROPERTY_MEMBER_STEPPEDRANGES;
+            members->MembersSize    = sizeof(KSPROPERTY_STEPPING_LONG);
+            members->MembersCount   = 1;
+            members->Flags          = 0;
+
+            PKSPROPERTY_STEPPING_LONG range =
+                PKSPROPERTY_STEPPING_LONG(members + 1);
+
+            range->Bounds.SignedMinimum = dBMin << 16;
+            range->Bounds.SignedMaximum = dBMax << 16;
+            range->SteppingDelta        = 3 << 16;
+            range->Reserved             = 0;
+
+            PropertyRequest->ValueSize = sizeof(KSPROPERTY_DESCRIPTION) +
+                                         sizeof(KSPROPERTY_MEMBERSHEADER) +
+                                         sizeof(KSPROPERTY_STEPPING_LONG);
+            ntStatus = STATUS_SUCCESS;
+        }
+        else if (PropertyRequest->ValueSize >= sizeof(KSPROPERTY_DESCRIPTION))
+        {
+            PKSPROPERTY_DESCRIPTION desc =
+                PKSPROPERTY_DESCRIPTION(PropertyRequest->Value);
+
+            desc->AccessFlags       = KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET |
+                                      KSPROPERTY_TYPE_BASICSUPPORT;
+            desc->DescriptionSize   = sizeof(KSPROPERTY_DESCRIPTION) +
+                                      sizeof(KSPROPERTY_MEMBERSHEADER) +
+                                      sizeof(KSPROPERTY_STEPPING_LONG);
+            desc->PropTypeSet.Set   = KSPROPTYPESETID_General;
+            desc->PropTypeSet.Id    = VT_I4;
+            desc->PropTypeSet.Flags = 0;
+            desc->MembersListCount  = 1;
+            desc->Reserved          = 0;
+
+            PropertyRequest->ValueSize = sizeof(KSPROPERTY_DESCRIPTION);
+            ntStatus = STATUS_SUCCESS;
+        }
+        else if (PropertyRequest->ValueSize >= sizeof(ULONG))
+        {
+            *(PULONG(PropertyRequest->Value)) =
+                KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET |
+                KSPROPERTY_TYPE_BASICSUPPORT;
+            PropertyRequest->ValueSize = sizeof(ULONG);
+            ntStatus = STATUS_SUCCESS;
+        }
+    }
+
+    return ntStatus;
 }
 
 
