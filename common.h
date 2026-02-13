@@ -156,6 +156,12 @@
 #define CTRL_MODE_SOURCE_MASK   0x03    /* D1-D0: Source select              */
 
 /*****************************************************************************
+ * Registers 0x06/0x07 (Bass/Treble) bit definitions
+ */
+#define CTRL_TONE_FORCED_BITS   0xF0    /* D7-D4 must be 1 for regs 06h/07h */
+#define CTRL_TONE_MASK          0x0F    /* D3-D0: tone value                 */
+
+/*****************************************************************************
  * Register 0x11 (Audio Selection) bit definitions
  */
 #define CTRL_ASEL_SPKR          0x20    /* D5: PC speaker connected          */
