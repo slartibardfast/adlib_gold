@@ -129,8 +129,8 @@ Key components:
 |------|------|
 | `adapter.cpp` | DriverEntry, AddDevice, StartDevice, InstallSubdevice helper, AssignResources |
 | `common.cpp/h` | IAdapterCommon — shared hardware access, interrupt sync, mixer register I/O, registry persistence |
-| `mintopo.cpp/h` | Topology miniport — mixer nodes, volume/mute/tone property handlers |
-| `minwave.cpp/h` | WaveCyclic miniport — DMA setup, stream creation, format programming |
+| `algtopo.cpp/h` | Topology miniport — mixer nodes, volume/mute/tone property handlers |
+| `algwave.cpp/h` | WaveCyclic miniport — DMA setup, stream creation, format programming |
 | `fmsynth/miniport.cpp` | FM synth MIDI miniport — OPL3 register writes with 23µs delays, shadow registers |
 | `uart/miniport.cpp` | UART MIDI miniport — MPU-401 FIFO management, ISR, read/write streams |
 
@@ -145,10 +145,10 @@ adlibgold/
 ├── adapter.cpp          # DriverEntry, AddDevice, StartDevice
 ├── common.cpp           # CAdapterCommon — Control Chip access, bank switching, ISR
 ├── common.h             # IAdapterCommon interface, register constants
-├── mintopo.cpp          # Topology miniport — Control Chip mixer exposed as KS nodes
-├── mintopo.h
-├── minwave.cpp          # WaveCyclic miniport — YMZ263 MMA digital audio
-├── minwave.h
+├── algtopo.cpp          # Topology miniport — Control Chip mixer exposed as KS nodes
+├── algtopo.h
+├── algwave.cpp          # WaveCyclic miniport — YMZ263 MMA digital audio
+├── algwave.h
 ├── fmsynth.cpp          # FM MIDI miniport — YMF262 OPL3 (adapted from DDK sample)
 ├── fmsynth.h
 ├── midi.cpp             # MIDI miniport — YMZ263 MIDI UART
@@ -488,7 +488,7 @@ The DDK UART sample (wdm.txt lines 28420–30111) targets the MPU-401 chip. The 
 
 **Goal**: Windows mixer panel shows volume controls.
 
-1. `mintopo.cpp` — Define PCFILTER_DESCRIPTOR with all mixer nodes
+1. `algtopo.cpp` — Define PCFILTER_DESCRIPTOR with all mixer nodes
 2. Property handlers for volume (master, FM, sampling, aux, mic), bass, treble, mute
 3. Registry persistence for mixer settings
 4. **Verify**: sndvol32 shows sliders; adjusting master volume changes hardware register values
@@ -507,7 +507,7 @@ The DDK UART sample (wdm.txt lines 28420–30111) targets the MPU-401 chip. The 
 
 **Goal**: PCM playback and recording through YMZ263.
 
-1. `minwave.cpp` — CMiniportWaveCyclic with slave DMA channel allocation
+1. `algwave.cpp` — CMiniportWaveCyclic with slave DMA channel allocation
 2. Program Control Chip regs 13h/14h for IRQ and DMA channel assignment
 3. Stream implementation: SetFormat (program MMA reg 09h), SetState (start/stop), FIFO/DMA management
 4. Support PCM 8-bit/12-bit at 5.5/11.025/22.05/44.1 kHz, mono and stereo
