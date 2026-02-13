@@ -1,5 +1,5 @@
 /*****************************************************************************
- * mintopo.cpp - Ad Lib Gold topology miniport implementation
+ * algtopo.cpp - Ad Lib Gold topology miniport implementation
  *****************************************************************************
  *
  * Exposes the Ad Lib Gold Control Chip mixer as a KS topology filter.
@@ -10,7 +10,7 @@
  * bass/treble (Tone) with dB-scaled get/set/basicsupport, CPU resources.
  */
 
-#include "mintopo.h"
+#include "algtopo.h"
 
 #define STR_MODULENAME "AdLibGoldTopo: "
 

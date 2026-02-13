@@ -29,7 +29,7 @@ LINKER_FLAGS=-map
 SOURCES=\
         adapter.cpp     \
         common.cpp      \
-        mintopo.cpp     \
+        algtopo.cpp     \
         fmsynth.cpp     \
         algwave.cpp     \
         adlibgold.rc
