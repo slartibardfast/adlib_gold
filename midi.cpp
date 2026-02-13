@@ -600,10 +600,17 @@ NewStream
 
 
 /*****************************************************************************
+ * Non-pageable code — DPC callbacks, ISR, and synchronized routines
+ */
+#pragma code_seg()
+
+
+/*****************************************************************************
  * CMiniportMidiUartAdLibGold::Service()
  *****************************************************************************
  * DPC-mode service call from the port driver.
  * Called when the service group is signaled (after ISR puts data in FIFO).
+ * Runs at DISPATCH_LEVEL — must be non-paged.
  */
 STDMETHODIMP_(void)
 CMiniportMidiUartAdLibGold::
@@ -621,12 +628,6 @@ Service
         m_InputBufferTail = m_InputBufferHead = 0;
     }
 }
-
-
-/*****************************************************************************
- * Non-pageable code — ISR and DPC-level routines
- */
-#pragma code_seg()
 
 
 /*****************************************************************************
