@@ -31,4 +31,5 @@ SOURCES=\
         common.cpp      \
         mintopo.cpp     \
         fmsynth.cpp     \
+        minwave.cpp     \
         adlibgold.rc
