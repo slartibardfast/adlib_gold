@@ -36,6 +36,15 @@ CreateMiniportTopologyAdLibGold
     IN      POOL_TYPE   PoolType
 );
 
+NTSTATUS
+CreateMiniportMidiFMAdLibGold
+(
+    OUT     PUNKNOWN *  Unknown,
+    IN      REFCLSID,
+    IN      PUNKNOWN    UnknownOuter    OPTIONAL,
+    IN      POOL_TYPE   PoolType
+);
+
 
 /*****************************************************************************
  * Referenced forward
@@ -399,15 +408,72 @@ StartDevice
     }
 
     //
+    // Build the resource sub-list for the FM synth miniport (ports only).
+    //
+    PRESOURCELIST resourceListFmSynth = NULL;
+    if (NT_SUCCESS(ntStatus))
+    {
+        ntStatus = PcNewResourceSublist(&resourceListFmSynth,
+                                        NULL,
+                                        PagedPool,
+                                        ResourceList,
+                                        1);
+        if (NT_SUCCESS(ntStatus))
+        {
+            SUCCEEDS(resourceListFmSynth->AddPortFromParent(ResourceList, 0));
+        }
+    }
+
+    //
+    // Install the FM synth miniport.
+    //
+    if (NT_SUCCESS(ntStatus) && resourceListFmSynth)
+    {
+        ntStatus = InstallSubdevice(DeviceObject,
+                                    Irp,
+                                    L"FMSynth",
+                                    CLSID_PortMidi,
+                                    CLSID_PortMidi,     /* not used */
+                                    CreateMiniportMidiFMAdLibGold,
+                                    pAdapterCommon,
+                                    resourceListFmSynth,
+                                    GUID_NULL,
+                                    NULL,
+                                    &unknownFmSynth);
+
+        if (!NT_SUCCESS(ntStatus))
+        {
+            _DbgPrintF(DEBUGLVL_TERSE, ("StartDevice: FM synth install failed (0x%08X)", ntStatus));
+            ntStatus = STATUS_SUCCESS;  /* Non-fatal -- topology still works */
+        }
+    }
+
+    if (resourceListFmSynth)
+    {
+        resourceListFmSynth->Release();
+    }
+
+    //
+    // Register physical connection: FM synth bridge output -> Topology FM input.
+    //
+    if (unknownTopology && unknownFmSynth)
+    {
+        PcRegisterPhysicalConnection(
+            (PDEVICE_OBJECT)DeviceObject,
+            unknownFmSynth,
+            1,                  /* FM synth pin 1 = bridge output        */
+            unknownTopology,
+            1);                 /* Topology pin 1 = PIN_FMSYNTH_SOURCE   */
+    }
+
+    //
     // Future phases will install additional subdevices here:
     //
     //   Wave (CLSID_PortWaveCyclic) — needs ports + IRQ + DMA
-    //   FMSynth (CLSID_PortMidi)   — needs ports only
     //   MIDI (CLSID_PortMidi)      — needs ports + IRQ
     //
     // Physical connections will be registered between them:
     //   Wave render  -> Topology (sampling volume input)
-    //   FMSynth      -> Topology (FM volume input)
     //   Topology     -> Line Out
     //
 
