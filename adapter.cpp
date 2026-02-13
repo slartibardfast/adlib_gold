@@ -45,6 +45,15 @@ CreateMiniportMidiFMAdLibGold
     IN      POOL_TYPE   PoolType
 );
 
+NTSTATUS
+CreateMiniportWaveCyclicAdLibGold
+(
+    OUT     PUNKNOWN *  Unknown,
+    IN      REFCLSID,
+    IN      PUNKNOWN    UnknownOuter    OPTIONAL,
+    IN      POOL_TYPE   PoolType
+);
+
 
 /*****************************************************************************
  * Referenced forward
@@ -467,14 +476,72 @@ StartDevice
     }
 
     //
+    // Install wave miniport if DMA resources are available.
+    //
+    if (NT_SUCCESS(ntStatus) && (ResourceList->NumberOfDmas() >= 1))
+    {
+        //
+        // Build the resource sub-list for the wave miniport:
+        // ports + IRQ + DMA.
+        //
+        PRESOURCELIST resourceListWave = NULL;
+        ntStatus = PcNewResourceSublist(&resourceListWave,
+                                        NULL,
+                                        PagedPool,
+                                        ResourceList,
+                                        3);
+        if (NT_SUCCESS(ntStatus))
+        {
+            SUCCEEDS(resourceListWave->AddPortFromParent(ResourceList, 0));
+            SUCCEEDS(resourceListWave->AddInterruptFromParent(ResourceList, 0));
+            SUCCEEDS(resourceListWave->AddDmaFromParent(ResourceList, 0));
+        }
+
+        if (NT_SUCCESS(ntStatus) && resourceListWave)
+        {
+            ntStatus = InstallSubdevice(DeviceObject,
+                                        Irp,
+                                        L"Wave",
+                                        CLSID_PortWaveCyclic,
+                                        CLSID_PortWaveCyclic,  /* not used */
+                                        CreateMiniportWaveCyclicAdLibGold,
+                                        pAdapterCommon,
+                                        resourceListWave,
+                                        GUID_NULL,
+                                        NULL,
+                                        &unknownWave);
+
+            if (!NT_SUCCESS(ntStatus))
+            {
+                _DbgPrintF(DEBUGLVL_TERSE, ("StartDevice: Wave install failed (0x%08X)", ntStatus));
+                ntStatus = STATUS_SUCCESS;  /* Non-fatal */
+            }
+        }
+
+        if (resourceListWave)
+        {
+            resourceListWave->Release();
+        }
+    }
+
+    //
+    // Register physical connection:
+    // Wave render bridge (pin 3) -> Topology sampling input (pin 0).
+    //
+    if (unknownTopology && unknownWave)
+    {
+        PcRegisterPhysicalConnection(
+            (PDEVICE_OBJECT)DeviceObject,
+            unknownWave,
+            3,                  /* Wave pin 3 = WAVE_PIN_RENDER_BRIDGE   */
+            unknownTopology,
+            0);                 /* Topology pin 0 = PIN_WAVEOUT_SOURCE   */
+    }
+
+    //
     // Future phases will install additional subdevices here:
     //
-    //   Wave (CLSID_PortWaveCyclic) — needs ports + IRQ + DMA
-    //   MIDI (CLSID_PortMidi)      — needs ports + IRQ
-    //
-    // Physical connections will be registered between them:
-    //   Wave render  -> Topology (sampling volume input)
-    //   Topology     -> Line Out
+    //   MIDI (CLSID_PortMidi) — needs ports + IRQ
     //
 
     //

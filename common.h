@@ -216,7 +216,7 @@ typedef struct
 /*****************************************************************************
  * Forward declarations for miniport interfaces
  *
- * These are defined in their respective headers (minwave.h, midi.h).
+ * These are defined in their respective headers (algwave.h, midi.h).
  * We only need opaque pointers here for the ISR dispatch mechanism.
  */
 
