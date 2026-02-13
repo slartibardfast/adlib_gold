@@ -30,4 +30,5 @@ SOURCES=\
         adapter.cpp     \
         common.cpp      \
         mintopo.cpp     \
+        fmsynth.cpp     \
         adlibgold.rc
