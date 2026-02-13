@@ -127,12 +127,16 @@ DitherSample
      * PDF in [-16, +14].  One LSB at 12-bit resolution = 16 at
      * 16-bit resolution, so this is +/- 1 LSB dither.
      */
-    LONG r1 = (LONG)(*pLfsr & 0x0F) - 8;
+    LONG r1;
+    LONG r2;
+    LONG dithered;
+
+    r1 = (LONG)(*pLfsr & 0x0F) - 8;
     *pLfsr = LfsrNext(*pLfsr);
-    LONG r2 = (LONG)(*pLfsr & 0x0F) - 8;
+    r2 = (LONG)(*pLfsr & 0x0F) - 8;
     *pLfsr = LfsrNext(*pLfsr);
 
-    LONG dithered = (LONG)Sample16 + r1 + r2;
+    dithered = (LONG)Sample16 + r1 + r2;
 
     /* Clamp to signed 16-bit range */
     if (dithered > 32767)  dithered = 32767;

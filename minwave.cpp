@@ -14,7 +14,6 @@
 #define STR_MODULENAME "ALGWave: "
 
 #include "minwave.h"
-#include "mintopo.h"        /* PIN_WAVEOUT_SOURCE for physical connection   */
 
 
 /*
@@ -1529,12 +1528,19 @@ GetPosition
         /*
          * DMA mode: position = BufferSize - bytes remaining.
          */
-        ULONG transferCount = m_Miniport->m_DmaChannel->TransferCount();
-
-        if (m_Miniport->m_DmaChannel && transferCount)
+        if (m_Miniport->m_DmaChannel)
         {
-            ULONG counter = m_Miniport->m_DmaChannel->ReadCounter();
-            *Position = (counter != 0) ? (transferCount - counter) : 0;
+            ULONG transferCount = m_Miniport->m_DmaChannel->TransferCount();
+
+            if (transferCount)
+            {
+                ULONG counter = m_Miniport->m_DmaChannel->ReadCounter();
+                *Position = (counter != 0) ? (transferCount - counter) : 0;
+            }
+            else
+            {
+                *Position = 0;
+            }
         }
         else
         {
