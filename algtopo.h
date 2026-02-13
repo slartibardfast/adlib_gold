@@ -1,5 +1,5 @@
 /*****************************************************************************
- * mintopo.h - Ad Lib Gold topology miniport private definitions
+ * algtopo.h - Ad Lib Gold topology miniport private definitions
  *****************************************************************************
  *
  * Topology miniport exposing the Ad Lib Gold Control Chip mixer as
@@ -15,7 +15,7 @@
 /*****************************************************************************
  * Pin identifiers
  *
- * These match the order in MiniportPins[] (defined in mintopo.cpp).
+ * These match the order in MiniportPins[] (defined in algtopo.cpp).
  */
 enum
 {
@@ -32,7 +32,7 @@ enum
 /*****************************************************************************
  * Node identifiers
  *
- * These match the order in MiniportNodes[] (defined in mintopo.cpp).
+ * These match the order in MiniportNodes[] (defined in algtopo.cpp).
  */
 enum
 {
