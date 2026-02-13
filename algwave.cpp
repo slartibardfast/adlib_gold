@@ -1,5 +1,5 @@
 /*****************************************************************************
- * minwave.cpp - Ad Lib Gold WaveCyclic miniport implementation.
+ * algwave.cpp - Ad Lib Gold WaveCyclic miniport implementation.
  *****************************************************************************
  *
  * YMZ263 (MMA) digital audio for the Ad Lib Gold sound card.
@@ -13,7 +13,7 @@
 
 #define STR_MODULENAME "ALGWave: "
 
-#include "minwave.h"
+#include "algwave.h"
 
 
 /*

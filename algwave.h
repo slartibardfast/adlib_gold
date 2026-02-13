@@ -1,5 +1,5 @@
 /*****************************************************************************
- * minwave.h - Ad Lib Gold wave miniport private definitions
+ * algwave.h - Ad Lib Gold wave miniport private definitions
  *****************************************************************************
  *
  * WaveCyclic miniport for YMZ263 (MMA) digital audio.  Supports 8-bit
@@ -150,7 +150,7 @@ DitherSample
 /*****************************************************************************
  * Pin identifiers
  *
- * Match the order in MiniportPins[] (defined in minwave.cpp).
+ * Match the order in MiniportPins[] (defined in algwave.cpp).
  * Same layout as SB16 DDK sample.
  */
 enum
