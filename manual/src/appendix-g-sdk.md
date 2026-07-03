@@ -47,9 +47,13 @@ Shared: [`GLOBAL.H`](disks-md/developer-toolkit-v1.01/installed/GLOBAL.H.md),
 [`MAKEFILE`](disks-md/developer-toolkit-v1.01/installed/MAKEFILE.md).
 Pre-built library: `DRIVERS.LIB`. Editor: `ED.EXE`. Sampler: `SAMPL.EXE`.
 
-The toolkit manual itself, `SDTK.DOC`, is a Microsoft Word-for-DOS binary; it is
-preserved as-is at
-[`disks/developer-toolkit-v1.01/installed/SDTK.DOC`](disks/developer-toolkit-v1.01/installed/SDTK.DOC).
+The toolkit manual itself, `SDTK.DOC`, is a Microsoft Word-for-DOS binary. The
+DOS-era `.DOC` format was never officially published, so it is preserved
+[byte-for-byte](disks/developer-toolkit-v1.01/installed/SDTK.DOC) **and** rendered
+to faithful UTF-8 Markdown — the format decoded directly (CP437 body, `0x07` table
+cells, `0x13/14/15` Word fields), with all 51 tables reconstructed and every text
+byte preserved:
+[**SDTK manual (rendered)**](disks-md/developer-toolkit-v1.01/installed/SDTK.DOC.md).
 
 ## Example programs (`SAMPLE/`)
 
