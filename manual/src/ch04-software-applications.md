@@ -226,7 +226,7 @@ The Ad Lib Gold Test Program, which is supplied with the Gold software, enables 
 
 ## Prior to running the Test Program:
 
-1. Make sure that the Gold card is properly installed. If necessary, refer to the previous section, "Installing the Hardware".
+1. Make sure that the Gold card is properly installed. If necessary, refer to "[Installing the Hardware](ch03-gold-hardware.md#installing-the-hardware)" in the Gold Hardware chapter.
 
 2. Connect headphones, a speaker or stereo system to the audio jack.
 
@@ -572,7 +572,7 @@ To return to the previous song during playback activate the Previous command. Th
 
 ## Adjusting the Sound
 
-The Ad Lib Gold card has an on-board analog mixer that allows volume and tone controls to be adjusted. These features can be accessed from any application by using the Mixer Panel TSR program (see the section "Mixer Panel TSR"). But you can also adjust the sound directly inside the Juke Box Gold program. Three sliders located along the bottom of the window allow you to adjust volume, bass and treble controls while listening to Juke Box songs.
+The Ad Lib Gold card has an on-board analog mixer that allows volume and tone controls to be adjusted. These features can be accessed from any application by using the Mixer Panel TSR program (see the section "[Mixer Panel TSR](#loading-the-mixer-panel-tsr)"). But you can also adjust the sound directly inside the Juke Box Gold program. Three sliders located along the bottom of the window allow you to adjust volume, bass and treble controls while listening to Juke Box songs.
 
 ## To Adjust the Volume, Bass or Treble
 

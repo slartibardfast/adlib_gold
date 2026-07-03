@@ -158,9 +158,9 @@ MMA Programming Tips 47
 
 The control chip registers are implemented as a set of phantom registers to the second bank of FM registers. Access to the the control chip is triggered by writing 0FFh to the address register of the second FM bank (38Ah). Thereafter, all reads/writes will access the control chip. Access to the second FM bank is returned by writing 0FEh to the same address register.
 
-As with the FM and sampling chips, the control chip uses two port addresses. The first address, 38Ah, is the address register and writing a register number to this address selects a given data register. The second address, 38Bh, is the data address. Values written to this address are directed to the register number specified by the previous write to the address register. There are delays that must be respected when writing to certain registers. These delays are explained in detail in the Status Register section.
+As with the FM and sampling chips, the control chip uses two port addresses. The first address, 38Ah, is the address register and writing a register number to this address selects a given data register. The second address, 38Bh, is the data address. Values written to this address are directed to the register number specified by the previous write to the address register. There are delays that must be respected when writing to certain registers. These delays are explained in detail in the [Status Register](#status-register) section.
 
-By default, the control chip is located at 38Ah and 38Bh. However, the chip may be relocated (as explained in the section Audio Relocalization). Regardless of where the chip is located, the data register port address is always one greater than the address register port address.
+By default, the control chip is located at 38Ah and 38Bh. However, the chip may be relocated (as explained in the section [Audio Relocalization](#audio-relocalisation)). Regardless of where the chip is located, the data register port address is always one greater than the address register port address.
 
 All data registers on the control chip are read/write. Reading a register will return its current value. The only execption to this are registers 0 and 1. All registers are explained below in detail.
 
@@ -635,7 +635,7 @@ The Wave Select Enable bit (WSE, D5 at 01) no longer exists. Wave Select is now 
 
 The CSM bit (D7 at 08) found on the original chip is no longer present. Although this bit was documented on the original chip, it was nonfunctional. Compatibility is, therefore, not an issue.
 
-The timers are now functional. How to program them is explained in the Timers section of Programming the Synthesizer.
+The timers are now functional. How to program them is explained in the [Timers](#timers) section of Programming the Synthesizer.
 
 Register Map, FM Array 0
 

@@ -122,7 +122,7 @@ This approach minimizes the address space occupied by the GSS implementation and
 
 The implementation allows access to the address and data I/O registers of the first channel of the OPL3, while accessing the internal mixing registers. The address decoding being handled by the mixer section should have no influence on the operation of the second channel of the OPL3.
 
-As is the case with all other aspects of the GSS hardware, special care must be taken for the possibility of reentrance when separate applications access the mixer section and the OPL3 chip simultaneously. This is discussed in the section entitled "Software Issues" below.
+As is the case with all other aspects of the GSS hardware, special care must be taken for the possibility of reentrance when separate applications access the mixer section and the OPL3 chip simultaneously. This is discussed in the section entitled "[Software Issues](#software-issues)" below.
 
 ## Software Issues
 

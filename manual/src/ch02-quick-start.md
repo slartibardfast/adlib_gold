@@ -106,7 +106,7 @@ surround Juke Box Gold Music Playback Program including the Surround Sound Edito
 
 Note that the Juke Box Gold Music Playback Program offers on-line Help containing summarized information on how to operate the program and how to use the various features.
 
-See "Chapter 4 - Software Applications".
+See [Chapter 4 - Software Applications](ch04-software-applications.md).
 
 ## Adjusting the Volume
 
