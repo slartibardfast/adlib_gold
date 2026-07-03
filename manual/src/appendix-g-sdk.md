@@ -23,6 +23,21 @@ Toolkit v1.01 images:
 Beta v0.91b images are under
 [`disks/beta-v0.91b/images/`](disks/beta-v0.91b/images/).
 
+### Beta v0.91b disk contents
+
+The beta (31 March 1992) is an installer set, structured like the release: a
+`SETUP.EXE` plus a spanned `GOLD.CMP` archive that expands to a 130-file `\GOLD`
+tree (three weeks before v1.00 — the differences are catalogued in the
+[v0.91b → v1.00 changelog](appendix-f-as-installed.md#version-history-v091b-beta--v100)).
+The as-shipped files:
+
+| Size | File | Notes |
+|------|------|-------|
+| 292 536 | [`SETUP.EXE`](disks/beta-v0.91b/disk1/SETUP.EXE) | beta installer |
+| 11 962 | [`CTRLDRV.EXE`](disks/beta-v0.91b/disk1/CTRLDRV.EXE) | control-chip TSR |
+| 1 165 | [`README.TXT`](disks/beta-v0.91b/disk1/README.TXT) ([rendered](disks-md/beta-v0.91b/disk1/README.TXT.md)) | beta notes / hotkey changes |
+| 412 698 / 714 950 / 464 053 | `GOLD.CMP` (disk 1 / 2 / 3) | spanned "Ad Lib Comp." payload ([format](appendix-h-goldcmp-format.md)) |
+
 ## SDK source (installed toolkit)
 
 The toolkit expands to the driver source in

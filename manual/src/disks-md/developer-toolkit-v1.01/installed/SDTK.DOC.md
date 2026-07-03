@@ -4523,8 +4523,6 @@ Note that the state of the STL and STR bits for a 4-operator voice must be the s
 
 ---
 
----
-
 3Digital Audio and MIDI4.3	Digital Audio and MIDI
 
 The digital I/O functions are handled by the YMZ263 chip, also known as the MMA.  The MMA handles the following functions:
@@ -5456,7 +5454,7 @@ Page 4-24		Gold Sound Standard Council		July 8, 1993
 
 July 8, 1993		Gold Sound Standard Council		Page 4-25
 
-uÇ
+uÇ
 
 ---
 
