@@ -212,9 +212,7 @@ A special environment variable, called "GOLD" is used by the software to recogni
 
 To change the GOLD environment variable, type the following command, which should be preferably put in the AUTOEXEC.BAT file:
 
-$$
-\mathrm {S E T} \quad \mathrm {G O L D} = x x x
-$$
+`SET GOLD=xxx`
 
 When the Gold environment variable is not defined, the programs assume a default base address of 388H.
 

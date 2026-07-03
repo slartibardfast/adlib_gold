@@ -540,7 +540,7 @@ $$
 The KSR bit (position = D4) changes the rates for the envelope generator (EG). This parameter makes it possible to gradually shorten envelope length (increase EG rates) as higher notes on the keyboard are played. This is particularly useful for simulating the sound of stringed instruments such as piano and guitar, in which the envelope of the higher notes is noticeably shorter than the lower notes. The actual rate is then equal to the ADSR value plus an offset:
 
 $$
-\text {A c t u a l r a t e} = 4 ^ {*} \text {R a t e} + \text {K S R o f f e t}
+\mathrm{A c t u a l r a t e} = 4 ^ {*} \mathrm{R a t e} + \mathrm{K S R o f f e t}
 $$
 
 The KSR offset is specified in the following table:
@@ -564,7 +564,7 @@ These registers (addresses 40H to 55H, 1 per operator) control the attenuation o
 The Total Level (TL) attenuates the operator's output. In FM synthesis mode, varying the output level of an operator functioning as a carrier results in a change in the volume of that operator's voice. Attenuating the output from a modulator will change the frequency spectrum produced by the carrier. In additive synthesis, varying the output level of any operator varies the volume of its corresponding voice. The TL value has a range of 0 through 63 (6 bits). To convert this value into an output level, apply the following formula:
 
 $$
-\text {O u t p u t l e v e l} = (6 3 - \mathrm {T L}) ^ {*} 0. 7 5 \mathrm {d B}
+\mathrm{O u t p u t l e v e l} = (6 3 - \mathrm {T L}) ^ {*} 0. 7 5 \mathrm {d B}
 $$
 
 ## ADSR

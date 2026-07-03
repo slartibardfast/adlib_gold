@@ -412,13 +412,9 @@ Selects the interrupt request line used by the audio portion of the Gold hardwar
 
 WORD value
 
-$$
-0 = \mathrm {I R Q 3}, 1 = \mathrm {I R Q 4}, 2 = \mathrm {I R Q 5}, 3 = \mathrm {I R Q 7}
-$$
+`0 = IRQ3, 1 = IRQ4, 2 = IRQ5, 3 = IRQ7`
 
-$$
-4 = \mathrm {I R Q} 1 0, 5 = \mathrm {I R Q} 1 1, 6 = \mathrm {I R Q} 1 2, 7 = \mathrm {I R Q} 1 5
-$$
+`4 = IRQ10, 5 = IRQ11, 6 = IRQ12, 7 = IRQ15`
 
 **Return Value**
 
@@ -444,13 +440,9 @@ None
 
 Return Value
 
-$$
-0 = \mathrm {I R Q 3}, 1 = \mathrm {I R Q 4}, 2 = \mathrm {I R Q 5}, 3 = \mathrm {I R Q 7}
-$$
+`0 = IRQ3, 1 = IRQ4, 2 = IRQ5, 3 = IRQ7`
 
-$$
-4 = \mathrm {I R Q} 1 0, 5 = \mathrm {I R Q} 1 1, 6 = \mathrm {I R Q} 1 2, 7 = \mathrm {I R Q} 1 5
-$$
+`4 = IRQ10, 5 = IRQ11, 6 = IRQ12, 7 = IRQ15`
 
 Comments
 
