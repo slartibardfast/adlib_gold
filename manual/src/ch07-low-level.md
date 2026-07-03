@@ -2,11 +2,6 @@
 
 *Direct register-level programming of the MMA controller, the OPL3 (ALMSC) synthesizer, and the mixer.*
 
-> **Related source in this repository:**  
-> [`adapter.cpp`](https://github.com/slartibardfast/adlib_gold/blob/main/adapter.cpp) - Low-level port and register access  
-> [`algtopo.cpp`](https://github.com/slartibardfast/adlib_gold/blob/main/algtopo.cpp) - OPL3 voice/topology programming  
-> [`fmsynth.cpp`](https://github.com/slartibardfast/adlib_gold/blob/main/fmsynth.cpp) - OPL3 register reference in practice  
-
 ---
 
 Mixer and Setup Features 1

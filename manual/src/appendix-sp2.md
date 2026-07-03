@@ -2,9 +2,6 @@
 
 *Yamaha YM7128 (SP2) surround-processor datasheet and the bit-serial protocol used to program it.*
 
-> **Related source in this repository:**  
-> [`algtopo.cpp`](https://github.com/slartibardfast/adlib_gold/blob/main/algtopo.cpp) - Surround preset programming  
-
 ---
 
 ## Introduction

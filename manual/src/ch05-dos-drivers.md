@@ -2,13 +2,6 @@
 
 *The DOS Control Features, FM (OPL3), Wave, Timer and MIDI drivers, and their complete function references.*
 
-> **Related source in this repository:**  
-> [`common.cpp`](https://github.com/slartibardfast/adlib_gold/blob/main/common.cpp) - Control-features / mixer register access (Ct* functions)  
-> [`common.h`](https://github.com/slartibardfast/adlib_gold/blob/main/common.h) - Control-features driver declarations  
-> [`fmsynth.cpp`](https://github.com/slartibardfast/adlib_gold/blob/main/fmsynth.cpp) - OPL3 FM synthesis driver  
-> [`algwave.cpp`](https://github.com/slartibardfast/adlib_gold/blob/main/algwave.cpp) - Wave (PCM/ADPCM) playback and recording  
-> [`midi.cpp`](https://github.com/slartibardfast/adlib_gold/blob/main/midi.cpp) - MIDI driver  
-
 ---
 
 This batch file command loads all Ad Lib Gold drivers.

@@ -17,7 +17,3 @@
 - [YAMAHA Gold Sound Standard (GSS)](appendix-gss.md)
 - [YM7128 Surround Processor (SP2)](appendix-sp2.md)
 - [Appendix D: List of Installed Files](appendix-d-files.md)
-
----
-
-- [Source Code Cross-Reference](source-xref.md)

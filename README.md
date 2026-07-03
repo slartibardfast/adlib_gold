@@ -14,9 +14,7 @@ scanned PDF and rebuilt as a searchable mdBook — is published at:
 ### 👉 https://slartibardfast.github.io/adlib_gold/
 
 It documents the hardware, the DOS driver APIs, and the low-level register
-interface this driver implements. See the
-[Source Code Cross-Reference](https://slartibardfast.github.io/adlib_gold/source-xref.html)
-for a mapping from manual chapters to the source files below.
+interface this driver implements.
 
 ## Source layout
 

@@ -2,9 +2,6 @@
 
 *Card layout, connectors, jumpers, IRQ/DMA options, and the Surround Sound module.*
 
-> **Related source in this repository:**  
-> [`adapter.cpp`](https://github.com/slartibardfast/adlib_gold/blob/main/adapter.cpp) - Hardware detection and adapter configuration  
-
 ---
 
 3.1 Description of the Hardware 1

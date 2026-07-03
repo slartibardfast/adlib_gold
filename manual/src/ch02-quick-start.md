@@ -2,9 +2,6 @@
 
 *Installing the Gold card and software, and using the evaluation applications.*
 
-> **Related source in this repository:**  
-> [`adlibgold.inf`](https://github.com/slartibardfast/adlib_gold/blob/main/adlibgold.inf) - Windows setup information for the Gold card  
-
 ---
 
 - Installing the Hardware

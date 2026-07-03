@@ -22,7 +22,6 @@ API, and the low-level register interface needed to program the card directly.
 | [Appendix: GSS](appendix-gss.md) | Gold Sound Standard specification |
 | [Appendix: SP2](appendix-sp2.md) | YM7128 surround processor datasheet |
 | [Appendix D](appendix-d-files.md) | List of installed files |
-| [Source Cross-Reference](source-xref.md) | Manual topics mapped to the driver source in this repo |
 
 ## About this reproduction
 
@@ -41,6 +40,6 @@ Because it is a historical document, some names, phone numbers and addresses
 Text recovered by OCR may contain occasional transcription errors; consult the
 original scan where exactness matters.
 
-> Source code for the drivers described here lives alongside this manual in the
+> This SDK lives in the
 > [`slartibardfast/adlib_gold`](https://github.com/slartibardfast/adlib_gold)
-> repository - see the [Source Code Cross-Reference](source-xref.md).
+> repository.
