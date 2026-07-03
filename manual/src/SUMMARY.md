@@ -30,7 +30,6 @@
   - [disk1/SETUP.BAT](disks-md/program-disks-v1.00/disk1/SETUP.BAT.md)
   - [disk2/G2S/G2S.DOC](disks-md/program-disks-v1.00/disk2/G2S/G2S.DOC.md)
   - [disk2/WIN_MIDI/README.TXT](disks-md/program-disks-v1.00/disk2/WIN_MIDI/README.TXT.md)
-  - [disk3/WINDRV/--------.---](disks-md/program-disks-v1.00/disk3/WINDRV/--------.---.md)
   - [disk3/WINDRV/OEMSETUP.INF](disks-md/program-disks-v1.00/disk3/WINDRV/OEMSETUP.INF.md)
   - [disk3/WINDRV/README.TXT](disks-md/program-disks-v1.00/disk3/WINDRV/README.TXT.md)
   - [installed/DRIVERS.BAT](disks-md/program-disks-v1.00/installed/DRIVERS.BAT.md)
