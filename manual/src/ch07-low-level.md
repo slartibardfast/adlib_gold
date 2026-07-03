@@ -767,11 +767,13 @@ $$
 t 1 = T I M E R 1 * b c
 $$
 
-Timer 2 (Register #6 and 7, Channel 0) is a 16-bit programmable down counter that is controlled by the base counter clock. The interrupt is triggered when the counter value reaches 0. The time t2, in usec, until IRQ is generated may be calculated as follows:
+Timer 2 (Register #6 and 7, Channel 0) is a 16-bit programmable down counter that is controlled by the base counter clock. The interrupt is triggered when the counter value reaches 0. The time t2, in usec, until IRQ is generated may be calculated as follows:[^t2-sic]
 
 $$
 t 2 = \left(\mathrm {T I M E R 2} (\mathrm {H}) * 2 5 6 + \mathrm {T I M E R 0} (\mathrm {L}) * b c\right)
 $$
+
+[^t2-sic]: Transcribed as printed: the second term reads `TIMER0(L)`, but it should read `TIMER2(L)`. Provenance of the correction: (1) Timer 2 is a single 16-bit counter, so its value is reconstructed from its *own* high and low bytes — compare the `t0` formula above, which pairs `TIMER0(H)` with `TIMER0(L)`; (2) the paragraph immediately below states "`TIMER2(L)` must be read first as it is this read which triggers the latching mechanism," confirming `TIMER2(L)` is the intended low byte. The `TIMER0(L)` misprint appears identically across two independent OCR passes of the original scan, establishing that it originates in the 1992 printed source rather than in transcription. — *Ed.*
 
 TIMER2 may be read to determine the count value. When TIMER2(L) is read the 16-bit count value is latched and the latched value of TIMER2(L) is output. Subsequently, when TIMER2(H) is read, the latched value of TIMER2(H) is output. (Latching a value means taking a "snapshot" of that value at a given moment.) TIMER2(L) must be read first as it is this read which triggers the latching mechanism.
 
