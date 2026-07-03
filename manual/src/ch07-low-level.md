@@ -182,7 +182,7 @@ IMPORTANT: Before returning access to the FM chip (writing FEh to 38Ah), all del
 
 ## Register Map
 
-The diagram on the following page is a summary of the control chip registers. When writing to registers which contain undesignated bits, these bits must be set to zero. Locations where certain bits must be set are indicated by a "1" in the register map.
+The diagram below is a summary of the control chip registers. When writing to registers which contain undesignated bits, these bits must be set to zero. Locations where certain bits must be set are indicated by a "1" in the register map.
 
 Register Map, Control Chip
 
@@ -569,7 +569,7 @@ $$
 
 ## ADSR
 
-These values change the shape of the envelope for the specified operator by changing the rates or the levels. The attack (AR) and the decay (DR) rates are at addresses 60H to 75H (1 per operator). The Sustain Level (SL) and Release Rate (RR) are located at addresses 80H to 95H. All of these values are 4 bits in length (range 0 to 15). Refer to the diagram on page 11 for more information.
+These values change the shape of the envelope for the specified operator by changing the rates or the levels. The attack (AR) and the decay (DR) rates are at addresses 60H to 75H (1 per operator). The Sustain Level (SL) and Release Rate (RR) are located at addresses 80H to 95H. All of these values are 4 bits in length (range 0 to 15). Refer to the register map for more information.
 
 The attack rate (AR) determines the rising time for the sound. The higher the value in this register, the faster the attack.
 
@@ -623,7 +623,7 @@ The WS parameter enables the card to generate other kinds of wave shapes. This i
 
 This section explains the differences between the Ad Lib Gold Sound Adapter and the original Ad Lib Music Synthesizer Card as regards FM synthesis. A previous knowledge of the original Ad Lib card is assumed. If you are unfamiliar with the original card, you should first read the following section: "Programming the Synthesizer", which is reproduced from the original Programmer's Manual.
 
-You can see from the register map on the following page that the new FM section is quite similar to the original FM chip but with extra features added. Register Array 0 is accessed by writing to addresses x and x+1 (388H and 389H by default). Register Array 1 is accessed by writing to addresses x+2 and x+3 (38AH and 38BH by default). This scheme allows for complete compatibility with older software which recognizes only the original Ad Lib card.
+You can see from the register map below that the new FM section is quite similar to the original FM chip but with extra features added. Register Array 0 is accessed by writing to addresses x and x+1 (388H and 389H by default). Register Array 1 is accessed by writing to addresses x+2 and x+3 (38AH and 38BH by default). This scheme allows for complete compatibility with older software which recognizes only the original Ad Lib card.
 
 All registers are cleared at reset. The TEST registers at 01 should be cleared or not accessed at all. Bits in the register map which are not designated should be left in their cleared state.
 
@@ -675,7 +675,7 @@ Connection Select (05H, Register Array 1):
 
 <table border="1"><tr><td></td><td>D5</td><td>D4</td><td>D3</td><td>D2</td><td>D1</td><td>D0</td></tr><tr><td>4-op voice</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td></tr><tr><td>2-op voices</td><td>3,6</td><td>2,5</td><td>1,4</td><td>3,6</td><td>2,5</td><td>1,4</td></tr><tr><td></td><td colspan="3">Array 1</td><td colspan="3">Array 0</td></tr></table>
 
-With 2-operator voices, the connection bit at C0-C8 specifies one of two possible methods for connecting the operators. With 4-operator voices, there are 4 methods of connecting the operators. This is done by using both connection bits of the pair of 2-operator voices involved. The following table shows the relationship between the 4-operator voice and its connection bits. The diagram on the next page illustrates the connection methods.
+With 2-operator voices, the connection bit at C0-C8 specifies one of two possible methods for connecting the operators. With 4-operator voices, there are 4 methods of connecting the operators. This is done by using both connection bits of the pair of 2-operator voices involved. The following table shows the relationship between the 4-operator voice and its connection bits. The diagram below illustrates the connection methods.
 
 Connection bit (C) addresses for 4-operator voices:
 
@@ -687,7 +687,7 @@ The following table is a combination of the preceding two tables. You may find i
 
 <table border="1"><tr><td>Connect Sel</td><td>D5</td><td>D4</td><td>D3</td><td>D2</td><td>D1</td><td>D0</td></tr><tr><td>4-op voice</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td></tr><tr><td>2-op voices</td><td>3,6</td><td>2,5</td><td>1,4</td><td>3,6</td><td>2,5</td><td>1,4</td></tr><tr><td>C addresses</td><td>C2,C5</td><td>C1,C4</td><td>C0,C3</td><td>C2,C5</td><td>C1,C4</td><td>C0,C3</td></tr><tr><td></td><td colspan="3">Array 1</td><td colspan="3">Array 0</td></tr></table>
 
-Feedback in a 4-operator voice is applied to the first operator only, as indicated by the loop around Operator 1 in the diagram on the following page. The feedback value is determined by the value written in the register for the first register pair (Cx). The value in the second register pair (Cx+3) is ignored.
+Feedback in a 4-operator voice is applied to the first operator only, as indicated by the loop around Operator 1 in the diagram below. The feedback value is determined by the value written in the register for the first register pair (Cx). The value in the second register pair (Cx+3) is ignored.
 
 Similarly, the F-NUMBER, KON, and BLOCK parameters for a 4-operator voice are determined by the values written in the registers for the first register pairs (Ax and Bx). The values in the second register pairs (Ax+3 and Bx+3) are ignored.
 

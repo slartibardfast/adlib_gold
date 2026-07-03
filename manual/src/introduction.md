@@ -40,57 +40,57 @@ ISBN 2-920858-32-7
 
 Printed in Canada
 
-1. Introduction 1-1
+1. Introduction
 
-2. Quick Start and Evaluation Software 2-i
+2. Quick Start and Evaluation Software
 
-Installing the Hardware 2-1
+Installing the Hardware
 
-Installing the Software 2-1
+Installing the Software
 
-Using the Gold Card Evaluation Software 2-2
+Using the Gold Card Evaluation Software
 
-Adjusting the Volume 2-3
+Adjusting the Volume
 
-3. Gold Hardware 3-i
+3. Gold Hardware
 
-3.1 Description of the Hardware 3-1
+3.1 Description of the Hardware
 
-3.2 Getting Installed 3-9
+3.2 Getting Installed
 
-3.3 Surround Sound Module 3-15
+3.3 Surround Sound Module
 
-4. Software Applications 4-i
+4. Software Applications
 
-4.1 Software Installation and Configuration 4-1
+4.1 Software Installation and Configuration
 
-4.2 Test Program 4-5
+4.2 Test Program
 
-4.3 Mixer Panel TSR 4-7
+4.3 Mixer Panel TSR
 
-4.4 Juke Box Gold Music Playback Program 4-13
+4.4 Juke Box Gold Music Playback Program
 
-4.5 Instrument Maker Gold 4-17
+4.5 Instrument Maker Gold
 
-4.6 Sample Maker 4-19
+4.6 Sample Maker
 
-4.7 Surround Sound Editor 4-23
+4.7 Surround Sound Editor
 
-4.8 Batch File Utilities 4-29
+4.8 Batch File Utilities
 
-4.9 ROL2 Playback TSR 4-31
+4.9 ROL2 Playback TSR
 
-5. DOS Software Drivers 5-i
+5. DOS Software Drivers
 
-5.1 Interfacing DOS Drivers with Applications 5-1
+5.1 Interfacing DOS Drivers with Applications
 
-5.2 DOS Control Features Driver 5-3
+5.2 DOS Control Features Driver
 
-5.3 DOS FM Synthesis Driver 5-57
+5.3 DOS FM Synthesis Driver
 
-5.4 DOS Wave Driver 5-71
+5.4 DOS Wave Driver
 
-5.5 DOS Timer Driver 5-93
+5.5 DOS Timer Driver
 
 5.6 DOS MIDI Driver (To be released)
 
@@ -100,23 +100,23 @@ Adjusting the Volume 2-3
 
 (To be released)
 
-7. Low-level Programming 7-i
+7. Low-level Programming
 
-7.1 Mixer and Setup Features 7-1
+7.1 Mixer and Setup Features
 
-7.2 FM Synthesis 7-15
+7.2 FM Synthesis
 
-7.3 Digital Input and Output (Digital Audio and MIDI) 7-37
+7.3 Digital Input and Output (Digital Audio and MIDI)
 
 Appendices
 
-Appendix A: Gold Sound Standard A-i
+Appendix A: Gold Sound Standard
 
-Appendix B: YM7128 - Surround Processor B-i
+Appendix B: YM7128 - Surround Processor
 
-Appendix C: Pin Out for Joystick-MIDI Connector C-1
+Appendix C: Pin Out for Joystick-MIDI Connector
 
-Appendix D: List of Installed Files D-1
+Appendix D: List of Installed Files
 
 The Ad Lib Gold Developer Toolkit is a set of software applications, libraries, documentation and other information that will accelerate application support for the Ad Lib Gold series of cards.
 

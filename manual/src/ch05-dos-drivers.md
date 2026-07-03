@@ -1430,7 +1430,7 @@ The Ad Lib Gold FM Synthesis Driver offers services to access features of the OP
 
 ## Voice Allocation Structure
 
-The OPL3 chip contains 36 operators which can be combined in various ways to create 1-, 2- or 4-operator voices. (You may wish to refer to the "FM Driver Voices" table on the next page for the purposes of this discussion.)
+The OPL3 chip contains 36 operators which can be combined in various ways to create 1-, 2- or 4-operator voices. (You may wish to refer to the "FM Driver Voices" table below for the purposes of this discussion.)
 
 The 4-operator voices offer the richest sound. Up to six 4-operator voices can be used simultaneously. In the FM Driver, the 4-operator voices are numbered 0,2,4,6,8 and 10. By default, all six 4-operator voices are enabled. They may be selectively disabled, thus creating two 2-operator voices.
 
@@ -2385,7 +2385,7 @@ Remember that the MMA timer 1 and 2 are combined with the MMA base counter and t
 
 The timer's function can be access directly or by the TimerDrvService functions which is a dispatcher.
 
-Each timer function is presented in the following pages.
+Each timer function is presented in the following sections.
 
 ## LoadStartOPL3Timer1
 
