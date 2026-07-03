@@ -18,3 +18,7 @@
 - [YAMAHA Gold Sound Standard (GSS)](appendix-gss.md)
 - [YM7128 Surround Processor (SP2)](appendix-sp2.md)
 - [Appendix D: List of Installed Files](appendix-d-files.md)
+- [Appendix E: Program Disks (as shipped)](appendix-e-program-disks.md)
+- [Appendix F: Software (as installed)](appendix-f-as-installed.md)
+- [Appendix G: Developer SDK](appendix-g-sdk.md)
+- [Appendix H: The "Ad Lib Comp." format](appendix-h-goldcmp-format.md)

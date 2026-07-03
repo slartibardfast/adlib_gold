@@ -1,0 +1,195 @@
+;-----------------------------------------------------------------------
+;	(C)Copyright Microsoft Corporation, 1984, 1985, 1986
+;
+; 	Modified version for Adlib. 1990
+;
+;--------------------------------------------------------------------------
+
+
+memS	equ	0	; small model
+memM	equ	0	; medium model
+memC	equ	0	; compact model
+memL	equ	1	; large model
+memH	equ	0	; huge model
+
+
+
+	IF	memS
+LDATA	EQU	0
+LPROG	EQU	0
+	ENDIF
+	IF	memM
+LDATA	EQU	0
+LPROG	EQU	1
+	ENDIF
+	IF	memC
+LDATA	EQU	1
+LPROG	EQU	0
+	ENDIF
+	IF	memL
+LDATA	EQU	1
+LPROG	EQU	1
+	ENDIF
+	IF	memH
+LDATA	EQU	1
+LPROG	EQU	1
+	ENDIF
+
+
+
+; near DATA segement, for each models:
+DATAS	MACRO
+_DATA	SEGMENT WORD PUBLIC 'DATA'
+	ENDM
+
+EDATAS	MACRO
+_DATA	ENDS
+	ENDM
+
+
+DATA?S	MACRO
+_BSS	SEGMENT WORD PUBLIC 'BSS'
+	ENDM
+
+EDATA?S	MACRO
+_BSS	ENDS
+	ENDM
+
+
+CONSTS	MACRO
+CONST	SEGMENT WORD PUBLIC 'CONST'
+	ENDM
+
+ECONSTS	MACRO
+CONST	ENDS
+	ENDM
+
+
+STACKS	MACRO
+STACK	SEGMENT PARA STACK 'STACK'
+	ENDM
+
+ESTACKS	MACRO
+STACK	ENDS
+	ENDM
+
+
+CODES	MACRO name
+	IF memS OR memC
+_TEXT	SEGMENT WORD PUBLIC 'CODE'
+	ASSUME	CS: _TEXT
+	ENDIF
+	IF memM OR memL OR memH
+name&_TEXT SEGMENT WORD PUBLIC 'CODE'
+	ASSUME	CS: name&_TEXT
+	ENDIF
+	ENDM
+
+ECODES	MACRO name
+	IF memS OR memC
+_TEXT	ENDS
+	ENDIF
+	IF memM OR memL OR memH
+name&_TEXT ENDS
+	ENDIF
+	ENDM
+
+
+	
+
+;-------------------------------- EXTERN -----------------------------------
+EXTERN  MACRO  name
+	IF  LPROG
+	  extrn &name:  far
+	ELSE
+	  extrn &name:  near
+	ENDIF
+	ENDM
+
+
+;-------------------------------- BEGIN ------------------------------------
+;**
+;
+; The BEGIN and ENTRY macros establish appropriate function entry points
+; depending on whether NEAR or FAR program addressing is being used.  The
+; only difference between the two is that BEGIN generates a PROC operation
+; to start a segment. 
+;
+BEGIN   MACRO   name            ; begin a function
+	PUBLIC  name
+	IF  LPROG
+	  name    proc    far
+	ELSE
+	  name    proc    near
+	ENDIF
+ENDM
+
+;-------------------------------- ENTRY ------------------------------------
+ENTRY	MACRO	name
+	PUBLIC	NAME
+	IF	LPROG
+name	LABEL	FAR
+	ELSE
+name	LABEL	NEAR
+	ENDIF
+	ENDM
+
+
+;-------------------------------- MCALL ------------------------------------
+MCALL	MACRO name
+	IF LPROG
+	call	far ptr name
+	ELSE
+	call	name
+	ENDIF
+	ENDM
+
+
+;---------------------------------------------------------------------------
+;**
+;
+; The following symbols are defined to help set up a STRUC defining the
+; stack frame:
+;
+;	CPSIZE -> code pointer size (2 or 4)
+;	DPSIZE -> data pointer size (2 or 4)
+;
+; These wouldn't be necessary if it were possible to use macros or even
+; conditionals within a STRUC.
+;
+	IF	LPROG
+CPSIZE	EQU	4
+	ELSE
+CPSIZE	EQU	2
+	ENDIF
+	IF	LDATA
+DPSIZE	EQU	4
+	ELSE
+DPSIZE	EQU	2
+	ENDIF
+
+
+;-------------------------------- penter -----------------------------------
+penter	MACRO	dyns			; used when we enter a procedure
+	push	BP			; save context register
+	IF	dyns NE 0
+	sub	SP, dyns		; local variables on stack
+	ENDIF
+	mov	BP, SP			;
+	push	DI			; for register variables (MICROSOFT 'C' 3.0)
+	push	SI			;
+	ENDM				;
+
+;-------------------------------- pleave -----------------------------------
+pleave	MACRO	dyns			; used when we leave a procedure
+	pop	SI			;
+	pop	DI			;
+	IF	dyns NE 0
+	add	SP, dyns		;
+	ENDIF
+	pop	BP			;
+	ret				;
+	ENDM				;
+
+
+

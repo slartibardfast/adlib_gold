@@ -1,0 +1,68 @@
+#
+# Makefile for the SDTK bas-functions libraries.
+#
+# You probably have to change the macros for the BaseDir and for the
+# compile and assemble commands
+#
+# This make file designed for used with borland.
+# You can customize the "Compile" and "Link" macros for Microsoft
+#
+# If you use microsoft, you should put the option -DMICROSOFT to 
+# your Compile macro.
+
+BaseDir = .
+ObjectDir = OBJECT
+SourceDir = $(BaseDir)
+DestDir = $(BaseDir)
+
+Compile = bcc -ml -O1 -c -u -N- -DTURBO -n$(ObjectDir) 
+
+Assemble= tasm /mx
+Lib    = tlib
+
+all:    $(DestDir)\drivers.lib
+
+#------------------------------------------------------------------
+
+$(DestDir)\drivers.lib:         $(ObjectDir)\interr.obj         \
+				$(ObjectDir)\set_get.obj        \
+				$(ObjectDir)\control.obj        \
+				$(ObjectDir)\timer.obj          \
+				$(ObjectDir)\midi.obj           \
+				$(ObjectDir)\fm.obj             \
+				$(ObjectDir)\wave.obj           
+				tlib drivers @&&!
+-+object\interr.obj	&
+-+object\set_get.obj 	&
+-+object\control.obj 	&
+-+object\timer.obj	&
+-+object\midi.obj	&
+-+object\wave.obj	&
+-+object\fm.obj		
+!
+
+
+#-------------------------------------------------------------------
+
+$(ObjectDir)\fm.obj:            $(SourceDir)\fm.asm $(SourceDir)\model2.mac
+				$(Assemble) fm.asm, $(ObjectDir)\fm.obj
+
+$(ObjectDir)\timer.obj:         $(SourceDir)\timer.c
+				$(Compile) $&.c
+
+$(ObjectDir)\midi.obj:          $(SourceDir)\midi.c
+				$(Compile) $&.c
+
+$(ObjectDir)\control.obj:       $(SourceDir)\control.c
+				$(Compile) $&.c
+
+$(ObjectDir)\interr.obj:        $(SourceDir)\interr.c 
+				$(Compile) $&.c
+
+$(ObjectDir)\wave.obj:          $(SourceDir)\wave.c
+				$(Compile) $&.c
+
+$(ObjectDir)\set_get.obj:       $(SourceDir)\set_get.c
+				$(Compile) $&.c
+
+

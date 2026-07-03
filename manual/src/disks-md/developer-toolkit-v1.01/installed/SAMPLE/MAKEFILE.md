@@ -1,0 +1,71 @@
+# `developer-toolkit-v1.01/installed/SAMPLE/MAKEFILE`
+
+> UTF-8 rendering of a DOS-encoded (CP437 / CRLF) file. Byte-for-byte original: [`MAKEFILE`](../../../../disks/developer-toolkit-v1.01/installed/SAMPLE/MAKEFILE).
+
+```make
+# Make file for the sample code supplied here.
+# This make file designed for used with borland.
+# You can customize the "Compile" and "Link" macros for Microsoft
+#
+# If you use microsoft, you should put the option -DMICROSOFT to 
+# your Compile macro.
+
+BaseDir = ..
+ObjectDir = OBJECT
+SourceDir = $(BaseDir)\SAMPLE
+DestDir = $(BaseDir)\SAMPLE
+SDTKDir = $(BaseDir)
+
+Compile = bcc -ml -c -u -N- -DTURBO -I$(SDTKDir) -n$(ObjectDir) 
+
+LINK	= tlink /x /n
+
+all:	$(DestDir)\timers.exe $(DestDir)\fms.exe $(DestDir)\midis.exe \
+	$(DestDir)\playback.exe $(DestDir)\record.exe
+
+#-------------------------------------------------------------------
+
+$(DestDir)\timers.exe:		$(BaseDir)\drivers.lib\
+				$(ObjectDir)\timers.obj 	
+				$(LINK) @timers.lnk
+
+$(ObjectDir)\timers.obj:	$(BaseDir)\drivers.lib\
+				$(SourceDir)\timers.c
+				$(Compile) $&.c
+
+#-------------------------------------------------------------------
+
+$(DestDir)\fms.exe:		$(BaseDir)\drivers.lib\
+				$(ObjectDir)\fms.obj 		
+				$(LINK) @fms.lnk
+
+$(ObjectDir)\fms.obj: 		$(SourceDir)\fms.c
+				$(Compile) $&.c
+
+#-------------------------------------------------------------------
+
+$(DestDir)\midis.exe:		$(BaseDir)\drivers.lib\
+				$(ObjectDir)\midis.obj 		
+				$(LINK) @Midis.Lnk
+
+$(ObjectDir)\midis.obj:	 	$(SourceDir)\midis.c
+				$(Compile) $&.c
+
+#-------------------------------------------------------------------
+
+$(DestDir)\record.exe:		$(BaseDir)\drivers.lib\
+				$(ObjectDir)\record.obj 		
+				$(LINK) @record.Lnk
+
+$(ObjectDir)\record.obj:	$(SourceDir)\record.c
+				$(Compile) $&.c
+
+#-------------------------------------------------------------------
+$(DestDir)\playback.exe:	$(BaseDir)\drivers.lib\
+				$(ObjectDir)\playback.obj 		
+				$(LINK) @playback.Lnk
+
+$(ObjectDir)\playback.obj:	 	$(SourceDir)\playback.c
+				$(Compile) $&.c
+
+```
