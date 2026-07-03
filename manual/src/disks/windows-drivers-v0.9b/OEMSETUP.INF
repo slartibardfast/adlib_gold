@@ -1,0 +1,5 @@
+[disks]
+1=.\,"Yamaha GSS Wave/Midi/Aux"
+
+[Installable.Drivers]
+sfgold = 1:sfgold.drv,"Wave,Midi,Aux", "Yamaha GSS Wave/Midi/Aux",1:vgold.386,,

@@ -1,0 +1,5 @@
+[disks]
+1=.\,"Sonic Foundry Gold Wave/Midi/Aux"
+
+[Installable.Drivers]
+sfgold = 1:sfgold.drv,"Wave,Midi,Aux", "Sonic Foundry Gold Wave/Midi/Aux",1:vgold.386,,

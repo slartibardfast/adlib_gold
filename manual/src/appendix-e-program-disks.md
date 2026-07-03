@@ -22,7 +22,9 @@ a standalone Windows driver package (**v1.2**, the newest artifact):
 | Mar 1992 | Beta software | v0.91b | [Appendix G](appendix-g-sdk.md#beta-v091b-disk-contents) |
 | Apr 1992 | Program Disks | **v1.00** | this appendix |
 | 1992 | Developer Toolkit | **v1.01** | [Appendix G](appendix-g-sdk.md) *(this manual)* |
-| Jul 1993 | Windows 3.1 Mixer & Drivers | **v1.2** *(latest)* | [below](#windows-31-mixer--drivers-v12-july-1993) |
+| Oct 1992 | Windows Mixer & Drivers | v0.9 | [below](#windows-31-mixer--drivers) |
+| Dec 1992 | Windows Mixer & Drivers | v0.9b | [below](#windows-31-mixer--drivers) |
+| Jul 1993 | Windows Mixer & Drivers | **v1.2** *(latest)* | [below](#windows-31-mixer--drivers) |
 
 ## Provenance & integrity
 
@@ -86,17 +88,21 @@ Disk images (mountable in DOSBox / any emulator):
 > [Appendix H](appendix-h-goldcmp-format.md); the payload itself is browsable in
 > [Appendix F](appendix-f-as-installed.md).
 
-## Windows 3.1 Mixer & Drivers v1.2 (July 1993)
+## Windows 3.1 Mixer & Drivers
 
-The **newest** Ad Lib Gold release is a standalone *"Windows 3.1 Mixer and
-Drivers"* diskette, distributed via the Ad Lib BBS. Its `README` identifies it as
-**Version 1.2, July 1993** — later than every other artifact here. It ships two
-Windows drivers (the *Yamaha GSS MIDI Synth* and the *GSS Wave/MIDI/Aux* driver),
-the Windows mixer applet, and a MIDI-mapper configuration. The **driver binaries
-are byte-identical** to those on Program Disk 3, so v1.2 is essentially a
-re-release with updated documentation rather than new code — but it is the last
-dated Ad Lib Gold software, so it is preserved here in full and malware-scanned
-clean.
+The Windows drivers shipped separately from the DOS software (via the Ad Lib
+BBS) and went through **three revisions** — the newest of which, **v1.2 (July
+1993), is the last dated Ad Lib Gold artifact of any kind.** The early releases
+used a single combined driver (`SFGOLD.DRV` + `VGOLD.386`); by v1.2 this had been
+split and renamed into two *GSS* drivers. The Windows mixer applet `MIXERGLD.EXE`
+is unchanged across all three. All are preserved here and malware-scanned clean.
+
+### v1.2 (July 1993) — the latest
+
+Two Windows drivers (the *Yamaha GSS MIDI Synth* and the *GSS Wave/MIDI/Aux*
+driver), the mixer applet, and a MIDI-mapper configuration. These driver binaries
+are byte-identical to the `WINDRV` set on Program Disk 3, so v1.2 is essentially a
+re-release with updated documentation.
 
 | Size | File | Notes |
 |------|------|-------|
@@ -110,3 +116,18 @@ clean.
 | 238 | [`OEMSETUP.INF`](disks/windows-drivers-v1.2/OEMSETUP.INF) | Windows driver install info |
 | 37 742 | [`MIDIMAP.CFG`](disks/windows-drivers-v1.2/MIDIMAP.CFG) | MIDI-mapper configuration |
 | 19 120 | [`G2S.EXE`](disks/windows-drivers-v1.2/G2S.EXE) ([`.DOC`](disks-md/windows-drivers-v1.2/G2S.DOC.md)) | the Sound Blaster emulator (bundled) |
+
+### Earlier releases (pre-GSS architecture)
+
+Two pre-release Windows driver disks survive, using the older combined
+`SFGOLD.DRV` + `VGOLD.386` design:
+
+| Version | Date | Contents | Notes |
+|---------|------|----------|-------|
+| v0.9 | Oct 1992 | `SFGOLD.DRV`, `VGOLD.386`, `MIXERGLD.EXE`, `MIDIMAP.CFG`, `OEMSETUP.INF` ([README](disks-md/windows-drivers-v0.9/README.TXT.md)) | first Windows driver |
+| v0.9b | Dec 1992 | same set, updated ([README](disks-md/windows-drivers-v0.9b/README.TXT.md)) | adds `[sfgold.drv]` `system.ini` tuning options |
+
+Browse the raw files:
+[v0.9](https://github.com/slartibardfast/adlib_gold/tree/main/manual/src/disks/windows-drivers-v0.9) ·
+[v0.9b](https://github.com/slartibardfast/adlib_gold/tree/main/manual/src/disks/windows-drivers-v0.9b) ·
+[v1.2](https://github.com/slartibardfast/adlib_gold/tree/main/manual/src/disks/windows-drivers-v1.2).
