@@ -51,7 +51,7 @@ original scan where exactness matters.
 
 Appendices E–H go beyond the manual and preserve the actual **Ad Lib Gold
 software** across every known release of 1992–93: the **Beta v0.91b** (March
-1992), the end-user **Program Disks v1.00** (April 1992), this **Developer
+1992), the end-user **Program Disks v1.00** (1992), this **Developer
 Toolkit v1.01**, and the newest artifact — the standalone **Windows 3.1 Mixer &
 Drivers v1.2** (July 1993). See the [release timeline](appendix-e-program-disks.md#release-timeline).
 Every file is kept byte-for-byte in its original DOS (CP437 / CRLF) encoding with

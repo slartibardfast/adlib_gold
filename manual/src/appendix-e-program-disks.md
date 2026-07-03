@@ -1,6 +1,6 @@
 # Appendix E — Program Disks (as shipped)
 
-The Ad Lib Gold **Program Disks, version 1.00** (April 1992) are the end-user
+The Ad Lib Gold **Program Disks, version 1.00** (1992) are the end-user
 software that shipped with the card. This appendix preserves them **exactly as
 distributed**: the authentic 720 KB floppy images, every file byte-for-byte in
 its original DOS (CP437 / CRLF) form, and a UTF-8 rendering of each text file.
@@ -12,19 +12,35 @@ compression format of the `GOLD*.CMP` archive is reverse-engineered in
 
 ## Release timeline
 
-The Ad Lib Gold software shipped in several releases across 1992–93 — all
-preserved in this archive. The end-user *program* software never advanced past
-v1.00; the later revisions are the Developer Toolkit (v1.01, **this manual**) and
-a standalone Windows driver package (**v1.2**, the newest artifact):
+The Ad Lib Gold software was released across 1992–93 — all preserved in this
+archive. The dates below are the **newest confirmed file timestamp** in each
+release's own files (FAT directory entries, or archive metadata for the Windows
+drivers) — the most reliable evidence of when each master was cut. Because the
+lineages are **versioned independently** (the SDK *Developer Toolkit*, the retail
+*Program Disks*, and the *Windows driver* package), the version numbers do not
+track the dates:
 
 | Date | Release | Version | Where |
 |------|---------|---------|-------|
-| Mar 1992 | Beta software | v0.91b | [Appendix G](appendix-g-sdk.md#beta-v091b-disk-contents) |
-| Apr 1992 | Program Disks | **v1.00** | this appendix |
-| 1992 | Developer Toolkit | **v1.01** | [Appendix G](appendix-g-sdk.md) *(this manual)* |
+| Apr 1992 | Beta software | v0.91b | [Appendix G](appendix-g-sdk.md#beta-v091b-disk-contents) |
+| Apr 1992 | Developer Toolkit | **v1.01** | [Appendix G](appendix-g-sdk.md) *(this manual)* |
+| Oct 1992 | Program Disks | **v1.00** | this appendix |
 | Oct 1992 | Windows Mixer & Drivers | v0.9 | [below](#windows-31-mixer--drivers) |
 | Dec 1992 | Windows Mixer & Drivers | v0.9b | [below](#windows-31-mixer--drivers) |
 | Jul 1993 | Windows Mixer & Drivers | **v1.2** *(latest)* | [below](#windows-31-mixer--drivers) |
+
+<sup>**Dating basis** — the newest genuine file in each set, excluding two
+`1994-03-30` archival re-master stamps and disk-ripper tags. Evidence: **Beta**
+`SETUP.EXE` 2 Apr, payload `GOLD.CMP` 9 Apr 1992 (its `README` is dated 31 Mar
+1992); **Developer Toolkit** files 30 Mar – 2 Apr 1992 — the `SDTK.DOC`
+"Thu, Jul 8 1993" page footer is a Microsoft Word auto-date *field*, not the
+authoring date; **Program Disks** core install `GOLD1/2/3.CMP` 30 Sep – 1 Oct
+1992, but this archived master is a later composite re-cut that also bundles the
+1993 GSS Windows drivers (`GSS.DRV` 10 Mar 1993, byte-identical to v1.2) and a
+14 Nov 1993 `G2S.EXE`; **Windows** v0.9 to 27 Oct 1992, v0.9b to 4 Dec 1992, v1.2
+binaries Mar 1993 / `README` 13 Jul 1993. The "Ad Lib Comp." container stores only
+a name and compressed size per file — no timestamps — so the compressed payloads
+add no further dates.</sup>
 
 ## Provenance & integrity
 
