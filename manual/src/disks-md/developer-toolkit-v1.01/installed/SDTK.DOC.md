@@ -5,7 +5,7 @@
 > officially published, so this rendering was produced by decoding the format
 > directly (CP437 text body, `0x0D` paragraphs, `0x07` table cells, `0x13/14/15`
 > Word fields). Tables are reconstructed; every text byte is preserved.
-> Byte-for-byte original: [`SDTK.DOC`](../../disks/developer-toolkit-v1.01/installed/SDTK.DOC).
+> Byte-for-byte original: [`SDTK.DOC`](../../../disks/developer-toolkit-v1.01/installed/SDTK.DOC).
 
 ---
 

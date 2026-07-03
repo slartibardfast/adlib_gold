@@ -16,7 +16,7 @@ container format and its LZ+Huffman codec were **reverse-engineered from
 `MZ` image. The tree was malware-scanned clean.
 
 Browse the decoded files under
-[`disks/program-disks-v1.00/installed/`](disks/program-disks-v1.00/installed/).
+[`disks/program-disks-v1.00/installed/`](https://github.com/slartibardfast/adlib_gold/tree/main/manual/src/disks/program-disks-v1.00/installed).
 
 ## `\GOLD\DRIVERS` — DOS device drivers
 
@@ -63,7 +63,7 @@ Fourteen `.RL2` sequences ship as demos: `BUILDING`, `CAVE`, `FLIGHT`,
 **90 `.SMP` sample files** — the percussion and instrument library used by the
 tools (bass/snare drums, cymbals, hi-hats, congas, cowbells, claves, bells,
 brushes, handclaps, and the `$TEXT*` speech samples). See the
-[full listing](disks/program-disks-v1.00/installed/SMP/).
+[full listing](https://github.com/slartibardfast/adlib_gold/tree/main/manual/src/disks/program-disks-v1.00/installed/SMP).
 
 ## Version history (v0.91b beta → v1.00)
 

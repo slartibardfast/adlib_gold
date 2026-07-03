@@ -21,7 +21,7 @@ Toolkit v1.01 images:
 [Disk 2](disks/developer-toolkit-v1.01/images/Developer%20Toolkit%20v1.01%20-%20Disk%202.IMA) ·
 [Disk 3](disks/developer-toolkit-v1.01/images/Developer%20Toolkit%20v1.01%20-%20Disk%203.IMA).
 Beta v0.91b images are under
-[`disks/beta-v0.91b/images/`](disks/beta-v0.91b/images/).
+[`disks/beta-v0.91b/images/`](https://github.com/slartibardfast/adlib_gold/tree/main/manual/src/disks/beta-v0.91b/images).
 
 ### Beta v0.91b disk contents
 
@@ -30,7 +30,7 @@ The beta (31 March 1992) is an installer set, structured like the release: a
 tree (three weeks before v1.00 — the differences are catalogued in the
 [v0.91b → v1.00 changelog](appendix-f-as-installed.md#version-history-v091b-beta--v100)).
 That payload has been decoded and is browsable at
-[`disks/beta-v0.91b/installed/`](disks/beta-v0.91b/installed/) — note the samples
+[`disks/beta-v0.91b/installed/`](https://github.com/slartibardfast/adlib_gold/tree/main/manual/src/disks/beta-v0.91b/installed) — note the samples
 sit loose in `\GOLD` (they were only moved into `\GOLD\SMP` for the v1.00 release)
 and `SAMPLBNK.EQU` is still present (dropped in v1.00). The as-shipped files:
 
@@ -44,7 +44,7 @@ and `SAMPLBNK.EQU` is still present (dropped in v1.00). The as-shipped files:
 ## SDK source (installed toolkit)
 
 The toolkit expands to the driver source in
-[`disks/developer-toolkit-v1.01/installed/`](disks/developer-toolkit-v1.01/installed/).
+[`disks/developer-toolkit-v1.01/installed/`](https://github.com/slartibardfast/adlib_gold/tree/main/manual/src/disks/developer-toolkit-v1.01/installed).
 Each source file is preserved in its original DOS encoding, with a UTF-8
 rendering alongside.
 
