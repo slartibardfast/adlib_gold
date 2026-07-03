@@ -1,0 +1,21 @@
+[book]
+title = "Ad Lib Gold Developer Toolkit"
+authors = ["Ad Lib Inc. (original, 1992)"]
+description = "Reproduction of the Ad Lib Gold Developer Toolkit v1.01 manual, OCR'd from the original PDF and rebuilt as a searchable mdBook."
+language = "en"
+src = "src"
+
+[output.html]
+default-theme = "rust"
+preferred-dark-theme = "ayu"
+git-repository-url = "https://github.com/slartibardfast/adlib_gold"
+edit-url-template = "https://github.com/slartibardfast/adlib_gold/edit/main/manual/{path}"
+no-section-label = false
+
+[output.html.fold]
+enable = true
+level = 1
+
+[output.html.search]
+enable = true
+limit-results = 30
