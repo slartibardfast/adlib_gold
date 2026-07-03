@@ -25,10 +25,10 @@ API, and the low-level register interface needed to program the card directly.
 
 ## About this reproduction
 
-This edition was produced by running optical character recognition (GLM-OCR) over
-the original scanned PDF, then rebuilding the result as an mdBook. The **technical
-content is preserved as written** in 1992; only structure and formatting were
-modernized:
+This edition was produced with [ocr.z.ai](https://ocr.z.ai) (GLM-OCR), which
+performed optical character recognition over the original scanned PDF, then
+rebuilding the result as an mdBook. The **technical content is preserved as
+written** in 1992; only structure and formatting were modernized:
 
 - the six OCR fragments were reassembled into the manual's original chapters;
 - OCR mojibake (for example `AdLib®`) was repaired;
