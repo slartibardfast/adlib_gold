@@ -258,7 +258,7 @@ Game port disabled
 
 Figure 3: Game port jumper enabling
 
-<table border="1"><tr><td>$\cdot$</td><td>NOTE: The jumper is factory set to the game port enabled position.</td></tr></table>
+<table border="1"><tr><td>·</td><td>NOTE: The jumper is factory set to the game port enabled position.</td></tr></table>
 
 - Dual joystick selector jumpers (No.11) These jumpers let the user change the factory-set "joystick plus MIDI" option (all jumpers on the bracket side) to the "two joysticks without MIDI" option (all jumpers on the opposite side). All jumpers in this selector must be changed to the same position, as shown in the following illustrations.
 

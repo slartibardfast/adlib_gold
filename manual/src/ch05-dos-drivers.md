@@ -2102,7 +2102,7 @@ Identifies the waveform output device that is to be opened.
 Specifies a pointer to a WaveFormat structure that identifies the format of the waveform that will be sent to the output device. The WaveFormat structure is also used to specify the "mode" by which the data will be sent to the hardware (WAVE_TRANF_POLLING, WAVE_TRANSF_INTERRUPT, WAVE_TRANSF_DMA).
 
 ```c
-int (far $ ^{*} $ dwCallBack) (HWaveOut dev, LpWaveHdr block, DWord dwCallBackData);
+int (far * dwCallBack) (HWaveOut dev, LpWaveHdr block, DWord dwCallBackData);
 ```
 
 Specifies the address of a callback function. The callback function is called by the driver during playback to process messages related to the progress of the playback.

@@ -174,7 +174,7 @@ Reading the address port (38Ah by default) when the control chip access has been
 
 The 4 least significant bits indicate interrupt status. Reading this register does not reset the interrupt status. A zeroed bit indicates which section of the board has generated an interrupt. FM indicates the FM section has generated an interrupt; SMP, the sampling section; TEL, the telephone section; SCSI, the SCSI section. SB set indicates that the card is busy writing to a register. RB set indicates that the card is busy writing its registers to memory.
 
-A delay of approximately 450 $ \mu $sec is required after writing to any of registers 4 to 8. A delay of approximately 5 $ \mu $sec is required after writing to any of registers 9 through 16. As well, the chip must not be accessed while the chip is saving its registers to memory. In order to respect these delays, the SB and RB bits should be polled until they become zero. As a general rule, always poll the SB and RB bits before writing anything to the chip.
+A delay of approximately 450 µsec is required after writing to any of registers 4 to 8. A delay of approximately 5 µsec is required after writing to any of registers 9 through 16. As well, the chip must not be accessed while the chip is saving its registers to memory. In order to respect these delays, the SB and RB bits should be polled until they become zero. As a general rule, always poll the SB and RB bits before writing anything to the chip.
 
 As well, the chip must not be accessed while it is restoring its registers from memory. This process takes a bit less than 2.5 milliseconds. As there is no status bit for this action, the timing must be done in software.
 
@@ -236,7 +236,7 @@ These registers control the overall output volume of the card. They replace the 
 
 The volume ranges from +6 dB to -64 dB in steps of 2 dB. An additional step gives -80 dB (off). IMPORTANT: Bits D6 and D7 must be set to 1.
 
-<table border="1"><tr><td>dB</td><td>D5-D0</td></tr><tr><td>6</td><td>3F</td></tr><tr><td>4</td><td>3E</td></tr><tr><td>$\vdots$</td><td>$\vdots$</td></tr><tr><td>-62</td><td>1D</td></tr><tr><td>-64</td><td>1C</td></tr><tr><td>-80</td><td>1B</td></tr><tr><td>$\vdots$</td><td>$\vdots$</td></tr><tr><td>-80</td><td>0</td></tr></table>
+<table border="1"><tr><td>dB</td><td>D5-D0</td></tr><tr><td>6</td><td>3F</td></tr><tr><td>4</td><td>3E</td></tr><tr><td>⋮</td><td>⋮</td></tr><tr><td>-62</td><td>1D</td></tr><tr><td>-64</td><td>1C</td></tr><tr><td>-80</td><td>1B</td></tr><tr><td>⋮</td><td>⋮</td></tr><tr><td>-80</td><td>0</td></tr></table>
 
 Registers #4 and #5
 
@@ -244,14 +244,14 @@ Registers #4 and #5
 
 The bass control has a range of +15dB to -12 dB in 3 dB steps. The bass is set using bits D0-D3. IMPORTANT: Bits D4 - D7 must be set to 1.
 
-<table border="1"><tr><td>dB</td><td>D3-D0</td></tr><tr><td>15</td><td>F</td></tr><tr><td>$\vdots$</td><td>$\vdots$</td></tr><tr><td>15</td><td>B</td></tr><tr><td>12</td><td>A</td></tr><tr><td>$\vdots$</td><td>$\vdots$</td></tr><tr><td>0</td><td>6</td></tr><tr><td>$\vdots$</td><td>$\vdots$</td></tr><tr><td>-12</td><td>2</td></tr><tr><td>$\vdots$</td><td>$\vdots$</td></tr><tr><td>-12</td><td>0</td></tr></table>
+<table border="1"><tr><td>dB</td><td>D3-D0</td></tr><tr><td>15</td><td>F</td></tr><tr><td>⋮</td><td>⋮</td></tr><tr><td>15</td><td>B</td></tr><tr><td>12</td><td>A</td></tr><tr><td>⋮</td><td>⋮</td></tr><tr><td>0</td><td>6</td></tr><tr><td>⋮</td><td>⋮</td></tr><tr><td>-12</td><td>2</td></tr><tr><td>⋮</td><td>⋮</td></tr><tr><td>-12</td><td>0</td></tr></table>
 
 Register #6
 ## Treble
 
 The treble control has a range of +12dB to -12 dB in 3 dB steps. The treble is set using bits D0-D3. IMPORTANT: Bits D4 - D7 must be set to 1.
 
-<table border="1"><tr><td>dB</td><td>D3-D0</td></tr><tr><td>12</td><td>F</td></tr><tr><td>$\vdots$</td><td>$\vdots$</td></tr><tr><td>12</td><td>A</td></tr><tr><td>$\vdots$</td><td>$\vdots$</td></tr><tr><td>0</td><td>6</td></tr><tr><td>$\vdots$</td><td>$\vdots$</td></tr><tr><td>-12</td><td>2</td></tr><tr><td>$\vdots$</td><td>$\vdots$</td></tr><tr><td>-12</td><td>0</td></tr></table>
+<table border="1"><tr><td>dB</td><td>D3-D0</td></tr><tr><td>12</td><td>F</td></tr><tr><td>⋮</td><td>⋮</td></tr><tr><td>12</td><td>A</td></tr><tr><td>⋮</td><td>⋮</td></tr><tr><td>0</td><td>6</td></tr><tr><td>⋮</td><td>⋮</td></tr><tr><td>-12</td><td>2</td></tr><tr><td>⋮</td><td>⋮</td></tr><tr><td>-12</td><td>0</td></tr></table>
 
 Register #7
 
@@ -399,7 +399,7 @@ $$
 F (t) = E (t) \sin (w t + \Omega)
 $$
 
-E(t) is the output from the EG, w is the frequency, t is time and $ \Omega $ is the phase modulation.
+E(t) is the output from the EG, w is the frequency, t is time and Ω is the phase modulation.
 
 ![Figure 5.1](images/p5-01.png)
 
@@ -461,10 +461,10 @@ This register must be initialized to zero before taking any action. The wave sel
 
 The timers are not wired on the card. However, the following information is included since the timers can be used to detect the presence of our card in the computer.
 
-Timer-1 is an upward 8 bit counter with a resolution of 80 $ \mu $sec. If an overflow occurs, the status register flag FT1 is set, and the preset value (address = 02) is loaded into Timer-1. Timer-2 (address = 03) is an upward 8 bit counter just like Timer-1 except that the resolution is 320 $ \mu $sec.
+Timer-1 is an upward 8 bit counter with a resolution of 80 µsec. If an overflow occurs, the status register flag FT1 is set, and the preset value (address = 02) is loaded into Timer-1. Timer-2 (address = 03) is an upward 8 bit counter just like Timer-1 except that the resolution is 320 µsec.
 
 $$
-T _ {\mathrm {o v e r f l o w}} (\mathrm {m s}) = (2 5 6 - \mathrm {N}) ^ {*} \mathrm {K}
+T _ {\mathrm {o v e r f l o w}} (\mathrm {m s}) = (2 5 6 - \mathrm {N}) * \mathrm {K}
 $$
 
 N is the preset value and K is the timer constant equal to 0.08 for Timer-1 and 0.32 for Timer-2. Register address 04 controls the operation of both timers. ST1 and ST2 (start/stop T1 or T2) bits start or stop the timers. When the corresponding bit is 1 the counter is loaded and counting starts, but when 0 the counter is held.
@@ -495,7 +495,7 @@ As mentioned earlier, the timer interrupts are not connected, but the timers can
 
 5. Unmask and start timer-1: write 21H to register 4.
 
-6. Wait (in a delay loop) for at least 80 $ \mu $sec.
+6. Wait (in a delay loop) for at least 80 µsec.
 
 7. Read the status register and save the result.
 
@@ -531,7 +531,7 @@ The MULTI 4-bit field determines the multiplication factor applied to the input 
 
 <table border="1"><tr><td>MULTI</td><td>Factor</td></tr><tr><td>8</td><td>8</td></tr><tr><td>9</td><td>9</td></tr><tr><td>10</td><td>10</td></tr><tr><td>11</td><td>10</td></tr><tr><td>12</td><td>12</td></tr><tr><td>13</td><td>12</td></tr><tr><td>14</td><td>15</td></tr><tr><td>15</td><td>15</td></tr></table>
 
-The operator output can then be expressed, with " $ \partial $ " as the multiplication factor, as follows:
+The operator output can then be expressed, with " ∂ " as the multiplication factor, as follows:
 
 $$
 F (t) = E _ {c} (t) \sin \left(\partial_ {c} w _ {c} t + E _ {m} \sin \left(\partial_ {m} w _ {m} t\right)\right)
@@ -540,7 +540,7 @@ $$
 The KSR bit (position = D4) changes the rates for the envelope generator (EG). This parameter makes it possible to gradually shorten envelope length (increase EG rates) as higher notes on the keyboard are played. This is particularly useful for simulating the sound of stringed instruments such as piano and guitar, in which the envelope of the higher notes is noticeably shorter than the lower notes. The actual rate is then equal to the ADSR value plus an offset:
 
 $$
-\mathrm{A c t u a l r a t e} = 4 ^ {*} \mathrm{R a t e} + \mathrm{K S R o f f e t}
+\mathrm{A c t u a l r a t e} = 4 * \mathrm{R a t e} + \mathrm{K S R o f f e t}
 $$
 
 The KSR offset is specified in the following table:
@@ -564,7 +564,7 @@ These registers (addresses 40H to 55H, 1 per operator) control the attenuation o
 The Total Level (TL) attenuates the operator's output. In FM synthesis mode, varying the output level of an operator functioning as a carrier results in a change in the volume of that operator's voice. Attenuating the output from a modulator will change the frequency spectrum produced by the carrier. In additive synthesis, varying the output level of any operator varies the volume of its corresponding voice. The TL value has a range of 0 through 63 (6 bits). To convert this value into an output level, apply the following formula:
 
 $$
-\mathrm{O u t p u t l e v e l} = (6 3 - \mathrm {T L}) ^ {*} 0. 7 5 \mathrm {d B}
+\mathrm{O u t p u t l e v e l} = (6 3 - \mathrm {T L}) * 0. 7 5 \mathrm {d B}
 $$
 
 ## ADSR
@@ -584,7 +584,7 @@ The release rate (RR) determines the rate at which the sound disappears after a 
 These parameters determine the pitch of the note played. The Block parameter determines the octave while the F-Number (10 bits) further specifies the frequency. The following formula is used to determine the value of F-Number and Block:
 
 $$
-F - N u m = F _ {m u s} ^ {*} 2 ^ {(2 0 - b)} / 4 9. 7 1 6 k H z
+F - N u m = F _ {m u s} * 2 ^ {(2 0 - b)} / 4 9. 7 1 6 k H z
 $$
 
 In this formula, $ F_{mus} $ is the desired frequency (Hz) and "b" is the block value (0 to 7). Refer to Appendix C for a table of note frequencies.
@@ -750,13 +750,13 @@ Register #1, Channel 0 is used for testing the LSI. It should not be accessed.
 Timer 0 (Registers #1 and 2, Channel 0) is a 16-bit programmable down counter with 1.88964 usec resolution. This constant will be referred to as clockFreq. the the following examples. The interrupt is triggered when the counter value reaches 0. The time t0, in usec, until IRQ is generated may be calculated as follows:
 
 $$
-\mathbf {t 0} = \mathrm {T I M E R 0} (\mathrm {H}) * (2 5 6 ^ {*} \mathrm {b a s e F r e q}) + \mathrm {T I M E R 0} (\mathrm {L}) * \mathrm {b a s e F r e q}
+\mathbf {t 0} = \mathrm {T I M E R 0} (\mathrm {H}) * (2 5 6 * \mathrm {b a s e F r e q}) + \mathrm {T I M E R 0} (\mathrm {L}) * \mathrm {b a s e F r e q}
 $$
 
 The BASE COUNTER (Register #4 and 5, Channel 0) is a 12-bit counter that supplies the period for each tick of TIMER1 and TIMER2. The base counter has a resolution of 1.89 usec. The period bc, in usec, may be calculated as follows:
 
 $$
-\mathbf {b c} = \mathrm {B A S E C O U N T E R} (\mathrm {H}) * (2 5 6 ^ {*} \mathrm {b a s e F r e q}) + \mathrm {B A S E C O U N T E R} (\mathrm {L}) *
+\mathbf {b c} = \mathrm {B A S E C O U N T E R} (\mathrm {H}) * (2 5 6 * \mathrm {b a s e F r e q}) + \mathrm {B A S E C O U N T E R} (\mathrm {L}) *
 $$
 
 ## baseFreq

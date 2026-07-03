@@ -58,7 +58,7 @@ This is an LSI which has quality digital surround sound capabilities realized by
 
 ## FEATURES
 
-- The built-in RAM realizes digital delay time of 100 msec. $ ^{*} $ at the maximum.
+- The built-in RAM realizes digital delay time of 100 msec. * at the maximum.
 
 - Feedback loop can be constructed for reverberation.
 
@@ -66,7 +66,7 @@ This is an LSI which has quality digital surround sound capabilities realized by
 
 - Digital attenuator is built in for surround sound volume control.
 
-- Sampling frequency is 23.6 kHz $ ^{*} $ , and 14 bit floating A/D converter is built in.
+- Sampling frequency is 23.6 kHz * , and 14 bit floating A/D converter is built in.
 
 - Two-times oversampling digital filter and 14 bit floating D/A converter are built in.
 

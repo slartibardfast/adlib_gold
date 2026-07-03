@@ -444,7 +444,7 @@ Activating the key when in the Mixer Panel main window will open the Surround Fe
 
 Figure 9: The Surround control window
 
-<table border="1"><tr><td>$\cdot$</td><td>NOTE: If the Surround Sound Module is not installed, the program will display the message"OPTION NOT INSTALLED"and the changes you make to the parameters will have no effect(Fig.10).</td></tr></table>
+<table border="1"><tr><td>·</td><td>NOTE: If the Surround Sound Module is not installed, the program will display the message"OPTION NOT INSTALLED"and the changes you make to the parameters will have no effect(Fig.10).</td></tr></table>
 
 ![Figure 2.3](images/p2-03.png)
 
@@ -893,7 +893,7 @@ that the output signal is in phase with the input signal. When this check box is
 
 ## dB
 
-Displays the attenuation value setting of the signal, which ranges from -60 decibels to 0 decibels, in steps of 2 dB. A signal can also be turned off (- $ \infty $).
+Displays the attenuation value setting of the signal, which ranges from -60 decibels to 0 decibels, in steps of 2 dB. A signal can also be turned off (- ∞).
 
 ## Filter Parameter Section
 

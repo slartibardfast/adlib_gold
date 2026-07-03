@@ -19,3 +19,7 @@ level = 1
 [output.html.search]
 enable = true
 limit-results = 30
+
+# Server-side math: render LaTeX to HTML at build time with KaTeX.
+[preprocessor.katex]
+after = ["links"]

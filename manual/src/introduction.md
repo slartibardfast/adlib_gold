@@ -26,13 +26,13 @@ In order to ensure that third party applications operate in a consistent environ
 
 Ad Lib Inc.
 
-220 Grande-AllÃ©e East, Suite 850
+220 Grande-Allée East, Suite 850
 
-QuÃ©bec, QC, Canada G1R 2J1
+Québec, QC, Canada G1R 2J1
 
 50 Staniford Street, Suite 800 Boston, MA 02114
 
-Copyright $ \textcircled{c} $1992, Ad Lib Inc.
+Copyright © 1992, Ad Lib Inc.
 
 1st edition
 
