@@ -10,6 +10,7 @@
 - [Chapter 3 - Gold Hardware](ch03-gold-hardware.md)
 - [Chapter 4 - Software Applications](ch04-software-applications.md)
 - [Chapter 5 - DOS Software Drivers](ch05-dos-drivers.md)
+- [Chapter 6 - Windows DLLs](ch06-windows-dlls.md)
 - [Chapter 7 - Low-Level Programming](ch07-low-level.md)
 
 # Appendices

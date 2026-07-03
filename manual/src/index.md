@@ -18,6 +18,7 @@ API, and the low-level register interface needed to program the card directly.
 | [Chapter 3 - Gold Hardware](ch03-gold-hardware.md) | Card layout, jumpers, connectors, surround module |
 | [Chapter 4 - Software Applications](ch04-software-applications.md) | Setup, test, mixer, jukebox, instrument/sample makers |
 | [Chapter 5 - DOS Software Drivers](ch05-dos-drivers.md) | Control, FM, Wave, Timer and MIDI driver APIs |
+| [Chapter 6 - Windows DLLs](ch06-windows-dlls.md) | Announced but not released in v1.01 |
 | [Chapter 7 - Low-Level Programming](ch07-low-level.md) | MMA / OPL3 / mixer register reference |
 | [Appendix: GSS](appendix-gss.md) | Gold Sound Standard specification |
 | [Appendix: SP2](appendix-sp2.md) | YM7128 surround processor datasheet |
