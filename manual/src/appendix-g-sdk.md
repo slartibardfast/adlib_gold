@@ -29,7 +29,10 @@ The beta (31 March 1992) is an installer set, structured like the release: a
 `SETUP.EXE` plus a spanned `GOLD.CMP` archive that expands to a 130-file `\GOLD`
 tree (three weeks before v1.00 — the differences are catalogued in the
 [v0.91b → v1.00 changelog](appendix-f-as-installed.md#version-history-v091b-beta--v100)).
-The as-shipped files:
+That payload has been decoded and is browsable at
+[`disks/beta-v0.91b/installed/`](disks/beta-v0.91b/installed/) — note the samples
+sit loose in `\GOLD` (they were only moved into `\GOLD\SMP` for the v1.00 release)
+and `SAMPLBNK.EQU` is still present (dropped in v1.00). The as-shipped files:
 
 | Size | File | Notes |
 |------|------|-------|
