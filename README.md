@@ -6,15 +6,17 @@ audio controller, an optional YM7128 (SP2) surround processor, and a MIDI/game
 port. The driver is organized as an adapter plus four miniports (topology, wave,
 FM synth, MIDI), adapted from the Windows 2000 DDK sample drivers.
 
-## 📖 Developer manual
+## 📖 SDK reference
 
-The original **Ad Lib Gold Developer Toolkit v1.01** manual — OCR'd from the
-scanned PDF and rebuilt as a searchable mdBook — is published at:
+The **Ad Lib Gold Developer Toolkit v1.01** — the SDK this driver is written
+against — is published as a searchable mdBook at:
 
 ### 👉 https://slartibardfast.github.io/adlib_gold/
 
 It documents the hardware, the DOS driver APIs, and the low-level register
-interface this driver implements.
+interface this driver implements. **This is the canonical SDK reference** for
+the project; the raw OCR text in [`doc/sdk.txt`](doc/sdk.txt) is its source
+material.
 
 ## Source layout
 
