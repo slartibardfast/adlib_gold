@@ -441,7 +441,7 @@ The ALMSC is located at address 388H in the i/o space. The card decodes two addr
 
 <table border="1"><tr><td>REG</td><td colspan="7">D7 D6 D5 D4 D3 D2 D1 D0</td></tr><tr><td>01</td><td colspan="2"></td><td>WSE</td><td colspan="4">TEST</td></tr><tr><td>02</td><td colspan="7">TIMER-1</td></tr><tr><td>03</td><td colspan="7">TIMER-2</td></tr><tr><td>04</td><td>RST</td><td colspan="2">maskT1T2</td><td colspan="3"></td><td>start/stopT2T1</td></tr><tr><td>08</td><td>CSM</td><td>SEL</td><td colspan="5"></td></tr><tr><td>20-35</td><td>AM</td><td>VIB</td><td>EG</td><td>KSR</td><td colspan="3">MULTI</td></tr><tr><td>40-55</td><td colspan="2">KSL</td><td colspan="5">TL</td></tr><tr><td>60-75</td><td colspan="4">AR</td><td colspan="3">DR</td></tr><tr><td>80-95</td><td colspan="4">SL</td><td colspan="3">RR</td></tr><tr><td>A0-A8</td><td colspan="8">F-NUMBER(L)</td></tr><tr><td>B0-B8</td><td colspan="2"></td><td>KON</td><td colspan="3">BLOCK</td><td colspan="2">F-NUM(H)</td></tr><tr><td>BD</td><td>DEPAM</td><td>DEPVIB</td><td>R</td><td>BD</td><td>SD</td><td>TOM</td><td>TC</td><td>HH</td></tr><tr><td>C0-C8</td><td colspan="4"></td><td colspan="3">FB</td><td>C</td></tr><tr><td>E0-F5</td><td colspan="6"></td><td colspan="2">WS</td></tr></table>
 
-Because of the nature of the card, you must wait 3.3 Î¼sec after a register select write and 23 Î¼sec for a data write. Only the status register located at address 388H can be read.
+Because of the nature of the card, you must wait 3.3 µsec after a register select write and 23 µsec for a data write. Only the status register located at address 388H can be read.
 
 For many parameters, there is one register per operator. However, there are holes in the address map so that the operator number cannot be used as an offset into the map. The operator offsets are as follows:
 
@@ -613,7 +613,7 @@ The AM Depth is 4.8dB when D7 is 1 and 1dB when 0. The VIB Depth is 14 cents whe
 
 These two parameters influence the way the operators are connected together and the B factor in the feedback loop of the modulator. These parameters are assigned 1 per voice at locations C0H through C8H. The Connection bit (C) determines if the voice will be functioning in Additive synthesis mode (C = 1) of in Frequency modulation mode (C = 0). The other parameter, Feedback (FB), gives the modulation factor, B, for the feedback loop:
 
-<table border="1"><tr><td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>Î²</td><td>0</td><td>Ï€/16</td><td>Ï€/8</td><td>Ï€/4</td><td>Ï€/2</td><td>Ï€</td><td>2Ï€</td><td>4Ï€</td></tr></table>
+<table border="1"><tr><td></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td>β</td><td>0</td><td>π/16</td><td>π/8</td><td>π/4</td><td>π/2</td><td>π</td><td>2π</td><td>4π</td></tr></table>
 
 ## Wave Select
 

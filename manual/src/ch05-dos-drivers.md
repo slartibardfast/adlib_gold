@@ -2377,7 +2377,7 @@ All timers have their own base clock (time resolution) and counter size (maximum
 
 Here is a table that illustrates the specifications of all timers:
 
-<table border="1"><tr><td rowspan="2"></td><td colspan="2">OPL3 chip</td><td colspan="4">MMA chip</td></tr><tr><td>Tim.1</td><td>Tim.2</td><td>Tim.0</td><td>B.C.</td><td>Tim.1</td><td>Tim.2</td></tr><tr><td>time resolution in Î¼sec</td><td>80</td><td>320</td><td>1.89</td><td>1.89</td><td>1.89</td><td>1.89</td></tr><tr><td>max period length in msec</td><td>20.4</td><td>81.6</td><td>123.83</td><td>7.738</td><td>116.07</td><td>507116</td></tr><tr><td>counter size in bits</td><td>8</td><td>8</td><td>16</td><td>12</td><td>4+12</td><td>16+12</td></tr></table>
+<table border="1"><tr><td rowspan="2"></td><td colspan="2">OPL3 chip</td><td colspan="4">MMA chip</td></tr><tr><td>Tim.1</td><td>Tim.2</td><td>Tim.0</td><td>B.C.</td><td>Tim.1</td><td>Tim.2</td></tr><tr><td>time resolution in µsec</td><td>80</td><td>320</td><td>1.89</td><td>1.89</td><td>1.89</td><td>1.89</td></tr><tr><td>max period length in msec</td><td>20.4</td><td>81.6</td><td>123.83</td><td>7.738</td><td>116.07</td><td>507116</td></tr><tr><td>counter size in bits</td><td>8</td><td>8</td><td>16</td><td>12</td><td>4+12</td><td>16+12</td></tr></table>
 
 Table 1: Hardware specifications of timers
 
