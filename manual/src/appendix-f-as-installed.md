@@ -64,3 +64,39 @@ Fourteen `.RL2` sequences ship as demos: `BUILDING`, `CAVE`, `FLIGHT`,
 tools (bass/snare drums, cymbals, hi-hats, congas, cowbells, claves, bells,
 brushes, handclaps, and the `$TEXT*` speech samples). See the
 [full listing](disks/program-disks-v1.00/installed/SMP/).
+
+## Version history (v0.91b beta → v1.00)
+
+Because the codec is now decodable, the **beta software (v0.91b, 31 March 1992)**
+— preserved as floppy images in [Appendix G](appendix-g-sdk.md) — can be
+expanded too and diffed against the v1.00 release (23 April 1992, three weeks
+later). The changes:
+
+- **Sample library reorganised.** In the beta the ~85 `.SMP` files sat loose in
+  `\GOLD`; v1.00 moves them into the new `\GOLD\SMP` sub-directory. This
+  accounts for most of the apparent file churn — the samples themselves are
+  unchanged.
+- **Demo songs renamed** — the beta's `*GLD`/`*GD` suffixes were dropped:
+  `BUILDGLD`→`BUILDING`, `CAVEGLD`→`CAVE`, `ERAGLD`→`NEWERA`, `INDUSGLD`→`INDUSTRY`,
+  `KRAKENGD`→`KRAKEN`, `MACHIGLD`→`MACHINE`, `MIRRORGD`→`MIRRORS`,
+  `ULTIMGLD`→`ULTIMATE`, `WALKGLD`→`WALKPARK`, `LUTECON`→`LUTECONC`. The beta's
+  `FUGUE2`/`PRELUDE2` were dropped; `TOCCATA2`, `HIGHWAY2`, `FLIGHT` and `LORDS`
+  were added.
+- **`SAMPLBNK.EQU` removed** — confirmed verbatim by the v1.00 `README`: *"Due to
+  changes in the .RL2 file format, file SAMPLBNK.EQU is no longer necessary and
+  has been removed."*
+- **Animation player restructured** — the beta's single `PLAYANIM.EXE` became a
+  `PLAYANIM.BAT` launcher driving a new `ANIMGLD.EXE`.
+- **Every driver and application was recompiled** (all compressed sizes differ);
+  most notably `ALARMDRV.EXE` and `PLAYRL2.EXE` roughly halved in size.
+- **Batch reshuffle** — `SYNCDRV.BAT` dropped, `STRKDRV.BAT` added, and
+  `SETUP.BAT` folded into the payload (it now auto-calls `CTRLDRV.EXE`, per the
+  v1.00 `README`).
+
+The beta `README` also records user-facing changes settling in just before
+release: the `MIXER`/`RL2DRV` hotkeys became redefinable from `SETUP`, and the
+mixer's **F4** key was repurposed to save the configuration permanently to
+EEPROM. Developer-facing addenda continued into **v1.01** — the
+[Release Notes](release-notes.md) add the `RL2DRV` driver-ordering requirement,
+the `SAMPL.EXE` library-conflict warning, and the interrupt-disable discipline
+for hardware access.

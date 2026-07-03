@@ -47,7 +47,7 @@ Disk images (mountable in DOSBox / any emulator):
 | Size | File | Notes |
 |------|------|-------|
 | 603 174 | `GOLD2.CMP` | second part of the spanned archive |
-| 19 120 | `G2S/G2S.EXE` | Gold-to-Standard utility |
+| 19 120 | `G2S/G2S.EXE` | **Sound Blaster emulator** — a V86-mode TSR (≈352 bytes resident) that traps SB I/O and remaps it to the Gold hardware (~50% of SB apps; also emulates a DAC on LPT1) |
 | 3 064 | [`G2S/G2S.DOC`](disks/program-disks-v1.00/disk2/G2S/G2S.DOC) | its documentation |
 | 37 742 | `WIN_MIDI/MIDIMAP.CFG` | Windows MIDI mapper config |
 | 112 | [`WIN_MIDI/README.TXT`](disks/program-disks-v1.00/disk2/WIN_MIDI/README.TXT) | |
