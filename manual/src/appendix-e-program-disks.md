@@ -42,7 +42,7 @@ Disk images (mountable in DOSBox / any emulator):
 | 417 508 | `GOLD1.CMP` | first part of the spanned install archive |
 | 1 113 | [`README.TXT`](disks/program-disks-v1.00/disk1/README.TXT) ([md](disks-md/program-disks-v1.00/disk1/README.TXT.md)) | v1.00 install notes |
 
-## Disk 2 — archive part 2, Windows MIDI, GSS utility
+## Disk 2 — archive part 2, Sound Blaster emulator, Windows MIDI
 
 | Size | File | Notes |
 |------|------|-------|

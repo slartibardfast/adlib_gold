@@ -1,6 +1,8 @@
 # Ad Lib Gold Developer Toolkit
 
-*A searchable reproduction of the **Ad Lib Gold Developer Toolkit, Version 1.01** developer manual.*
+*A searchable reproduction of the **Ad Lib Gold Developer Toolkit, Version 1.01**
+developer manual — with the complete Ad Lib Gold floppy-disk software preserved,
+decoded and browsable alongside it.*
 
 The Ad Lib Gold 1000/2000 was a 1992 16-bit sound card built around the Yamaha
 **OPL3 (YMF262)** FM synthesizer, a **MMA** digital-audio controller, an optional
@@ -23,6 +25,10 @@ API, and the low-level register interface needed to program the card directly.
 | [Appendix: GSS](appendix-gss.md) | Gold Sound Standard specification |
 | [Appendix: SP2](appendix-sp2.md) | YM7128 surround processor datasheet |
 | [Appendix D](appendix-d-files.md) | List of installed files |
+| [Appendix E: Program Disks](appendix-e-program-disks.md) | The v1.00 end-user floppies as shipped — authentic images + files |
+| [Appendix F: Software (as installed)](appendix-f-as-installed.md) | The decoded 133-file `\GOLD` install tree |
+| [Appendix G: Developer SDK](appendix-g-sdk.md) | Driver C/asm source, samples, toolkit + beta floppies |
+| [Appendix H: "Ad Lib Comp." format](appendix-h-goldcmp-format.md) | Reverse-engineering the `GOLD.CMP` codec |
 
 ## About this reproduction
 
@@ -40,6 +46,23 @@ Because it is a historical document, some names, phone numbers and addresses
 (such as the Ad Lib Developer Support line) are of purely historical interest.
 Text recovered by OCR may contain occasional transcription errors; consult the
 original scan where exactness matters.
+
+## The disk archive
+
+Appendices E–H go beyond the manual and preserve the actual **Ad Lib Gold
+software** across three release generations — the **Beta v0.91b** (March 1992),
+the **Program Disks v1.00** (April 1992) and the **Developer Toolkit v1.01**.
+Every file is kept byte-for-byte in its original DOS (CP437 / CRLF) encoding with
+a UTF-8 rendering alongside; the authentic 720 KB floppy images are included and
+were boot-sector-verified and malware-scanned before inclusion.
+
+The end-user software shipped in a proprietary compressed container
+(`GOLD.CMP`). Its format and LZ + static-Huffman codec were
+[reverse-engineered](appendix-h-goldcmp-format.md) from the installer, so the
+complete install trees — **133 files** for v1.00 and **130** for the beta — could
+be decoded and are [browsable as installed](appendix-f-as-installed.md). Decoding
+is proven correct: the recovered `CTRLDRV.EXE` is byte-identical to the copy that
+ships uncompressed on the disk.
 
 > This SDK lives in the
 > [`slartibardfast/adlib_gold`](https://github.com/slartibardfast/adlib_gold)
