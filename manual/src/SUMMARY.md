@@ -87,3 +87,6 @@
   - [installed/SYNCDRV.BAT](disks-md/beta-v0.91b/installed/SYNCDRV.BAT.md)
   - [installed/TEST.BAT](disks-md/beta-v0.91b/installed/TEST.BAT.md)
   - [installed/VOICEPAD.BAT](disks-md/beta-v0.91b/installed/VOICEPAD.BAT.md)
+- [Windows 3.1 Mixer & Drivers v1.2]()
+  - [README.TXT](disks-md/windows-drivers-v1.2/README.TXT.md)
+  - [G2S.DOC](disks-md/windows-drivers-v1.2/G2S.DOC.md)
