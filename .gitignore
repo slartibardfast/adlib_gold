@@ -1,0 +1,6 @@
+
+# TLC (Specula lane) transient output — regenerated per run, never tracked.
+spec/states/
+spec/*_TTrace_*.tla
+spec/*_TTrace_*.bin
+tla2tools.jar
