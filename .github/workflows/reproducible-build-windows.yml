@@ -1,0 +1,37 @@
+name: Reproducible Build (Windows)
+
+# The second host of the dual-hosted lane: rebuild adlibgold.sys natively on Windows
+# from the same pinned DDK+VC6 deps-bundle and prove it reproduces the SAME recorded
+# artifact hash as the Linux/Wine build, byte-for-byte (call/0007, call/0009). Because
+# both hosts run the identical VC6 binaries over identical C:\ paths, the artifacts must
+# match; this job is what proves it. The bundle is provided out of band (its licence
+# forbids public redistribution): set the DDK_BUNDLE_URL secret to a location CI can read.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['*.cpp', '*.h', 'sources', 'build.bat', 'build.sh', 'pe_normalize.py', 'deps-bundle.lock']
+
+env:
+  BUNDLE_SHA: f60af3fd65b53b67176499d9959adc1235cb1a1d3024c0adb6b7bd3c2fadb902
+  ARTIFACT_SHA: b4c5d63c5cf10405f82eff6a210966501349d19dc6a4aaf364289b8df5751587
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Fetch and verify the pinned deps-bundle (provenance gate)
+        shell: bash
+        run: |
+          curl -fsSL -o bundle.tar.gz "${{ secrets.DDK_BUNDLE_URL }}"
+          echo "$BUNDLE_SHA  bundle.tar.gz" | sha256sum -c -
+      - name: Build natively with the VC6 toolchain
+        shell: cmd
+        run: |
+          set BUNDLE=%CD%\bundle.tar.gz
+          call build.bat
+      - name: Prove the Windows artifact is byte-identical to the Linux/Wine build
+        shell: bash
+        run: echo "$ARTIFACT_SHA  adlibgold.sys" | sha256sum -c -
