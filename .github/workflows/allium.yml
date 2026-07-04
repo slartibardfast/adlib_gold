@@ -23,12 +23,11 @@ jobs:
       - name: Check and analyse every spec, then discharge its obligations
         run: |
           set -e
+          clean () { python3 -c "import json,sys; d=json.load(open('$1')); n=len(d.get('diagnostics',[]))+len(d.get('findings',[])); sys.exit(1 if n else 0)" || { cat "$1"; exit 1; }; }
           for s in spec/*.allium; do
             echo "== $s =="
-            for cmd in check analyse; do
-              allium "$cmd" "$s" > out.json
-              python3 -c "import json,sys; d=json.load(open('out.json')); n=len(d.get('diagnostics',[]))+len(d.get('findings',[])); print(f'  {\"$cmd\"}: {n} diagnostic(s)/finding(s)'); sys.exit(1 if n else 0)" || { cat out.json; exit 1; }
-            done
+            allium check "$s" > check.json;     clean check.json
+            allium analyse "$s" > analyse.json; clean analyse.json
             allium plan "$s" > /dev/null
             "$HOME/.local/bin/host-lifecycle" obligations "$s" --tests tests
           done
