@@ -1432,8 +1432,16 @@ Write
     OUT     PULONG  BytesWritten
 )
 {
-    ASSERT(BufferAddress);
     ASSERT(BytesWritten);
+
+    /* PortMidi may call with a NULL or zero-length buffer, so guard before the first
+     * read: ASSERT compiles out in a free build, so dereferencing a NULL here would
+     * bugcheck. The sibling UART Write guards the same way. */
+    if (!BufferAddress || Length == 0)
+    {
+        *BytesWritten = 0;
+        return STATUS_SUCCESS;
+    }
 
     BYTE statusByte = *(PBYTE)BufferAddress & 0xF0;
     *BytesWritten = Length;
@@ -1456,7 +1464,12 @@ Write
     }
     else if (Length < 4)
     {
-        WriteMidiData(*(DWORD *)BufferAddress);
+        /* Assemble the message from only the provided bytes; a plain DWORD read would
+         * fetch up to three bytes past a short buffer. */
+        DWORD msg = 0;
+        for (ULONG i = 0; i < Length; i++)
+            msg |= ((DWORD)((PBYTE)BufferAddress)[i]) << (i * 8);
+        WriteMidiData(msg);
     }
     else
     {

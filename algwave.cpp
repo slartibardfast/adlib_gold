@@ -1430,10 +1430,13 @@ ProgramMmaStart
     }
     else
     {
-        /* 8-bit: DMA mode — hardware transfers directly */
+        /* 8-bit: DMA mode — hardware transfers directly. Leave the FIFO interrupt
+         * unmasked (no MMA_FMT_MSK): the threshold interrupt is the only thing that
+         * runs the ISR, and ServiceWaveISR gates the PIO fill on m_16Bit, so for an
+         * 8-bit stream it just calls Port->Notify, which is what advances the cyclic
+         * buffer position. Masking it froze 8-bit render and capture. */
         fmtReg |= (MMA_DATA_FMT_8BIT << MMA_FMT_DATA_SHIFT);
         fmtReg |= MMA_FMT_ENB;         /* DMA enabled */
-        fmtReg |= MMA_FMT_MSK;         /* Mask FIFO IRQ (DMA handles flow) */
     }
 
     ac->WriteMMA(MMA_REG_FORMAT, fmtReg);

@@ -604,6 +604,14 @@ Init
 
     _DbgPrintF(DEBUGLVL_VERBOSE, ("[CMiniportTopologyAdLibGold::Init]"));
 
+    /* Zero the members the failure cleanup and destructor touch before anything can
+     * fail: the DDK placement new does not zero pool, and the destructor releases
+     * AdapterCommon under an `if` guard that heap garbage would defeat. */
+    AdapterCommon = NULL;
+    Sp2Present    = FALSE;
+    Sp2Enabled    = FALSE;
+    Sp2Mode       = 1;
+
     NTSTATUS ntStatus =
         UnknownAdapter->QueryInterface(IID_IAdapterCommon,
                                        (PVOID *)&AdapterCommon);

@@ -965,9 +965,14 @@ InterruptServiceRoutine
     WRITE_PORT_UCHAR(that->m_pPortBase + ALG_REG_FM1_ADDR, ALG_BANK_OPL3);
 
     /*
-     * If all IRQ source bits are 1 (inactive), this is not our interrupt.
+     * Claim the interrupt only for the two sources this ISR actually services, the
+     * sampling and FM lines. The SCSI and telephone bits in the status byte belong to
+     * other drivers; testing them here (the wider ALG_STATUS_IRQ_MASK) would let this
+     * ISR return SUCCESS for an interrupt it cannot clear, stalling the real handler.
+     * A source is pending when its bit is 0, so both bits set means neither is ours.
      */
-    if ((status & ALG_STATUS_IRQ_MASK) == ALG_STATUS_IRQ_MASK)
+    if ((status & (ALG_STATUS_SMP_IRQ | ALG_STATUS_FM_IRQ)) ==
+        (ALG_STATUS_SMP_IRQ | ALG_STATUS_FM_IRQ))
     {
         return STATUS_UNSUCCESSFUL;
     }
