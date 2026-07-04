@@ -15,6 +15,7 @@
  */
 
 #include "fmsynth.h"
+#include "fmvoice.h"   /* pure voice-allocation policy (call/0014), unit-tested */
 
 #define STR_MODULENAME "AdLibGoldFM: "
 
@@ -1625,18 +1626,20 @@ Opl3_FindFullSlot
 {
     ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
 
+    /* Delegate to the pure policy (fmvoice.h), the single tested source of truth. */
+    unsigned char chan[NUM2VOICES], note[NUM2VOICES], on[NUM2VOICES];
     WORD i;
+    int  found;
 
     for (i = 0; i < NUM2VOICES; i++)
     {
-        if ((bChannel == m_Voice[i].bChannel)
-            && (bNote == m_Voice[i].bNote)
-            && (m_Voice[i].bOn))
-        {
-            return i;
-        }
+        chan[i] = m_Voice[i].bChannel;
+        note[i] = m_Voice[i].bNote;
+        on[i]   = (unsigned char)(m_Voice[i].bOn ? 1 : 0);
     }
-    return 0xFFFF;
+
+    found = FmVoiceFind(chan, note, on, NUM2VOICES, bChannel, bNote);
+    return (found == FM_VOICE_NONE) ? (WORD)0xFFFF : (WORD)found;
 }
 
 
@@ -2011,53 +2014,21 @@ Opl3_FindEmptySlot(BYTE bPatch)
 {
     ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
 
-    WORD  i, found;
-    DWORD dwOldest;
+    /* Delegate to the pure policy (fmvoice.h), the single tested source of truth:
+     * a free voice, else the oldest released, else the oldest of this patch, else
+     * the globally oldest. Always a valid voice, so no more than 18 ever sound. */
+    unsigned long time[NUM2VOICES];
+    unsigned char on[NUM2VOICES], patch[NUM2VOICES];
+    WORD i;
 
     for (i = 0; i < NUM2VOICES; i++)
     {
-        if (!m_Voice[i].dwTime)
-            return i;
+        time[i]  = m_Voice[i].dwTime;
+        on[i]    = (unsigned char)(m_Voice[i].bOn ? 1 : 0);
+        patch[i] = m_Voice[i].bPatch;
     }
 
-    dwOldest = 0xffffffff;
-    found = 0xffff;
-    for (i = 0; i < NUM2VOICES; i++)
-    {
-        if (!m_Voice[i].bOn && (m_Voice[i].dwTime < dwOldest))
-        {
-            dwOldest = m_Voice[i].dwTime;
-            found = i;
-        }
-    }
-    if (found != 0xffff)
-        return found;
-
-    dwOldest = 0xffffffff;
-    found = 0xffff;
-    for (i = 0; i < NUM2VOICES; i++)
-    {
-        if ((m_Voice[i].bPatch == bPatch) && (m_Voice[i].dwTime < dwOldest))
-        {
-            dwOldest = m_Voice[i].dwTime;
-            found = i;
-        }
-    }
-    if (found != 0xffff)
-        return found;
-
-    found = 0;
-    dwOldest = m_Voice[found].dwTime;
-    for (i = (found + 1); i < NUM2VOICES; i++)
-    {
-        if (m_Voice[i].dwTime < dwOldest)
-        {
-            dwOldest = m_Voice[i].dwTime;
-            found = i;
-        }
-    }
-
-    return found;
+    return (WORD)FmVoiceAllocate(time, on, patch, NUM2VOICES, bPatch);
 }
 
 

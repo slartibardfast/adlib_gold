@@ -1,11 +1,12 @@
 # fmsynth.obligations — disposition for every `allium plan` obligation of fmsynth.allium.
 #   <id> => structural | test:<name> exercises=<symbol> | waived: <reason>
-# The behavioural obligations get runnable tests under plan/0006 once the driver's own
-# OPL3 synth (call/0014) builds from the vendored DDK bundle (call/0008).
+# The voice-allocation decision (which voice a note-on sounds, which a note-off releases,
+# the drum-channel classification) is pure (fmvoice.h) and unit-tested by
+# tests/fmvoice_test.c; the driver's Opl3_FindEmptySlot/Opl3_FindFullSlot delegate to it.
 
 # --- Spec-integrity (covered by the check/analyse lane) ---
-config-default.voice_count       => structural
-config-default.drum_channel      => structural
+config-default.voice_count       => test:test_fm_allocate exercises=FmVoiceAllocate
+config-default.drum_channel      => test:test_fm_drum_channel exercises=FmVoiceIsDrum
 entity-fields.Note               => structural
 entity-fields.Voice              => structural
 transition-rejected.Voice.state  => structural
@@ -13,11 +14,11 @@ transition-terminal.Voice.state  => structural
 surface-actor.FmSynth            => structural
 surface-provides.FmSynth         => structural
 
-# --- Behavioural (no runnable tests yet; discharged under plan/0006) ---
-transition-edge.Voice.free.sounding    => waived: no runnable tests until plan/0006 (needs a build; call/0008)
-transition-edge.Voice.sounding.free    => waived: no runnable tests until plan/0006 (needs a build; call/0008)
-rule-success.DrumChannelIsPercussion   => waived: no runnable tests until plan/0006 (needs a build; call/0008)
-rule-failure.DrumChannelIsPercussion.1 => waived: no runnable tests until plan/0006 (needs a build; call/0008)
-rule-success.NoteOnSounds              => waived: no runnable tests until plan/0006 (needs a build; call/0008)
-rule-success.NoteOffReleases           => waived: no runnable tests until plan/0006 (needs a build; call/0008)
-invariant.VoiceBudget                  => waived: no runnable tests until plan/0006 (needs a build; call/0008)
+# --- Behavioural (discharged by the pure voice allocator, tests/fmvoice_test.c) ---
+transition-edge.Voice.free.sounding    => test:test_fm_allocate exercises=FmVoiceAllocate
+transition-edge.Voice.sounding.free    => test:test_fm_find exercises=FmVoiceFind
+rule-success.DrumChannelIsPercussion   => test:test_fm_drum_channel exercises=FmVoiceIsDrum
+rule-failure.DrumChannelIsPercussion.1 => test:test_fm_drum_channel exercises=FmVoiceIsDrum
+rule-success.NoteOnSounds              => test:test_fm_allocate exercises=FmVoiceAllocate
+rule-success.NoteOffReleases           => test:test_fm_find exercises=FmVoiceFind
+invariant.VoiceBudget                  => test:test_fm_allocate exercises=FmVoiceAllocate

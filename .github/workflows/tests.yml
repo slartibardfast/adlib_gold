@@ -8,9 +8,9 @@ name: Tests
 on:
   push:
     branches: [main]
-    paths: ['tests/**', 'wavedsp.h', 'sp2.h', 'sp2modes.h', 'chiptiming.h', '.github/workflows/tests.yml']
+    paths: ['tests/**', 'wavedsp.h', 'sp2.h', 'sp2modes.h', 'chiptiming.h', 'fmvoice.h', '.github/workflows/tests.yml']
   pull_request:
-    paths: ['tests/**', 'wavedsp.h', 'sp2.h', 'sp2modes.h', 'chiptiming.h', '.github/workflows/tests.yml']
+    paths: ['tests/**', 'wavedsp.h', 'sp2.h', 'sp2modes.h', 'chiptiming.h', 'fmvoice.h', '.github/workflows/tests.yml']
 
 jobs:
   unit:
