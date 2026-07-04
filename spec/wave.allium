@@ -38,6 +38,7 @@ entity Format {
     resampled: Boolean
     resample_bounded: Boolean
     dithered: Boolean
+    routes_both_outputs: Boolean
 }
 
 -- One render stream across its KS transport lifecycle. ACQUIRE folds to PAUSE.
@@ -82,13 +83,27 @@ surface WaveRender {
         PositionRead(stream)
 }
 
--- A format is accepted only as audio PCM, mono or stereo, 8 or 16 bit; the port class
--- refuses anything else before a stream is configured.
+-- A format is accepted only as audio PCM, mono, 8 or 16 bit; the port class refuses
+-- anything else before a stream is configured. Stereo is deferred to a dual-channel
+-- interleaved path (call/0016): the manual's interleave is a DMA feature the 16-bit PIO
+-- fill cannot use, and the driver has no channel-1 access, so the pin advertises mono and
+-- Windows downmixes a stereo source.
 rule AcceptPcmFormat {
     when: format: Format.created
     requires: (format.bits = pcm8 or format.bits = pcm16)
-        and (format.channels = mono or format.channels = stereo)
+        and format.channels = mono
     ensures: stream.format = format
+}
+
+-- A mono stream drives its one FIFO to both outputs (reg 09h L and R set) with interleave
+-- off (reg 0Ch ILV clear), the routing the pure wavereg.h helper derives from the channel
+-- count. Stereo would drive channel 0 to the left output and set interleave, but that path
+-- is deferred (call/0016); the mapping is the one tested source of truth, so a regression
+-- that ignores the channel count is caught.
+rule MonoRoutesBothOutputs {
+    when: format: Format.created
+    requires: format.channels = mono
+    ensures: format.routes_both_outputs = true
 }
 
 -- A source rate that is not one of the four hardware rates is resampled to the nearest

@@ -13,6 +13,7 @@
 #include "common.h"
 #include "wavedsp.h"   /* pure, tested DSP: NearestSupportedRate + dither (call/0011) */
 #include "wavesrc.h"   /* pure, tested sample-rate converter (call/0011)             */
+#include "wavereg.h"   /* pure, tested play/format channel-field mapping (call/0016)  */
 
 
 /*****************************************************************************

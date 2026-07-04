@@ -49,7 +49,7 @@ KSDATARANGE_AUDIO PinDataRangesStream[] =
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
             STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
         },
-        2,          /* MaximumChannels      */
+        1,          /* MaximumChannels (mono only; stereo deferred, call/0016) */
         8,          /* MinimumBitsPerSample */
         16,         /* MaximumBitsPerSample */
         7350,       /* MinimumSampleFrequency */
@@ -615,8 +615,10 @@ ValidateFormat
         return STATUS_INVALID_PARAMETER;
     }
 
-    /* Channels: mono or stereo */
-    if ((wfx->nChannels < 1) || (wfx->nChannels > 2))
+    /* Channels: mono only. Stereo needs the dual-channel interleaved path, which is
+     * deferred until it can be programmed and verified on hardware (call/0016); the
+     * pin advertises MaximumChannels = 1, so Windows downmixes a stereo source. */
+    if (wfx->nChannels != 1)
     {
         return STATUS_INVALID_PARAMETER;
     }
@@ -628,11 +630,10 @@ ValidateFormat
     }
 
     /*
-     * Sample rate. Mono 16-bit plays through the software PIO fill, which can
+     * Sample rate. The 16-bit path plays through the software PIO fill, which can
      * resample an off-rate source to the nearest hardware rate (call/0011), so it
-     * accepts any rate in the audio range. Every other path (8-bit ISA DMA, and
-     * stereo, whose interleaved frames the streaming fill does not resample) must
-     * be one of the four discrete hardware rates.
+     * accepts any rate in the audio range. The 8-bit ISA DMA path clocks the hardware
+     * directly, so it must be one of the four discrete hardware rates.
      */
     if (wfx->wBitsPerSample == 16 && wfx->nChannels == 1)
     {
@@ -1410,6 +1411,9 @@ ProgramMmaStart
     BYTE fmtReg = (BYTE)(
         (MMA_FIFO_THR_DEFAULT << MMA_FMT_FIFO_SHIFT));
 
+    /* Interleave bit from the channel count (mono: off; call/0016). */
+    fmtReg |= WaveMmaFormatInterleave(m_Stereo ? 2 : 1);
+
     if (m_16Bit)
     {
         /* 16-bit: PIO mode — software fills FIFO with dithered data */
@@ -1458,8 +1462,9 @@ ProgramMmaStart
      */
     BYTE pbReg = MMA_PB_PCM | MMA_PB_GO;   /* PCM mode, start */
 
-    /* Enable left and right channels */
-    pbReg |= MMA_PB_LEFT | MMA_PB_RIGHT;
+    /* Output-channel enable from the channel count: mono drives both outputs
+     * (call/0016). Derived in the pure wavereg.h helper so a test pins the mapping. */
+    pbReg |= WaveMmaPlayChannelBits(m_Stereo ? 2 : 1);
 
     /* Frequency select */
     BYTE freqBits = CMiniportWaveCyclicAdLibGold::SampleRateToFreqBits(

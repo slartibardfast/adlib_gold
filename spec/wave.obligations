@@ -34,6 +34,8 @@ transition-edge.Stream.running.stopped => waived: no wave test harness until pla
 invariant.Stream.RunningIsConfigured   => waived: no wave test harness until plan/0004 (needs a build; call/0008)
 rule-success.AcceptPcmFormat           => waived: no wave test harness until plan/0004 (needs a build; call/0008)
 rule-failure.AcceptPcmFormat.1         => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-success.MonoRoutesBothOutputs     => test:test_wave_reg exercises=WaveMmaPlayChannelBits
+rule-failure.MonoRoutesBothOutputs.1   => waived: no wave test harness until plan/0004 (needs a build; call/0008)
 rule-success.PlaybackFifoServicesRender   => test:test_mma_status exercises=MmaStatusChannel0Ready
 rule-failure.PlaybackFifoServicesRender.1 => test:test_mma_status exercises=MmaStatusChannel0Ready
 rule-success.ServiceAdvancesPosition      => test:test_wave_wrap exercises=WaveWrapPosition
