@@ -1,15 +1,16 @@
 name: Tests
 
 # Userspace unit tests for the driver's pure logic (no DDK/hardware needed): the
-# WaveCyclic DSP decisions (nearest-rate mapping and TPDF dither, call/0011). These
-# run the tests that discharge the corresponding wave.allium obligations.
+# WaveCyclic DSP decisions (nearest-rate mapping and TPDF dither, call/0011), the SP2
+# bit-serial protocol (call/0012), and the calibrated chip-write delays (call/0013).
+# These run the tests that discharge the corresponding allium obligations.
 
 on:
   push:
     branches: [main]
-    paths: ['tests/**', 'wavedsp.h', '.github/workflows/tests.yml']
+    paths: ['tests/**', 'wavedsp.h', 'sp2.h', 'chiptiming.h', '.github/workflows/tests.yml']
   pull_request:
-    paths: ['tests/**', 'wavedsp.h', '.github/workflows/tests.yml']
+    paths: ['tests/**', 'wavedsp.h', 'sp2.h', 'chiptiming.h', '.github/workflows/tests.yml']
 
 jobs:
   unit:

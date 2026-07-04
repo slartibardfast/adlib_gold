@@ -8,7 +8,8 @@
  */
 
 #include "common.h"
-#include "sp2.h"   /* SP2 bit-serial encoder (call/0012), unit-tested */
+#include "sp2.h"        /* SP2 bit-serial encoder (call/0012), unit-tested */
+#include "chiptiming.h"  /* calibrated chip-write delays (call/0013), unit-tested */
 
 #define STR_MODULENAME "AdLibGold: "
 
@@ -553,7 +554,7 @@ ControlRegWrite
         else if (Register >= 0x09 && Register <= 0x16)
         {
             /* Registers 9-16h: 5us delay */
-            KeStallExecutionProcessor(5);
+            KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_CONTROL, Register));
         }
 
         /* 6. Restore OPL3 bank 1 access */
@@ -648,18 +649,18 @@ WriteOPL3
     {
         /* Bank 0: direct access, no conflict */
         WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM0_ADDR, (UCHAR)Address);
-        KeStallExecutionProcessor(23);
+        KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_OPL3, 0));
         WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM0_DATA, Data);
-        KeStallExecutionProcessor(23);
+        KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_OPL3, 0));
     }
     else
     {
         /* Bank 1: ensure OPL3 mode, then write */
         WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_ADDR, ALG_BANK_OPL3);
         WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_ADDR, (UCHAR)(Address & 0xFF));
-        KeStallExecutionProcessor(23);
+        KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_OPL3, 0));
         WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_DATA, Data);
-        KeStallExecutionProcessor(23);
+        KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_OPL3, 0));
     }
 }
 
