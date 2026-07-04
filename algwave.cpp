@@ -376,6 +376,14 @@ Init
     m_pActiveStream     = NULL;
     m_PowerState.DeviceState = PowerDeviceD0;
 
+    /* Zero the interface pointers before any can fail: the DDK placement new does
+     * not zero pool, and the destructor releases each under an `if (ptr)` guard, so
+     * an early QueryInterface/PcNewServiceGroup failure must leave them NULL rather
+     * than as heap garbage that the guard would take for a live pointer. */
+    m_AdapterCommon     = NULL;
+    m_ServiceGroup      = NULL;
+    m_DmaChannel        = NULL;
+
     NTSTATUS ntStatus =
         UnknownAdapter->QueryInterface(IID_IAdapterCommon,
                                         (PVOID *)&m_AdapterCommon);

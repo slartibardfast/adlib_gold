@@ -118,14 +118,8 @@ public:
     STDMETHODIMP_(BYTE) ReadMMAStatus
     (   void
     );
-    STDMETHODIMP_(void) SetWaveMiniport(IN PWAVEMINIPORTADLIBGOLD Miniport)
-    {
-        m_pWaveMiniport = Miniport;
-    }
-    STDMETHODIMP_(void) SetMidiMiniport(IN PMIDIMINIPORTADLIBGOLD Miniport)
-    {
-        m_pMidiMiniport = Miniport;
-    }
+    STDMETHODIMP_(void) SetWaveMiniport(IN PWAVEMINIPORTADLIBGOLD Miniport);
+    STDMETHODIMP_(void) SetMidiMiniport(IN PMIDIMINIPORTADLIBGOLD Miniport);
     STDMETHODIMP_(NTSTATUS) RestoreMixerSettingsFromRegistry
     (   void
     );
@@ -435,23 +429,6 @@ NonDelegatingQueryInterface
 
 
 /*****************************************************************************
- * CAdapterCommon::GetInterruptSync()
- *****************************************************************************
- * Returns a pointer to the interrupt synchronization object.
- */
-STDMETHODIMP_(PINTERRUPTSYNC)
-CAdapterCommon::
-GetInterruptSync
-(   void
-)
-{
-    PAGED_CODE();
-
-    return m_pInterruptSync;
-}
-
-
-/*****************************************************************************
  * CAdapterCommon::ControlRegReset()
  *****************************************************************************
  * Reset mixer registers to defaults (from registry or hardcoded).
@@ -492,6 +469,8 @@ GetCardModel
 (   void
 )
 {
+    PAGED_CODE();
+
     return m_CardModel;
 }
 
@@ -502,6 +481,98 @@ GetCardModel
  * Everything below runs at DISPATCH_LEVEL or DIRQL and must not be paged out.
  */
 #pragma code_seg()
+
+
+/*****************************************************************************
+ * CAdapterCommon::GetInterruptSync()
+ *****************************************************************************
+ * Returns the borrowed interrupt-sync pointer. Non-paged: the MIDI transmit path
+ * calls this at DISPATCH_LEVEL, where a fetch from a trimmed pageable page would be
+ * an unrecoverable ring-0 page fault.
+ */
+STDMETHODIMP_(PINTERRUPTSYNC)
+CAdapterCommon::
+GetInterruptSync
+(   void
+)
+{
+    return m_pInterruptSync;
+}
+
+
+/*****************************************************************************
+ * SyncClearBackPointer()
+ *****************************************************************************
+ * Runs at DIRQL under the interrupt lock; clears an ISR back-pointer so the ISR
+ * cannot dispatch through a pointer that is being torn down.
+ */
+typedef struct _CLEAR_PTR_CONTEXT
+{
+    PVOID * Target;
+} CLEAR_PTR_CONTEXT, *PCLEAR_PTR_CONTEXT;
+
+static NTSTATUS
+SyncClearBackPointer
+(
+    IN      PINTERRUPTSYNC  InterruptSync,
+    IN      PVOID           Context
+)
+{
+    *(((PCLEAR_PTR_CONTEXT)Context)->Target) = NULL;
+    return STATUS_SUCCESS;
+}
+
+
+/*****************************************************************************
+ * CAdapterCommon::SetWaveMiniport()
+ *****************************************************************************
+ * Publish or clear the wave miniport back-pointer the ISR dispatches through. A
+ * clear is serialized against the ISR through the interrupt lock; a set is a plain
+ * aligned store the ISR reads atomically.
+ */
+STDMETHODIMP_(void)
+CAdapterCommon::
+SetWaveMiniport
+(
+    IN      PWAVEMINIPORTADLIBGOLD  Miniport
+)
+{
+    if (Miniport == NULL && m_pInterruptSync)
+    {
+        CLEAR_PTR_CONTEXT ctx;
+        ctx.Target = (PVOID *)&m_pWaveMiniport;
+        m_pInterruptSync->CallSynchronizedRoutine(SyncClearBackPointer, PVOID(&ctx));
+    }
+    else
+    {
+        m_pWaveMiniport = Miniport;
+    }
+}
+
+
+/*****************************************************************************
+ * CAdapterCommon::SetMidiMiniport()
+ *****************************************************************************
+ * Publish or clear the MIDI miniport back-pointer; see SetWaveMiniport.
+ */
+STDMETHODIMP_(void)
+CAdapterCommon::
+SetMidiMiniport
+(
+    IN      PMIDIMINIPORTADLIBGOLD  Miniport
+)
+{
+    if (Miniport == NULL && m_pInterruptSync)
+    {
+        CLEAR_PTR_CONTEXT ctx;
+        ctx.Target = (PVOID *)&m_pMidiMiniport;
+        m_pInterruptSync->CallSynchronizedRoutine(SyncClearBackPointer, PVOID(&ctx));
+    }
+    else
+    {
+        m_pMidiMiniport = Miniport;
+    }
+}
 
 
 /*****************************************************************************

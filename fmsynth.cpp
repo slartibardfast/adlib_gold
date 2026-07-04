@@ -955,16 +955,19 @@ Init
 
     if (NT_SUCCESS(ntStatus))
     {
-        KIRQL oldIrql;
-        KeAcquireSpinLock(&m_SpinLock, &oldIrql);
-
+        /*
+         * This runs at PASSIVE_LEVEL during StartDevice, so it takes no spinlock:
+         * a pageable routine that raised IRQL here would take an unrecoverable ring-0
+         * page fault the moment its own trailing page was trimmed. Nothing races at
+         * Init (no stream exists and the ISR never dispatches to the FM miniport), and
+         * WriteOPL3 still serializes each OPL3 write against the ISR through
+         * CallSynchronizedRoutine, so the reset is safe without a lock.
+         */
         for (i = 0; i < 0x200; i++)
             m_SavedRegValues[i] = 0x00;
 
         /* No board detection -- adapter common already verified the card. */
         Opl3_BoardReset();
-
-        KeReleaseSpinLock(&m_SpinLock, oldIrql);
 
         *ServiceGroup = NULL;
     }
@@ -1117,7 +1120,9 @@ PowerChangeNotify
  * Core OPL3 register write.  Delegates to adapter common for bank-
  * coordinated access, then updates the shadow register.
  *
- * Called at DISPATCH_LEVEL within spinlock.
+ * Called at IRQL <= DISPATCH_LEVEL: WriteOPL3 serializes the access against the
+ * ISR through CallSynchronizedRoutine, so both the PASSIVE reset (Init) and the
+ * DISPATCH stream/teardown writes are safe.
  */
 #pragma code_seg()
 void
@@ -1129,7 +1134,7 @@ SoundMidiSendFM
 )
 {
     ASSERT(Address < 0x200);
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     _DbgPrintF(DEBUGLVL_VERBOSE, ("%X\t%X", Address, Data));
 
@@ -1149,7 +1154,7 @@ void
 CMiniportMidiFMAdLibGold::
 Opl3_BoardReset()
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     BYTE i;
 
@@ -1586,7 +1591,7 @@ Opl3_NoteOff
     BYTE    bSustain
 )
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     WORD wOffset, wTemp;
 
@@ -1624,7 +1629,7 @@ Opl3_FindFullSlot
     BYTE    bChannel
 )
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     /* Delegate to the pure policy (fmvoice.h), the single tested source of truth. */
     unsigned char chan[NUM2VOICES], note[NUM2VOICES], on[NUM2VOICES];
@@ -1652,7 +1657,7 @@ Opl3_FMNote
     noteStruct FAR *    lpSN
 )
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     WORD            i;
     WORD            wOffset;
@@ -1700,7 +1705,7 @@ Opl3_NoteOn
     short   iBend
 )
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     WORD             wTemp, i, j;
     BYTE             b4Op, bTemp, bMode, bStereo;
@@ -1769,7 +1774,7 @@ WORD
 CMiniportMidiStreamFMAdLibGold::
 Opl3_CalcFAndB(DWORD dwPitch)
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     BYTE bBlock;
 
@@ -1788,7 +1793,7 @@ DWORD
 CMiniportMidiStreamFMAdLibGold::
 Opl3_CalcBend(DWORD dwOrig, short iBend)
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     DWORD dw;
 
@@ -1813,7 +1818,7 @@ CMiniportMidiStreamFMAdLibGold::
 Opl3_CalcVolume(BYTE bOrigAtten, BYTE bChannel, BYTE bVelocity,
                 BYTE bOper, BYTE bMode)
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     BYTE bVolume;
     WORD wTemp;
@@ -1849,7 +1854,7 @@ void
 CMiniportMidiStreamFMAdLibGold::
 Opl3_ChannelNotesOff(BYTE bChannel)
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     int i;
 
@@ -1869,7 +1874,7 @@ void
 CMiniportMidiStreamFMAdLibGold::
 Opl3_ChannelVolume(BYTE bChannel, WORD wAtten)
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     m_bChanAtten[bChannel] = (BYTE)wAtten;
     Opl3_SetVolume(bChannel);
@@ -1884,7 +1889,7 @@ Opl3_SetVolume
     BYTE   bChannel
 )
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     WORD            i, j, wTemp, wOffset;
     noteStruct FAR  *lpPS;
@@ -1930,7 +1935,7 @@ void
 CMiniportMidiStreamFMAdLibGold::
 Opl3_SetPan(BYTE bChannel, BYTE bPan)
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     if (bPan > (64 + 16))
         m_bStereoMask[bChannel] = 0xef;
@@ -1952,7 +1957,7 @@ Opl3_PitchBend
     short   iBend
 )
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     WORD  i, wTemp[2], wOffset, j;
     DWORD dwNew;
@@ -1988,7 +1993,7 @@ BYTE
 CMiniportMidiStreamFMAdLibGold::
 Opl3_CalcStereoMask(BYTE bChannel)
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     WORD wLeft, wRight;
 
@@ -2012,7 +2017,7 @@ WORD
 CMiniportMidiStreamFMAdLibGold::
 Opl3_FindEmptySlot(BYTE bPatch)
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     /* Delegate to the pure policy (fmvoice.h), the single tested source of truth:
      * a free voice, else the oldest released, else the oldest of this patch, else
@@ -2037,7 +2042,7 @@ void
 CMiniportMidiStreamFMAdLibGold::
 Opl3_SetSustain(BYTE bChannel, BYTE bSusLevel)
 {
-    ASSERT(KeGetCurrentIrql() == DISPATCH_LEVEL);
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     WORD i;
 
