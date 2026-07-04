@@ -79,11 +79,41 @@ static void test_wavesrc_resample(void)
     CHECK(n <= 10, "resample honours the output capacity");
 }
 
+/* The cyclic position advance the 16-bit PIO service loop uses (spec
+ * ServiceAdvancesPosition): moves forward, wraps at the buffer end, stays in range. */
+static void test_wave_wrap(void)
+{
+    /* A plain advance that does not reach the end. */
+    CHECK(WaveWrapPosition(0, 2, 256) == 2, "advance without wrap");
+    CHECK(WaveWrapPosition(100, 96, 256) == 196, "advance stays below bufSize");
+
+    /* Advancing to exactly the end wraps to 0. */
+    CHECK(WaveWrapPosition(254, 2, 256) == 0, "reaching the end wraps to 0");
+
+    /* Advancing past the end wraps within range. */
+    CHECK(WaveWrapPosition(250, 12, 256) == 6, "past-end wraps by one buffer");
+
+    /* The result is always a valid in-range offset, over a full sweep. */
+    {
+        unsigned long p = 0;
+        int i;
+        for (i = 0; i < 1000; i++)
+        {
+            p = WaveWrapPosition(p, 2, 200);
+            CHECK(p < 200, "position stays within [0, bufSize)");
+        }
+    }
+
+    /* An unsized buffer parks the position at 0 rather than dividing by zero. */
+    CHECK(WaveWrapPosition(50, 2, 0) == 0, "unsized buffer stays at 0");
+}
+
 int main(void)
 {
     test_wavesrc_fir();
     test_wavesrc_interp();
     test_wavesrc_resample();
+    test_wave_wrap();
     if (failures == 0) { printf("wavesrc_test: all checks passed\n"); return 0; }
     printf("wavesrc_test: %d failure(s)\n", failures);
     return 1;

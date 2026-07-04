@@ -27,17 +27,20 @@
 #define MMA_STATUS_T2       0x40    /* Timer-2 overflow                              */
 #define MMA_STATUS_OV       0x80    /* FIFO overrun (data lost)                      */
 
-/* The channel-0 playback FIFO has reached its interrupt level and needs a refill
- * (spec PlaybackFifoServicesRender): this drives the wave render service. */
+/* The channel-0 PCM FIFO has reached its interrupt level and needs service (spec
+ * PlaybackFifoServicesRender). This driver runs its single stream on channel 0, so this
+ * bit drives both the render refill and the capture drain; the stream's direction, not
+ * the FIFO bit, selects fill vs drain. */
 static int
-MmaStatusPlaybackReady(unsigned char status)
+MmaStatusChannel0Ready(unsigned char status)
 {
     return (status & MMA_STATUS_FIF0) != 0;
 }
 
-/* The channel-1 FIFO needs service (the capture / second-channel path). */
+/* The channel-1 PCM FIFO needs service (reserved for independent-channel full duplex,
+ * which this driver does not yet wire; kept so the decode covers the whole status byte). */
 static int
-MmaStatusCaptureReady(unsigned char status)
+MmaStatusChannel1Ready(unsigned char status)
 {
     return (status & MMA_STATUS_FIF1) != 0;
 }

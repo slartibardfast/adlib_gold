@@ -61,12 +61,14 @@ entity Stream {
 }
 
 -- The YMZ263 raises one shared sampling interrupt for both PCM FIFOs. The MMA status
--- register (a direct read of base+4, manual ch07) says which FIFO needs service: the
--- channel-0 playback FIFO request drives the render refill. The pure mmastatus.h is the
--- one tested decode of that byte, so a mislabeled bit can no longer silence playback.
+-- register (a direct read of base+4, manual ch07) says which FIFO needs service. This
+-- driver runs its single stream on channel 0, so the channel-0 FIFO request drives the
+-- service; the pure mmastatus.h is the one tested decode of that byte, so a mislabeled
+-- bit can no longer silence playback.
 entity MmaService {
     playback_fifo_ready: Boolean
     render_serviced: Boolean
+    position_advanced: Boolean
 }
 
 -- The KS wave-render boundary the port class drives.
@@ -128,11 +130,20 @@ rule ReadPosition {
     ensures: stream.position >= 0
 }
 
--- A render stream is refilled exactly when the channel-0 playback FIFO signals it has
--- reached its interrupt level. The decode is the one tested source of truth: the driver's
--- ISR gates the render service on this bit, so a status-bit mislabel is caught by the test.
+-- A render stream is refilled exactly when the channel-0 FIFO signals it has reached its
+-- interrupt level. The decode is the one tested source of truth: the driver's ISR gates
+-- the render service on this bit, so a status-bit mislabel is caught by the test.
 rule PlaybackFifoServicesRender {
     when: service: MmaService.created
     requires: service.playback_fifo_ready
     ensures: service.render_serviced = true
+}
+
+-- A serviced stream advances its cyclic buffer position by the bytes moved, wrapping at
+-- the buffer end, so the reported position moves forward while running and never reads
+-- past the buffer. The wrap arithmetic is the one tested source of truth (WaveWrapPosition).
+rule ServiceAdvancesPosition {
+    when: service: MmaService.created
+    requires: service.render_serviced
+    ensures: service.position_advanced = true
 }

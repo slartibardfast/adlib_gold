@@ -91,6 +91,12 @@
 /* FIFO size in bytes */
 #define MMA_FIFO_SIZE           128
 
+/* Bytes present at the FIFO when the interrupt fires (FIFO INT = THR_32, manual ch07).
+ * On a playback interrupt the FIFO has drained to this level, so the service refills
+ * FIFO_SIZE - this = 96 bytes (writing the full 128 would overflow it and set OV). On a
+ * capture interrupt this many bytes are guaranteed present to drain. */
+#define MMA_FIFO_INT_BYTES      32
+
 
 /*****************************************************************************
  * TPDF dither helpers (integer only — no FPU in kernel mode)
@@ -176,6 +182,10 @@ private:
     ULONG               m_SamplingFrequency;    /* Current sample rate       */
     ULONG               m_NotificationInterval; /* ms between notifications  */
 
+    /* The single active 16-bit PIO stream the ISR services (set in NewStream,
+     * cleared in the stream destructor under the interrupt lock). NULL when idle. */
+    CMiniportWaveCyclicStreamAdLibGold * m_pActiveStream;
+
     POWER_STATE         m_PowerState;           /* Current device power      */
 
     /*
@@ -239,7 +249,7 @@ public:
      * IWaveMiniportAdLibGold (ISR dispatch from adapter common)
      */
     STDMETHODIMP_(void) ServiceWaveISR
-    (   void
+    (   IN      BYTE    MmaStatus
     );
 
     /*
@@ -264,6 +274,9 @@ public:
      * Friends
      */
     friend class CMiniportWaveCyclicStreamAdLibGold;
+
+    /* Runs at DIRQL under the interrupt lock to clear m_pActiveStream (algwave.cpp). */
+    friend NTSTATUS SyncClearActiveStream(IN PINTERRUPTSYNC, IN PVOID);
 };
 
 
@@ -279,6 +292,9 @@ class CMiniportWaveCyclicStreamAdLibGold
 :   public IMiniportWaveCyclicStream,
     public CUnknown
 {
+    /* The miniport's ISR services this stream's FIFO at DIRQL. */
+    friend class CMiniportWaveCyclicAdLibGold;
+
 private:
     CMiniportWaveCyclicAdLibGold *   m_Miniport;    /* Parent miniport       */
     BOOLEAN     m_Capture;              /* TRUE for record, FALSE for play   */

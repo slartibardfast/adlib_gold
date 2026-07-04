@@ -227,8 +227,11 @@ DECLARE_INTERFACE_(IWaveMiniportAdLibGold, IUnknown)
 {
     DEFINE_ABSTRACT_UNKNOWN()
 
+    /* Called at DIRQL from the adapter ISR with the MMA status byte, so the wave
+     * path services the channel-0 FIFO on FIF0 without re-reading the register. */
     STDMETHOD_(void,ServiceWaveISR)
-    (   THIS
+    (   THIS_
+        IN      BYTE    MmaStatus
     )   PURE;
 };
 

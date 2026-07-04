@@ -69,6 +69,24 @@ WaveSrcInterp(short s0, short s1, unsigned long f)
 }
 
 /*
+ * Advance a byte offset within a cyclic DMA buffer by `advance` bytes, wrapping at
+ * the buffer end. The 16-bit PIO service loop steps its read/write position by whole
+ * samples on each FIFO service and wraps here, so the reported position always stays
+ * within [0, bufSize) and never reads past the buffer (spec ServiceAdvancesPosition).
+ * bufSize == 0 (unsized buffer) leaves the position at 0.
+ */
+static unsigned long
+WaveWrapPosition(unsigned long pos, unsigned long advance, unsigned long bufSize)
+{
+    if (bufSize == 0)
+        return 0;
+    pos += advance;
+    while (pos >= bufSize)
+        pos -= bufSize;
+    return pos;
+}
+
+/*
  * Resample `inCount` samples from inRate to outRate, writing at most outCap
  * samples to out; returns the count written. A phase accumulator steps through
  * the input at inRate/outRate samples per output sample (Q16), linearly

@@ -913,7 +913,7 @@ InterruptServiceRoutine
 
         if (that->m_pWaveMiniport)
         {
-            that->m_pWaveMiniport->ServiceWaveISR();
+            that->m_pWaveMiniport->ServiceWaveISR(mmaStatus);
         }
 
         if (MmaStatusMidiRxReady(mmaStatus) && that->m_pMidiMiniport)

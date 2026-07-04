@@ -13,19 +13,19 @@ static int failures = 0;
 #define CHECK(c, m) do { if (!(c)) { printf("FAIL: %s\n", m); failures++; } } while (0)
 
 /* Discharges wave.allium PlaybackFifoServicesRender (and the sibling flag decodes):
- * exercises MmaStatusPlaybackReady and the other status predicates. */
+ * exercises MmaStatusChannel0Ready and the other status predicates. */
 static void test_mma_status(void)
 {
     /* Each flag decodes from exactly its documented bit. */
-    CHECK(MmaStatusPlaybackReady(0x01), "FIF0 (0x01) is the channel-0 playback request");
-    CHECK(MmaStatusCaptureReady(0x02),  "FIF1 (0x02) is the channel-1 request");
+    CHECK(MmaStatusChannel0Ready(0x01), "FIF0 (0x01) is the channel-0 FIFO request");
+    CHECK(MmaStatusChannel1Ready(0x02), "FIF1 (0x02) is the channel-1 FIFO request");
     CHECK(MmaStatusMidiRxReady(0x04),   "RRQ (0x04) is MIDI receive");
     CHECK(MmaStatusMidiTxReady(0x08),   "TRQ (0x08) is MIDI transmit-empty");
     CHECK(MmaStatusOverrun(0x80),       "OV (0x80) is FIFO overrun");
 
     /* Each decoder ignores the other bits (no cross-talk between flags). */
-    CHECK(!MmaStatusPlaybackReady(0xFE), "playback ignores every bit but FIF0");
-    CHECK(!MmaStatusCaptureReady(0xFD),  "capture ignores every bit but FIF1");
+    CHECK(!MmaStatusChannel0Ready(0xFE), "channel 0 ignores every bit but FIF0");
+    CHECK(!MmaStatusChannel1Ready(0xFD), "channel 1 ignores every bit but FIF1");
     CHECK(!MmaStatusMidiRxReady(0xFB),   "MIDI rx ignores every bit but RRQ");
     CHECK(!MmaStatusMidiTxReady(0xF7),   "MIDI tx ignores every bit but TRQ");
     CHECK(!MmaStatusOverrun(0x7F),       "overrun ignores every bit but OV");
@@ -36,7 +36,7 @@ static void test_mma_status(void)
     CHECK(MMA_STATUS_RRQ == 0x04 && MMA_STATUS_TRQ == 0x08,   "MIDI rx/tx bits");
 
     /* A cleared status requests nothing. */
-    CHECK(!MmaStatusPlaybackReady(0x00) && !MmaStatusMidiRxReady(0x00),
+    CHECK(!MmaStatusChannel0Ready(0x00) && !MmaStatusMidiRxReady(0x00),
           "an idle status requests no service");
 }
 

@@ -373,6 +373,7 @@ Init
     m_RenderAllocated   = FALSE;
     m_SamplingFrequency = 44100;
     m_NotificationInterval = 0;
+    m_pActiveStream     = NULL;
     m_PowerState.DeviceState = PowerDeviceD0;
 
     NTSTATUS ntStatus =
@@ -935,17 +936,17 @@ NewStream
     }
 
     /*
-     * Full-duplex constraint: both streams must share the same sample rate.
+     * Reject full duplex until independent per-direction channels exist (plan/0008).
+     * The driver wires only MMA channel 0 — one DMA channel, one buffer, one FIFO — so
+     * a render and a capture stream would silently share them. Allow one direction at a
+     * time until channel 1 is wired for the second direction.
      */
     if (NT_SUCCESS(ntStatus))
     {
-        if (m_CaptureAllocated || m_RenderAllocated)
+        BOOLEAN otherAllocated = Capture ? m_RenderAllocated : m_CaptureAllocated;
+        if (otherAllocated)
         {
-            PWAVEFORMATEX wfx = PWAVEFORMATEX(DataFormat + 1);
-            if (m_SamplingFrequency != wfx->nSamplesPerSec)
-            {
-                ntStatus = STATUS_INVALID_PARAMETER;
-            }
+            ntStatus = STATUS_INVALID_DEVICE_REQUEST;
         }
     }
 
@@ -970,6 +971,13 @@ NewStream
                 {
                     m_RenderAllocated = TRUE;
                 }
+
+                /*
+                 * Register the stream the ISR services. Full duplex is rejected above,
+                 * so exactly one stream is active; the destructor clears this under the
+                 * interrupt lock. The stream is not RUN yet, and the ISR gates on RUN.
+                 */
+                m_pActiveStream = stream;
 
                 PWAVEFORMATEX wfx = PWAVEFORMATEX(DataFormat + 1);
                 m_SamplingFrequency = wfx->nSamplesPerSec;
@@ -997,19 +1005,72 @@ NewStream
 
 
 /*****************************************************************************
- * CMiniportWaveCyclicAdLibGold::ServiceWaveISR()
+ * SyncClearActiveStream()
  *****************************************************************************
- * Called from the adapter common ISR when a sampling interrupt occurs.
- * Notifies PortCls to schedule the DPC.
+ * Clear the miniport's active-stream pointer under the interrupt lock, so the ISR
+ * can never dereference a stream that is being torn down. Runs at DIRQL via
+ * CallSynchronizedRoutine; clears the pointer only if it still names this stream.
  */
 #pragma code_seg()
 
+typedef struct _WAVE_SYNC_CONTEXT
+{
+    CMiniportWaveCyclicAdLibGold *       Miniport;
+    CMiniportWaveCyclicStreamAdLibGold * Stream;
+} WAVE_SYNC_CONTEXT, *PWAVE_SYNC_CONTEXT;
+
+NTSTATUS
+SyncClearActiveStream
+(
+    IN      PINTERRUPTSYNC  InterruptSync,
+    IN      PVOID           Context
+)
+{
+    PWAVE_SYNC_CONTEXT ctx = (PWAVE_SYNC_CONTEXT)Context;
+
+    if (ctx->Miniport->m_pActiveStream == ctx->Stream)
+    {
+        ctx->Miniport->m_pActiveStream = NULL;
+    }
+
+    return STATUS_SUCCESS;
+}
+
+
+/*****************************************************************************
+ * CMiniportWaveCyclicAdLibGold::ServiceWaveISR()
+ *****************************************************************************
+ * Called at DIRQL from the adapter ISR when a sampling interrupt occurs, with the
+ * MMA status byte. When the channel-0 PCM FIFO signals (FIF0) and the active 16-bit
+ * PIO stream is running, service its FIFO — refill for render, drain for capture —
+ * so a 16-bit stream keeps playing/recording instead of underrunning after the
+ * pre-fill (plan/0008). The 8-bit DMA path has no active stream registered, so it
+ * only notifies. Notify advances the port's position query either way.
+ */
 STDMETHODIMP_(void)
 CMiniportWaveCyclicAdLibGold::
 ServiceWaveISR
-(   void
+(
+    IN      BYTE    MmaStatus
 )
 {
+    CMiniportWaveCyclicStreamAdLibGold *stream = m_pActiveStream;
+
+    if (stream &&
+        stream->m_State == KSSTATE_RUN &&
+        stream->m_16Bit &&
+        MmaStatusChannel0Ready(MmaStatus))
+    {
+        if (stream->m_Capture)
+        {
+            stream->DrainFifo();
+        }
+        else
+        {
+            stream->FillFifo();
+        }
+    }
+
     if (m_Port && m_ServiceGroup)
     {
         m_Port->Notify(m_ServiceGroup);
@@ -1105,6 +1166,28 @@ CMiniportWaveCyclicStreamAdLibGold::
 
     if (m_Miniport)
     {
+        /*
+         * Clear the ISR's active-stream pointer under the interrupt lock, so the ISR
+         * can never dereference this stream after it is freed (plan/0008).
+         * GetInterruptSync returns a borrowed pointer (no AddRef). Before the interrupt
+         * is connected there is no armed ISR, so clear it directly.
+         */
+        PINTERRUPTSYNC intSync = m_Miniport->m_AdapterCommon
+            ? m_Miniport->m_AdapterCommon->GetInterruptSync()
+            : NULL;
+        WAVE_SYNC_CONTEXT ctx;
+        ctx.Miniport = m_Miniport;
+        ctx.Stream   = this;
+
+        if (intSync)
+        {
+            intSync->CallSynchronizedRoutine(SyncClearActiveStream, PVOID(&ctx));
+        }
+        else if (m_Miniport->m_pActiveStream == this)
+        {
+            m_Miniport->m_pActiveStream = NULL;
+        }
+
         if (m_Capture)
         {
             m_Miniport->m_CaptureAllocated = FALSE;
@@ -1458,11 +1541,12 @@ FillFifo
         return;
 
     /*
-     * Write up to one FIFO's worth of bytes.
-     * For 16-bit stereo at format 2, each sample frame = 4 bytes (2 per channel).
-     * For 16-bit mono, each frame = 2 bytes.
+     * Refill the bytes the hardware drained since the interrupt fired at the FIFO INT
+     * level: FIFO_SIZE - MMA_FIFO_INT_BYTES = 96 bytes (manual ch07). Writing the full
+     * 128 would overflow the FIFO and set the OV error. Each 16-bit sample writes a
+     * 2-byte format-2 pair.
      */
-    ULONG bytesToWrite = MMA_FIFO_SIZE;
+    ULONG bytesToWrite = MMA_FIFO_SIZE - MMA_FIFO_INT_BYTES;
     ULONG bytesWritten = 0;
 
     while (bytesWritten < bytesToWrite)
@@ -1470,9 +1554,7 @@ FillFifo
         /* Read this sample and its neighbour, then interpolate at the fractional
          * read position (identity when m_ResampleStep == 0x10000). */
         SHORT s0 = *((SHORT *)(pBuffer + m_SoftwarePosition));
-        ULONG nextPos = m_SoftwarePosition + 2;
-        if (nextPos >= m_DmaBufferSize)
-            nextPos = 0;
+        ULONG nextPos = WaveWrapPosition(m_SoftwarePosition, 2, m_DmaBufferSize);
         SHORT s1 = *((SHORT *)(pBuffer + nextPos));
 
         SHORT sample = WaveSrcInterp(s0, s1, m_ResamplePhase);
@@ -1492,9 +1574,8 @@ FillFifo
         while (m_ResamplePhase >= 0x10000)
         {
             m_ResamplePhase -= 0x10000;
-            m_SoftwarePosition += 2;        /* 2 bytes per 16-bit sample */
-            if (m_SoftwarePosition >= m_DmaBufferSize)
-                m_SoftwarePosition = 0;
+            m_SoftwarePosition =            /* 2 bytes per 16-bit sample */
+                WaveWrapPosition(m_SoftwarePosition, 2, m_DmaBufferSize);
         }
     }
 }
@@ -1518,7 +1599,13 @@ DrainFifo
     if (!pBuffer)
         return;
 
-    ULONG bytesToRead = MMA_FIFO_SIZE;
+    /*
+     * Drain only the bytes guaranteed present at the FIFO INT level (manual ch07):
+     * MMA_FIFO_INT_BYTES. Reading a full FIFO would underflow and store stale bytes.
+     * Continuous capture depends on the record FIFO tuning and is confirmed on hardware
+     * (plan/0008 attested); this moves the guaranteed data without underflow.
+     */
+    ULONG bytesToRead = MMA_FIFO_INT_BYTES;
     ULONG bytesRead = 0;
 
     while (bytesRead < bytesToRead)
@@ -1531,13 +1618,9 @@ DrainFifo
         pBuffer[m_SoftwarePosition]     = lo;
         pBuffer[m_SoftwarePosition + 1] = hi;
 
-        m_SoftwarePosition += 2;
         bytesRead += 2;
-
-        if (m_SoftwarePosition >= m_DmaBufferSize)
-        {
-            m_SoftwarePosition = 0;
-        }
+        m_SoftwarePosition =
+            WaveWrapPosition(m_SoftwarePosition, 2, m_DmaBufferSize);
     }
 }
 
