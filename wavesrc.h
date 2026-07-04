@@ -87,12 +87,23 @@ WaveWrapPosition(unsigned long pos, unsigned long advance, unsigned long bufSize
 }
 
 /*
+ * The largest input block WaveSrcResample walks in one call. Its Q16 phase accumulator
+ * climbs to about inCount<<16 as it steps through the input, so bounding the block here
+ * keeps that accumulator inside a 32-bit unsigned for any audio ratio; an unbounded
+ * block past 65536 samples would wrap it and corrupt the read index (finding: resampler
+ * wraps past 65536; spec ResampleBoundedBlock).
+ */
+#define WAVESRC_MAX_BLOCK 0x8000
+
+/*
  * Resample `inCount` samples from inRate to outRate, writing at most outCap
  * samples to out; returns the count written. A phase accumulator steps through
  * the input at inRate/outRate samples per output sample (Q16), linearly
  * interpolating between neighbours. Equal rates copy through. Integer-only and
  * overflow-safe for rates up to 65535 Hz (inRate << 16 fits in 32 bits, and the
- * Q15 interpolation product stays inside a signed 32-bit long).
+ * Q15 interpolation product stays inside a signed 32-bit long). The block is bounded
+ * to WAVESRC_MAX_BLOCK input samples per call so the phase accumulator cannot wrap; a
+ * caller with more input resamples it in successive blocks.
  */
 static int
 WaveSrcResample(const short *in, int inCount, unsigned long inRate,
@@ -112,6 +123,9 @@ WaveSrcResample(const short *in, int inCount, unsigned long inRate,
             out[idx] = in[idx];
         return n;
     }
+
+    if (inCount > WAVESRC_MAX_BLOCK)             /* keep the Q16 accumulator inside 32 bits */
+        inCount = WAVESRC_MAX_BLOCK;
 
     step  = (inRate << 16) / outRate;            /* input samples per output, Q16 */
     phase = 0;

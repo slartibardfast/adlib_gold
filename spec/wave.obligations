@@ -40,6 +40,8 @@ rule-success.ServiceAdvancesPosition      => test:test_wave_wrap exercises=WaveW
 rule-failure.ServiceAdvancesPosition.1    => test:test_wave_wrap exercises=WaveWrapPosition
 rule-success.ResampleOffRate           => test:test_nearest_rate exercises=NearestSupportedRate
 rule-failure.ResampleOffRate.1         => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-success.ResampleBoundedBlock      => test:test_wavesrc_bound exercises=WaveSrcResample
+rule-failure.ResampleBoundedBlock.1    => waived: no wave test harness until plan/0004 (needs a build; call/0008)
 rule-success.DitherWideFormat          => test:test_dither exercises=WaveDspDither
 rule-failure.DitherWideFormat.1        => waived: no wave test harness until plan/0004 (needs a build; call/0008)
 rule-success.StartRender               => waived: no wave test harness until plan/0004 (needs a build; call/0008)

@@ -108,12 +108,39 @@ static void test_wave_wrap(void)
     CHECK(WaveWrapPosition(50, 2, 0) == 0, "unsized buffer stays at 0");
 }
 
+/* The block-size guard (spec ResampleBoundedBlock): a block larger than
+ * WAVESRC_MAX_BLOCK is bounded to a safe size so the Q16 phase accumulator cannot wrap
+ * past 65536 and corrupt the read index. The /2 downsample steps by exactly two input
+ * samples per output, so the guard caps the consumed input at WAVESRC_MAX_BLOCK and the
+ * output is exactly half that; without the guard the wrap would run the loop out to
+ * outCap on garbage indices. */
+static void test_wavesrc_bound(void)
+{
+    const int over = 70000;                        /* > 65536, past the wrap point */
+    short *in  = (short *)malloc(over * sizeof(short));
+    short *out = (short *)malloc(over * sizeof(short));
+    int i, n;
+
+    if (!in || !out) { printf("FAIL: bound-test allocation\n"); failures++; free(in); free(out); return; }
+
+    for (i = 0; i < over; i++) in[i] = (short)((i & 0x7FFF) - 16384);  /* in-range sawtooth */
+
+    n = WaveSrcResample(in, over, 44100, 22050, out, over);
+    CHECK(n == WAVESRC_MAX_BLOCK / 2, "over-large block is bounded to WAVESRC_MAX_BLOCK");
+    for (i = 0; i < n; i++)
+        CHECK(out[i] >= -32768 && out[i] <= 32767, "bounded output stays in 16-bit range");
+
+    free(in);
+    free(out);
+}
+
 int main(void)
 {
     test_wavesrc_fir();
     test_wavesrc_interp();
     test_wavesrc_resample();
     test_wave_wrap();
+    test_wavesrc_bound();
     if (failures == 0) { printf("wavesrc_test: all checks passed\n"); return 0; }
     printf("wavesrc_test: %d failure(s)\n", failures);
     return 1;

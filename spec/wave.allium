@@ -36,6 +36,7 @@ entity Format {
     channels: ChannelCount
     requested_rate: Integer
     resampled: Boolean
+    resample_bounded: Boolean
     dithered: Boolean
 }
 
@@ -100,6 +101,16 @@ rule ResampleOffRate {
         or format.requested_rate = config.rate_lower_mid
         or format.requested_rate = config.rate_low)
     ensures: format.resampled = true
+}
+
+-- The off-rate resampler walks its input with a Q16 phase accumulator, so an unbounded
+-- block would wrap the accumulator and corrupt the read index. Each resample is bounded
+-- to a safe block; the arithmetic bound is the one tested source of truth
+-- (WaveSrcResample), so a change that drops the guard is caught before it ships silence.
+rule ResampleBoundedBlock {
+    when: format: Format.created
+    requires: format.resampled
+    ensures: format.resample_bounded = true
 }
 
 -- A 16-bit source is dithered down to the 12-bit DAC with triangular-PDF dither, so
