@@ -1,0 +1,36 @@
+name: Reproducible Build
+
+# Rebuild adlibgold.sys under Linux/Wine from the pinned, Microsoft-licensed DDK+VC6
+# deps-bundle and prove it reproduces the recorded artifact hash byte-for-byte
+# (call/0007, call/0008, call/0009). The bundle is provided out of band (its licence
+# forbids public redistribution): set the DDK_BUNDLE_URL secret to a location the CI can
+# read. The download+sha check is the provenance gate; the build itself runs offline.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['*.cpp', '*.h', 'sources', 'build.sh', 'pe_normalize.py', 'deps-bundle.lock']
+
+env:
+  BUNDLE_SHA: f60af3fd65b53b67176499d9959adc1235cb1a1d3024c0adb6b7bd3c2fadb902
+  ARTIFACT_SHA: 3f7d3c3ce92183b5a6af0c3d353be8a104ea0a956c27c5f5daef68dc38b9a792
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Wine
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends wine wine32 python3
+      - name: Fetch and verify the pinned deps-bundle (provenance gate)
+        run: |
+          curl -fsSL -o bundle.tar.gz "${{ secrets.DDK_BUNDLE_URL }}"
+          echo "$BUNDLE_SHA  bundle.tar.gz" | sha256sum -c -
+      - name: Build offline and prove the artifact reproduces
+        run: |
+          BUNDLE="$PWD/bundle.tar.gz" ./build.sh
+          echo "$ARTIFACT_SHA  adlibgold.sys" | sha256sum -c -
