@@ -822,7 +822,7 @@ CreateMiniportMidiFMAdLibGold
     PAGED_CODE();
     ASSERT(Unknown);
 
-    STD_CREATE_BODY(CMiniportMidiFMAdLibGold, Unknown, UnknownOuter, PoolType);
+    STD_CREATE_BODY_(CMiniportMidiFMAdLibGold, Unknown, UnknownOuter, PoolType, PMINIPORTMIDI);
 }
 
 

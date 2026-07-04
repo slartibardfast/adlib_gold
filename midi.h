@@ -180,6 +180,7 @@ public:
      * Friends
      */
     friend class CMiniportMidiStreamUartAdLibGold;
+    friend NTSTATUS SynchronizedMidiWrite(PINTERRUPTSYNC, PVOID);
 };
 
 

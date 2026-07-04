@@ -251,7 +251,7 @@ CreateMiniportWaveCyclicAdLibGold
 
     ASSERT(Unknown);
 
-    STD_CREATE_BODY(CMiniportWaveCyclicAdLibGold, Unknown, UnknownOuter, PoolType);
+    STD_CREATE_BODY_(CMiniportWaveCyclicAdLibGold, Unknown, UnknownOuter, PoolType, PMINIPORTWAVECYCLIC);
 }
 
 
@@ -1007,13 +1007,13 @@ ServiceWaveISR
 
 
 /*****************************************************************************
- * CMiniportWaveCyclicAdLibGold::PowerChangeState()
+ * CMiniportWaveCyclicAdLibGold::PowerChangeNotify()
  *****************************************************************************
  * Handle power state transitions.
  */
 STDMETHODIMP_(void)
 CMiniportWaveCyclicAdLibGold::
-PowerChangeState
+PowerChangeNotify
 (
     IN      POWER_STATE     NewState
 )
@@ -1021,7 +1021,7 @@ PowerChangeState
     PAGED_CODE();
 
     _DbgPrintF(DEBUGLVL_VERBOSE,
-        ("[CMiniportWaveCyclicAdLibGold::PowerChangeState D%d]",
+        ("[CMiniportWaveCyclicAdLibGold::PowerChangeNotify D%d]",
          NewState.DeviceState - PowerDeviceD0));
 
     m_PowerState = NewState;

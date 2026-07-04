@@ -226,8 +226,8 @@ CreateMiniportMidiUartAdLibGold
 
     _DbgPrintF(DEBUGLVL_BLAB, ("CreateMiniportMidiUartAdLibGold"));
 
-    STD_CREATE_BODY(CMiniportMidiUartAdLibGold,
-                    Unknown, UnknownOuter, PoolType);
+    STD_CREATE_BODY_(CMiniportMidiUartAdLibGold,
+                    Unknown, UnknownOuter, PoolType, PMINIPORTMIDI);
 }
 
 
@@ -697,19 +697,19 @@ ServiceMidiISR
 
 
 /*****************************************************************************
- * CMiniportMidiUartAdLibGold::PowerChangeState()
+ * CMiniportMidiUartAdLibGold::PowerChangeNotify()
  *****************************************************************************
  * Handle power state changes.
  */
 STDMETHODIMP_(void)
 CMiniportMidiUartAdLibGold::
-PowerChangeState
+PowerChangeNotify
 (
     IN      POWER_STATE     NewState
 )
 {
     _DbgPrintF(DEBUGLVL_VERBOSE,
-        ("PowerChangeState: D%d -> D%d",
+        ("PowerChangeNotify: D%d -> D%d",
          m_PowerState.DeviceState - PowerDeviceD0,
          NewState.DeviceState - PowerDeviceD0));
 
@@ -886,7 +886,7 @@ CMiniportMidiStreamUartAdLibGold::
  *****************************************************************************
  * Initializes a stream.
  */
-STDMETHODIMP
+NTSTATUS
 CMiniportMidiStreamUartAdLibGold::
 Init
 (

@@ -11,6 +11,7 @@
 
 #include "stdunk.h"
 #include "portcls.h"
+#include <kcom.h>       /* DEFINE_ABSTRACT_UNKNOWN (needs ks.h from portcls.h) */
 #include "ksdebug.h"
 
 /*****************************************************************************
