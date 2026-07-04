@@ -46,6 +46,15 @@ rule DrumChannelIsPercussion {
     ensures: note.is_drum = true
 }
 
+-- A freshly created voice is free: a new stream zeroes its voice table, so every voice
+-- starts released with no note held (the driver's RtlZeroMemory in the stream Init). The
+-- pure allocator treats an all-unused (dwTime 0) table as all-free, so the first note
+-- lands on a free voice rather than stealing garbage state (tests/fmvoice_test.c).
+rule FreshStreamAllVoicesFree {
+    when: voice: Voice.created
+    ensures: voice.state = free
+}
+
 -- A note-on sounds a voice: a free voice, or a stolen one when all are busy.
 rule NoteOnSounds {
     when: voice: Voice.state transitions_to sounding

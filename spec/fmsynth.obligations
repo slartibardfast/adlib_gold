@@ -22,3 +22,4 @@ rule-failure.DrumChannelIsPercussion.1 => test:test_fm_drum_channel exercises=Fm
 rule-success.NoteOnSounds              => test:test_fm_allocate exercises=FmVoiceAllocate
 rule-success.NoteOffReleases           => test:test_fm_find exercises=FmVoiceFind
 invariant.VoiceBudget                  => test:test_fm_allocate exercises=FmVoiceAllocate
+rule-success.FreshStreamAllVoicesFree  => test:test_fm_allocate exercises=FmVoiceAllocate

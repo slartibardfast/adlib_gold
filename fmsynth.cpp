@@ -888,10 +888,16 @@ CMiniportMidiFMAdLibGold::
 
     KeAcquireSpinLock(&m_SpinLock, &oldIrql);
 
-    Opl3_BoardReset();
+    /* Only touch the OPL3 if Init obtained the adapter: a teardown after a failed Init
+     * has no adapter to write through, and Opl3_BoardReset dereferences it. This mirrors
+     * the m_Port / m_AdapterCommon guards below. */
+    if (m_AdapterCommon)
+    {
+        Opl3_BoardReset();
 
-    /* Clear NEW bit to restore OPL2 compatibility before unload */
-    SoundMidiSendFM(AD_NEW, 0x00);
+        /* Clear NEW bit to restore OPL2 compatibility before unload */
+        SoundMidiSendFM(AD_NEW, 0x00);
+    }
 
     KeReleaseSpinLock(&m_SpinLock, oldIrql);
 
@@ -936,6 +942,8 @@ Init
 
     m_Port = Port_;
     m_Port->AddRef();
+
+    m_fStreamExists = FALSE;    /* no stream yet; the DDK placement new does not zero pool */
 
     KeInitializeSpinLock(&m_SpinLock);
 
@@ -1342,11 +1350,20 @@ Init
     m_wSynthAttenL = 0;
     m_wSynthAttenR = 0;
 
-    /* Start channel attenuations at -3 dB (MIDI level ~90) */
+    /* The DDK placement new does not zero pool: clear the voice table (every voice free,
+     * dwTime 0 = unused) so a fresh stream starts with all voices free and no hung note
+     * (fmsynth.allium FreshStreamAllVoicesFree). */
+    RtlZeroMemory(m_Voice, sizeof(m_Voice));
+
+    /* Start channel attenuations at -3 dB (MIDI level ~90); also clear per-channel
+     * patch, pitch bend and sustain, which the allocator and note paths read. */
     for (i = 0; i < NUMCHANNELS; i++)
     {
         m_bChanAtten[i] = 4;
         m_bStereoMask[i] = 0xff;
+        m_iBend[i]       = 0;
+        m_bPatch[i]      = 0;
+        m_bSustain[i]    = 0;
     }
 
     return STATUS_SUCCESS;
@@ -1992,10 +2009,13 @@ Opl3_PitchBend
             if (i >= (NUM2VOICES / 2))
                 wOffset += (0x100 - (NUM2VOICES / 2));
 
-            m_Miniport->SoundMidiSendFM(AD_BLOCK + wOffset,
-                m_Voice[i].bBlock[0]);
+            /* Write A0 (F-number low) before B0 (block, F-number high, key-on): writing
+             * B0 first would latch the new octave against the stale low byte for one
+             * write, an audible blip. Note-on programs the same low-then-high order. */
             m_Miniport->SoundMidiSendFM(AD_FNUMBER + wOffset,
                 (BYTE)wTemp[0]);
+            m_Miniport->SoundMidiSendFM(AD_BLOCK + wOffset,
+                m_Voice[i].bBlock[0]);
         }
     }
 }
