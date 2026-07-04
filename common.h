@@ -329,6 +329,22 @@ DECLARE_INTERFACE_(IAdapterCommon, IUnknown)
         IN      BYTE    Register
     )   PURE;
 
+    /* Raw MMA access for callers already inside the interrupt-sync at DIRQL (the ISR
+     * FIFO service and the MIDI service/transmit). The base+4 index and base+5 data are
+     * one latch pair, so a below-DIRQL caller MUST use WriteMMA/ReadMMA, which serialize
+     * against the ISR; calling these Locked forms below DIRQL would race the ISR, and the
+     * public forms from within the ISR would re-enter the interrupt lock. */
+    STDMETHOD_(void,WriteMMALocked)
+    (   THIS_
+        IN      BYTE    Register,
+        IN      BYTE    Value
+    )   PURE;
+
+    STDMETHOD_(BYTE,ReadMMALocked)
+    (   THIS_
+        IN      BYTE    Register
+    )   PURE;
+
     /* Read the MMA status register: a direct read of base+4 (38CH), not the
      * register/data protocol. Non-paged; called at DIRQL from the ISR. */
     STDMETHOD_(BYTE,ReadMMAStatus)

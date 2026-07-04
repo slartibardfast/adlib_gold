@@ -37,6 +37,8 @@ typedef struct _SYNC_PORT_CONTEXT
 
 NTSTATUS SynchronizedControlRegWrite(IN PINTERRUPTSYNC, IN PVOID);
 NTSTATUS SynchronizedWriteOPL3Bank1(IN PINTERRUPTSYNC, IN PVOID);
+NTSTATUS SynchronizedWriteMMA(IN PINTERRUPTSYNC, IN PVOID);
+NTSTATUS SynchronizedReadMMA(IN PINTERRUPTSYNC, IN PVOID);
 
 class CAdapterCommon
 :   public IAdapterCommon,
@@ -112,6 +114,15 @@ public:
         IN      BYTE    Value
     );
     STDMETHODIMP_(BYTE) ReadMMA
+    (
+        IN      BYTE    Register
+    );
+    STDMETHODIMP_(void) WriteMMALocked
+    (
+        IN      BYTE    Register,
+        IN      BYTE    Value
+    );
+    STDMETHODIMP_(BYTE) ReadMMALocked
     (
         IN      BYTE    Register
     );
@@ -870,11 +881,64 @@ WriteOPL3Bank1Locked
 /*****************************************************************************
  * CAdapterCommon::WriteMMA()
  *****************************************************************************
- * Write to a YMZ263 MMA register (Channel 0).
+ * Write to a YMZ263 MMA register (Channel 0). The base+4 index / base+5 data pair
+ * is one latch, so it runs inside the interrupt-sync lock: the DIRQL FIFO service
+ * also drives base+4/base+5, and without this a state-transition write could be
+ * preempted between its index and its data write and land in the wrong register
+ * (plan/0008). Before the interrupt is connected (Init), the locked body runs directly.
  */
 STDMETHODIMP_(void)
 CAdapterCommon::
 WriteMMA
+(
+    IN      BYTE    Register,
+    IN      BYTE    Value
+)
+{
+    SYNC_PORT_CONTEXT ctx;
+    ctx.That    = this;
+    ctx.Address = Register;
+    ctx.Value   = Value;
+
+    if (m_pInterruptSync)
+    {
+        m_pInterruptSync->CallSynchronizedRoutine(SynchronizedWriteMMA, PVOID(&ctx));
+    }
+    else
+    {
+        WriteMMALocked(Register, Value);
+    }
+}
+
+
+/*****************************************************************************
+ * SynchronizedWriteMMA()
+ *****************************************************************************
+ * Interrupt-sync routine (DIRQL) wrapping the MMA index/data write.
+ */
+NTSTATUS
+SynchronizedWriteMMA
+(
+    IN      PINTERRUPTSYNC  InterruptSync,
+    IN      PVOID           Context
+)
+{
+    PSYNC_PORT_CONTEXT ctx = (PSYNC_PORT_CONTEXT)Context;
+    ctx->That->WriteMMALocked((BYTE)ctx->Address, ctx->Value);
+    return STATUS_SUCCESS;
+}
+
+
+/*****************************************************************************
+ * CAdapterCommon::WriteMMALocked()
+ *****************************************************************************
+ * The raw base+4 index / base+5 data write. Runs at DIRQL inside the interrupt-sync
+ * (or directly during Init); ISR-context callers (the FIFO service, MIDI transmit)
+ * use it directly to avoid re-entering the lock.
+ */
+STDMETHODIMP_(void)
+CAdapterCommon::
+WriteMMALocked
 (
     IN      BYTE    Register,
     IN      BYTE    Value
@@ -895,11 +959,59 @@ WriteMMA
 /*****************************************************************************
  * CAdapterCommon::ReadMMA()
  *****************************************************************************
- * Read from a YMZ263 MMA register (Channel 0).
+ * Read from a YMZ263 MMA register (Channel 0), serialized against the ISR like
+ * WriteMMA. The read byte is returned through the sync context.
  */
 STDMETHODIMP_(BYTE)
 CAdapterCommon::
 ReadMMA
+(
+    IN      BYTE    Register
+)
+{
+    SYNC_PORT_CONTEXT ctx;
+    ctx.That    = this;
+    ctx.Address = Register;
+    ctx.Value   = 0;
+
+    if (m_pInterruptSync)
+    {
+        m_pInterruptSync->CallSynchronizedRoutine(SynchronizedReadMMA, PVOID(&ctx));
+        return ctx.Value;
+    }
+
+    return ReadMMALocked(Register);
+}
+
+
+/*****************************************************************************
+ * SynchronizedReadMMA()
+ *****************************************************************************
+ * Interrupt-sync routine (DIRQL) wrapping the MMA index/data read; the byte comes
+ * back in the context.
+ */
+NTSTATUS
+SynchronizedReadMMA
+(
+    IN      PINTERRUPTSYNC  InterruptSync,
+    IN      PVOID           Context
+)
+{
+    PSYNC_PORT_CONTEXT ctx = (PSYNC_PORT_CONTEXT)Context;
+    ctx->Value = ctx->That->ReadMMALocked((BYTE)ctx->Address);
+    return STATUS_SUCCESS;
+}
+
+
+/*****************************************************************************
+ * CAdapterCommon::ReadMMALocked()
+ *****************************************************************************
+ * The raw base+4 index / base+5 data read. Runs at DIRQL inside the interrupt-sync
+ * (or directly during Init); ISR-context callers use it directly.
+ */
+STDMETHODIMP_(BYTE)
+CAdapterCommon::
+ReadMMALocked
 (
     IN      BYTE    Register
 )

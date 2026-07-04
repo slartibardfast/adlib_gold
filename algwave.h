@@ -318,8 +318,10 @@ private:
     /*
      * Private methods
      */
-    void FillFifo(void);                /* 16-bit playback: dither + write   */
-    void DrainFifo(void);               /* 16-bit capture: read + zero-pad   */
+    void FillFifo(BOOLEAN AtDirql);     /* 16-bit playback: dither + write; AtDirql
+                                         * TRUE from the ISR (raw MMA), FALSE from the
+                                         * PASSIVE pre-fill (synchronized MMA)         */
+    void DrainFifo(void);               /* 16-bit capture: read + zero-pad (ISR only) */
 
     void ProgramMmaStart(void);         /* Write regs 0Ch + 09h to start    */
     void ProgramMmaStop(void);          /* Reset reg 09h, mask FIFO IRQ     */

@@ -662,7 +662,8 @@ ServiceMidiISR
             break;      /* No more MIDI data available */
         }
 
-        UCHAR dataByte = m_AdapterCommon->ReadMMA(MMA_REG_MIDI_DATA);
+        /* ReadMMALocked: ServiceMidiISR runs at DIRQL inside the ISR's interrupt-sync. */
+        UCHAR dataByte = m_AdapterCommon->ReadMMALocked(MMA_REG_MIDI_DATA);
         bytesDrained++;
 
         if ((m_KSStateInput != KSSTATE_RUN) || (!m_NumCaptureStreams))
@@ -786,7 +787,8 @@ SynchronizedMidiWrite
      */
     while (count < context->Length && count < 16)
     {
-        context->Miniport->m_AdapterCommon->WriteMMA(
+        /* WriteMMALocked: this runs at DIRQL inside CallSynchronizedRoutine's lock. */
+        context->Miniport->m_AdapterCommon->WriteMMALocked(
             MMA_REG_MIDI_DATA, pMidiData[count]);
         count++;
     }

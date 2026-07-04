@@ -1076,7 +1076,7 @@ ServiceWaveISR
         }
         else
         {
-            stream->FillFifo();
+            stream->FillFifo(TRUE);     /* ISR context: raw MMA access */
         }
     }
 
@@ -1452,7 +1452,7 @@ ProgramMmaStart
 
         if (!m_Capture)
         {
-            FillFifo();     /* Pre-fill before starting */
+            FillFifo(FALSE);    /* PASSIVE pre-fill: synchronized MMA access */
         }
     }
 
@@ -1547,7 +1547,7 @@ ProgramMmaStop
 void
 CMiniportWaveCyclicStreamAdLibGold::
 FillFifo
-(   void
+(   IN      BOOLEAN AtDirql
 )
 {
     PADAPTERCOMMON ac = m_Miniport->m_AdapterCommon;
@@ -1578,9 +1578,20 @@ FillFifo
         /* Apply TPDF dither and truncate to 12-bit */
         SHORT dithered = DitherSample(sample, &m_LfsrState);
 
-        /* Write in format 2 byte order: low byte first, high byte second */
-        ac->WriteMMA(MMA_REG_PCM_DATA, (BYTE)(dithered & 0xFF));
-        ac->WriteMMA(MMA_REG_PCM_DATA, (BYTE)((dithered >> 8) & 0xFF));
+        /* Write in format 2 byte order: low byte first, high byte second. Pick the MMA
+         * accessor by context: from the ISR (AtDirql) the raw WriteMMALocked, since the
+         * public form would re-enter the interrupt lock; from the PASSIVE pre-fill the
+         * synchronized WriteMMA, so the index/data pair stays atomic against the ISR. */
+        if (AtDirql)
+        {
+            ac->WriteMMALocked(MMA_REG_PCM_DATA, (BYTE)(dithered & 0xFF));
+            ac->WriteMMALocked(MMA_REG_PCM_DATA, (BYTE)((dithered >> 8) & 0xFF));
+        }
+        else
+        {
+            ac->WriteMMA(MMA_REG_PCM_DATA, (BYTE)(dithered & 0xFF));
+            ac->WriteMMA(MMA_REG_PCM_DATA, (BYTE)((dithered >> 8) & 0xFF));
+        }
 
         bytesWritten += 2;
 
@@ -1627,8 +1638,9 @@ DrainFifo
     while (bytesRead < bytesToRead)
     {
         /* Read format 2 byte pair from FIFO */
-        BYTE lo = ac->ReadMMA(MMA_REG_PCM_DATA);
-        BYTE hi = ac->ReadMMA(MMA_REG_PCM_DATA);
+        /* ReadMMALocked: DrainFifo runs at DIRQL inside the ISR's interrupt-sync. */
+        BYTE lo = ac->ReadMMALocked(MMA_REG_PCM_DATA);
+        BYTE hi = ac->ReadMMALocked(MMA_REG_PCM_DATA);
 
         /* Store as 16-bit in the cyclic buffer */
         pBuffer[m_SoftwarePosition]     = lo;
