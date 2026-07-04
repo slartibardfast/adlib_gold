@@ -8,6 +8,7 @@
  */
 
 #include "common.h"
+#include "sp2.h"   /* SP2 bit-serial encoder (call/0012), unit-tested */
 
 #define STR_MODULENAME "AdLibGold: "
 
@@ -68,6 +69,10 @@ public:
     );
     STDMETHODIMP_(void) EnableOPL3Bank1
     (   void
+    );
+    STDMETHODIMP_(void) WriteSurroundReg
+    (   BYTE    Register,
+        BYTE    Value
     );
     STDMETHODIMP_(void) WriteOPL3
     (
@@ -1163,4 +1168,30 @@ QueryDeviceCapabilities
     _DbgPrintF(DEBUGLVL_VERBOSE, ("[CAdapterCommon::QueryDeviceCapabilities]"));
 
     return STATUS_SUCCESS;
+}
+
+
+/*****************************************************************************
+ * CAdapterCommon::WriteSurroundReg()
+ *****************************************************************************
+ * Program one SP2 (YM7128) register. Encode the write into the bit-serial command
+ * stream (sp2.h, unit-tested against the SDK SURROUND sample) and clock it out over
+ * Control Chip register 0x18 (call/0012). The caller serialises with the ISR.
+ */
+STDMETHODIMP_(void)
+CAdapterCommon::
+WriteSurroundReg
+(
+    IN      BYTE    Register,
+    IN      BYTE    Value
+)
+{
+    unsigned char seq[SP2_BYTES_PER_REG];
+    int n = Sp2EncodeReg(Register, Value, seq);
+    int i;
+
+    for (i = 0; i < n; i++)
+    {
+        ControlRegWrite(CTRL_REG_SURROUND, (BYTE)seq[i]);
+    }
 }

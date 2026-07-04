@@ -301,6 +301,14 @@ DECLARE_INTERFACE_(IAdapterCommon, IUnknown)
     (   THIS
     )   PURE;
 
+    /* SP2 (YM7128) surround: write one SP2 register over the register-0x18
+     * bit-serial protocol (call/0012). */
+    STDMETHOD_(void,WriteSurroundReg)
+    (   THIS_
+        IN      BYTE    Register,
+        IN      BYTE    Value
+    )   PURE;
+
     /* OPL3 register access (bank-coordinated) */
     STDMETHOD_(void,WriteOPL3)
     (   THIS_
