@@ -4,8 +4,9 @@ name: Reproducible Build (Windows)
 # from the same pinned DDK+VC6 deps-bundle and prove it reproduces the SAME recorded
 # artifact hash as the Linux/Wine build, byte-for-byte (call/0007, call/0009). Because
 # both hosts run the identical VC6 binaries over identical C:\ paths, the artifacts must
-# match; this job is what proves it. The bundle is provided out of band (its licence
-# forbids public redistribution): set the DDK_BUNDLE_URL secret to a location CI can read.
+# match; this job is what proves it. The bundle lives in the private slartibardfast/ddk
+# repo (its licence forbids public redistribution); CI checks it out with the read-only
+# deploy key (secret DDK_DEPLOY_KEY).
 
 on:
   workflow_dispatch:
@@ -22,15 +23,19 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Fetch and verify the pinned deps-bundle (provenance gate)
+      - name: Check out the pinned deps-bundle from private storage (read-only deploy key)
+        uses: actions/checkout@v5
+        with:
+          repository: slartibardfast/ddk
+          ssh-key: ${{ secrets.DDK_DEPLOY_KEY }}
+          path: ddk
+      - name: Verify the bundle sha (provenance gate)
         shell: bash
-        run: |
-          curl -fsSL -o bundle.tar.gz "${{ secrets.DDK_BUNDLE_URL }}"
-          echo "$BUNDLE_SHA  bundle.tar.gz" | sha256sum -c -
+        run: echo "$BUNDLE_SHA  ddk/adlibgold-ddk-vc6-bundle.tar.gz" | sha256sum -c -
       - name: Build natively with the VC6 toolchain
         shell: cmd
         run: |
-          set BUNDLE=%CD%\bundle.tar.gz
+          set BUNDLE=%CD%\ddk\adlibgold-ddk-vc6-bundle.tar.gz
           call build.bat
       - name: Prove the Windows artifact is byte-identical to the Linux/Wine build
         shell: bash
