@@ -1,0 +1,64 @@
+-- allium: 3
+-- adlib_gold fmsynth: the driver's own OPL3 (YMF262) FM synth MIDI miniport (call/0014,
+-- fmsynth.cpp). A note-on allocates one of 18 two-operator voices and sounds it with its
+-- channel's patch; a note-off releases the voice; when every voice is busy a new note
+-- steals one. The drum channel plays percussion. Distilled from fmsynth.cpp; the OPL3
+-- inter-write timing lives in the .tla timing spec.
+
+config {
+    voice_count: Integer = 18
+    drum_channel: Integer = 9
+}
+
+-- A MIDI note event routed to the synth. A note on the drum channel is percussion.
+entity Note {
+    channel: Integer
+    is_drum: Boolean
+}
+
+-- One of the OPL3's two-operator voices.
+entity Voice {
+    channel: Integer
+    state: free | sounding
+    transitions state {
+        free -> sounding
+        sounding -> free
+        terminal: free
+    }
+}
+
+given {
+    voice: Voice
+}
+
+-- The KS MIDI synth boundary the port class drives.
+surface FmSynth {
+    facing voice: Voice
+    provides:
+        VoiceSounded(voice)
+        VoiceReleased(voice)
+}
+
+-- A note on the drum channel is percussion; other channels are melodic.
+rule DrumChannelIsPercussion {
+    when: note: Note.created
+    requires: note.channel = config.drum_channel
+    ensures: note.is_drum = true
+}
+
+-- A note-on sounds a voice: a free voice, or a stolen one when all are busy.
+rule NoteOnSounds {
+    when: voice: Voice.state transitions_to sounding
+    ensures: VoiceSounded(voice)
+}
+
+-- A note-off releases the voice sounding that note.
+rule NoteOffReleases {
+    when: voice: Voice.state transitions_to free
+    ensures: VoiceReleased(voice)
+}
+
+-- No more than the OPL3's voice budget sound at once; the eighteen-and-first note steals.
+invariant VoiceBudget {
+    (Voices where state = sounding).count <= config.voice_count
+}
