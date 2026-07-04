@@ -1288,6 +1288,27 @@ SetFormat
         ULONG   hwRate = mono16 ? NearestSupportedRate(source) : source;
 
         /*
+         * Capture does not resample: DrainFifo stores samples at the hardware rate, so
+         * an off-rate 16-bit capture would record at the wrong speed. Require a discrete
+         * hardware rate for a capture stream; only render resamples an off-rate source.
+         */
+        if (m_Capture)
+        {
+            BOOLEAN discreteRate = FALSE;
+            ULONG   r;
+            for (r = 0; r < NUM_SUPPORTED_RATES; r++)
+            {
+                if (source == SupportedSampleRates[r])
+                {
+                    discreteRate = TRUE;
+                    break;
+                }
+            }
+            if (!discreteRate)
+                return STATUS_INVALID_PARAMETER;
+        }
+
+        /*
          * Full-duplex constraint: the two directions share the hardware clock,
          * so their hardware rates must match.
          */

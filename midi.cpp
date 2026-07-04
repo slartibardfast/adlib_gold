@@ -688,6 +688,22 @@ ServiceMidiISR
     }
 
     /*
+     * If the receive FIFO overran (OV), the receive circuit stays stuck until it is
+     * reset, so no further MIDI would arrive. Pulse just the receive reset (not the
+     * transmit) and restore the default control. WriteMMALocked: this runs at DIRQL
+     * inside the ISR's interrupt-sync. OV is shared with the PCM overrun, but here we
+     * only reach it on the MIDI-receive path, and resetting the idle Rx FIFO is benign.
+     */
+    if (MmaStatusOverrun(m_AdapterCommon->ReadMMAStatus()))
+    {
+        _DbgPrintF(DEBUGLVL_TERSE, ("ServiceMidiISR: receive overrun, resetting Rx"));
+        m_AdapterCommon->WriteMMALocked(MMA_REG_MIDI_CTRL,
+            MMA_MIDI_MSK_POV | MMA_MIDI_MSK_MOV | MMA_MIDI_MSK_TRQ |
+            MMA_MIDI_RCV_RST | MMA_MIDI_MSK_RRQ);
+        m_AdapterCommon->WriteMMALocked(MMA_REG_MIDI_CTRL, MMA_MIDI_CTRL_DEFAULT);
+    }
+
+    /*
      * Notify the port driver that data is available.
      */
     if (newBytesAvailable && m_Port)
