@@ -1,0 +1,69 @@
+-- allium: 3
+-- adlib_gold topology: the Control Chip mixer as a KS topology filter (algtopo). It
+-- exposes one node per Control Chip control (the volumes, the tone, the mute) and routes
+-- the wave, FM, aux, and mic sources to the line-out. It also surfaces the SP2
+-- special-effects module (an enable and a mode) when the card reports one present
+-- (call/0012). Distilled from algtopo.cpp; SP2 register-0x18 timing lives in the .tla
+-- timing spec.
+
+config {
+    -- The count of documented SP2 surround modes the mode node selects among.
+    sp2_mode_count: Integer = 4
+}
+
+enum ControlKind {
+    volume
+    tone
+    mute
+    sp2_enable
+    sp2_mode
+}
+
+-- A KS control node, one per Control Chip control, that sndvol32 drives. Each maps to a
+-- Control Chip register; an SP2 node reaches the surround processor over the
+-- register-0x18 bit-serial protocol.
+entity Node {
+    kind: ControlKind
+    reachable: Boolean
+}
+
+-- The mixer as a whole. surround_present reflects the Control Chip detect bit; the SP2
+-- nodes are present exactly when it is set (call/0012).
+entity Mixer {
+    surround_present: Boolean
+    sp2_nodes_present: Boolean
+}
+
+given {
+    mixer: Mixer
+}
+
+-- The KS topology boundary the port class drives.
+surface Topology {
+    facing mixer: Mixer
+    provides:
+        NodeReached(node)
+        SurroundResolved(mixer)
+}
+
+-- A volume, tone, or mute node is always reachable, since every card has the Control
+-- Chip mixer.
+rule CoreNodeReachable {
+    when: node: Node.created
+    requires: node.kind = volume or node.kind = tone or node.kind = mute
+    ensures: node.reachable = true
+}
+
+-- An SP2 node is reachable only where the card reports the surround module present, so
+-- the mixer reflects the hardware rather than offering a dead control (call/0012).
+rule Sp2NodeTracksHardware {
+    when: node: Node.created
+    requires: (node.kind = sp2_enable or node.kind = sp2_mode) and mixer.surround_present
+    ensures: node.reachable = true
+}
+
+-- The mixer surfaces the SP2 nodes exactly when the card reports surround present.
+rule SurroundResolves {
+    when: mixer: Mixer.created
+    ensures: mixer.sp2_nodes_present = mixer.surround_present
+}
