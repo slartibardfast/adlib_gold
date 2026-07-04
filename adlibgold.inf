@@ -127,14 +127,14 @@ DMAConfig=1
 ;; Single DMA channel for playback.
 ;;
 
-;; Gold 2000/2000MC — full IRQ and DMA range
+;; Gold 2000/2000MC - full IRQ and DMA range
 [ALG.LC1]
 ConfigPriority=NORMAL
 IOConfig=388-38F
 IRQConfig=3 , 4 , 5 , 7 , 10 , 11 , 12 , 15
 DMAConfig=0 , 1 , 2 , 3
 
-;; Gold 1000 — restricted IRQ and DMA range
+;; Gold 1000 - restricted IRQ and DMA range
 [ALG.LC2]
 ConfigPriority=NORMAL
 IOConfig=388-38F

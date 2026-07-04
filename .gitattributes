@@ -1,0 +1,2 @@
+# INF files must ship CRLF for legacy Windows setup (setupx) to parse them.
+*.inf text eol=crlf
