@@ -18,9 +18,10 @@
 /*****************************************************************************
  * MMA register indices (YMZ263 — used by wave miniport only)
  *
- * Accessed via IAdapterCommon::WriteMMA / ReadMMA (MMA Channel 0).
+ * Accessed via IAdapterCommon::WriteMMA / ReadMMA (MMA Channel 0). The status
+ * register is read directly through ReadMMAStatus (base+4), not selected by
+ * index, and decoded via mmastatus.h.
  */
-#define MMA_REG_STATUS      0x00    /* Read: status flags (auto-clear)       */
 #define MMA_REG_PLAYBACK    0x09    /* Write: playback/record control        */
 #define MMA_REG_VOLUME      0x0A    /* Write: output volume (0x00-0xFF)      */
 #define MMA_REG_PCM_DATA    0x0B    /* R/W: FIFO data port                   */

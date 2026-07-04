@@ -476,8 +476,8 @@ Init
             ULONG drain;
             for (drain = 0; drain < 16; drain++)
             {
-                UCHAR mmaStatus = m_AdapterCommon->ReadMMA(MMA_REG_STATUS);
-                if (!(mmaStatus & MMA_STATUS_RRQ))
+                UCHAR mmaStatus = m_AdapterCommon->ReadMMAStatus();
+                if (!MmaStatusMidiRxReady(mmaStatus))
                     break;
                 (void) m_AdapterCommon->ReadMMA(MMA_REG_MIDI_DATA);
             }
@@ -656,8 +656,8 @@ ServiceMidiISR
      */
     while (bytesDrained < 16)
     {
-        UCHAR mmaStatus = m_AdapterCommon->ReadMMA(MMA_REG_STATUS);
-        if (!(mmaStatus & MMA_STATUS_RRQ))
+        UCHAR mmaStatus = m_AdapterCommon->ReadMMAStatus();
+        if (!MmaStatusMidiRxReady(mmaStatus))
         {
             break;      /* No more MIDI data available */
         }

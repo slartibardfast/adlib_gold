@@ -19,13 +19,10 @@
 /*****************************************************************************
  * MMA register indices used by MIDI (YMZ263)
  *
- * Accessed via IAdapterCommon::WriteMMA / ReadMMA (MMA Channel 0).
- * MMA_REG_STATUS is also defined in algwave.h; we redefine it here
- * so midi.cpp can compile independently.
+ * Accessed via IAdapterCommon::WriteMMA / ReadMMA (MMA Channel 0). The status
+ * register is not one of these: it is read directly through ReadMMAStatus and
+ * decoded via mmastatus.h, never selected by index.
  */
-#ifndef MMA_REG_STATUS
-#define MMA_REG_STATUS          0x00    /* Read: status flags (auto-clear)    */
-#endif
 #define MMA_REG_MIDI_CTRL       0x0D    /* MIDI and interrupt control         */
 #define MMA_REG_MIDI_DATA       0x0E    /* MIDI data port (R/W FIFO)          */
 

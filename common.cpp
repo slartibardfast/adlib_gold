@@ -115,6 +115,9 @@ public:
     (
         IN      BYTE    Register
     );
+    STDMETHODIMP_(BYTE) ReadMMAStatus
+    (   void
+    );
     STDMETHODIMP_(void) SetWaveMiniport(IN PWAVEMINIPORTADLIBGOLD Miniport)
     {
         m_pWaveMiniport = Miniport;
@@ -842,6 +845,29 @@ ReadMMA
 
 
 /*****************************************************************************
+ * CAdapterCommon::ReadMMAStatus()
+ *****************************************************************************
+ * Read the YMZ263 MMA status register.
+ *
+ * The status is a DIRECT read of the register-select port at base+4 (38CH); it
+ * is not reached through the register/data protocol that ReadMMA uses (writing
+ * an index to base+4 then reading base+5 returns that register's data, not the
+ * status — manual ch07). Non-paged: called at DIRQL from the ISR and the MIDI
+ * service path. The flags are level-sensitive, so the read does not clear them.
+ */
+STDMETHODIMP_(BYTE)
+CAdapterCommon::
+ReadMMAStatus
+(   void
+)
+{
+    ASSERT(m_pPortBase);
+
+    return READ_PORT_UCHAR(m_pPortBase + ALG_REG_MMA0_ADDR);
+}
+
+
+/*****************************************************************************
  * InterruptServiceRoutine()
  *****************************************************************************
  * ISR for the Ad Lib Gold.
@@ -879,17 +905,18 @@ InterruptServiceRoutine
     if (!(status & ALG_STATUS_SMP_IRQ))
     {
         /*
-         * Read MMA status once.  Status bits auto-clear on read,
-         * so a single read must serve both wave (PRQ) and MIDI (RRQ).
+         * Read the MMA status once and dispatch by the flag each path owns.
+         * The flags are level-sensitive (manual ch07), so the read does not
+         * clear them; a path stays pending until its FIFO condition clears.
          */
-        UCHAR mmaStatus = READ_PORT_UCHAR(that->m_pPortBase + ALG_REG_MMA0_ADDR);
+        UCHAR mmaStatus = that->ReadMMAStatus();
 
         if (that->m_pWaveMiniport)
         {
             that->m_pWaveMiniport->ServiceWaveISR();
         }
 
-        if ((mmaStatus & MMA_STATUS_RRQ) && that->m_pMidiMiniport)
+        if (MmaStatusMidiRxReady(mmaStatus) && that->m_pMidiMiniport)
         {
             that->m_pMidiMiniport->ServiceMidiISR();
         }

@@ -18,6 +18,7 @@ enum-comparable.BitDepth            => structural
 enum-comparable.ChannelCount        => structural
 entity-fields.Format                => structural
 entity-fields.Stream                => structural
+entity-fields.MmaService            => structural
 entity-optional.Stream.format       => structural
 surface-actor.WaveRender            => structural
 surface-provides.WaveRender         => structural
@@ -33,6 +34,8 @@ transition-edge.Stream.running.stopped => waived: no wave test harness until pla
 invariant.Stream.RunningIsConfigured   => waived: no wave test harness until plan/0004 (needs a build; call/0008)
 rule-success.AcceptPcmFormat           => waived: no wave test harness until plan/0004 (needs a build; call/0008)
 rule-failure.AcceptPcmFormat.1         => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-success.PlaybackFifoServicesRender   => test:test_mma_status exercises=MmaStatusPlaybackReady
+rule-failure.PlaybackFifoServicesRender.1 => test:test_mma_status exercises=MmaStatusPlaybackReady
 rule-success.ResampleOffRate           => test:test_nearest_rate exercises=NearestSupportedRate
 rule-failure.ResampleOffRate.1         => waived: no wave test harness until plan/0004 (needs a build; call/0008)
 rule-success.DitherWideFormat          => test:test_dither exercises=WaveDspDither

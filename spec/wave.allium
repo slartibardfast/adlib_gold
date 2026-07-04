@@ -60,6 +60,15 @@ entity Stream {
     }
 }
 
+-- The YMZ263 raises one shared sampling interrupt for both PCM FIFOs. The MMA status
+-- register (a direct read of base+4, manual ch07) says which FIFO needs service: the
+-- channel-0 playback FIFO request drives the render refill. The pure mmastatus.h is the
+-- one tested decode of that byte, so a mislabeled bit can no longer silence playback.
+entity MmaService {
+    playback_fifo_ready: Boolean
+    render_serviced: Boolean
+}
+
 -- The KS wave-render boundary the port class drives.
 surface WaveRender {
     facing stream: Stream
@@ -117,4 +126,13 @@ rule ReadPosition {
     when: PositionRead(stream)
     requires: stream.state = running
     ensures: stream.position >= 0
+}
+
+-- A render stream is refilled exactly when the channel-0 playback FIFO signals it has
+-- reached its interrupt level. The decode is the one tested source of truth: the driver's
+-- ISR gates the render service on this bit, so a status-bit mislabel is caught by the test.
+rule PlaybackFifoServicesRender {
+    when: service: MmaService.created
+    requires: service.playback_fifo_ready
+    ensures: service.render_serviced = true
 }

@@ -79,13 +79,11 @@
 #define ALG_STATUS_IRQ_MASK     0x0F    /* All four IRQ source bits          */
 
 /*****************************************************************************
- * MMA status register bits (read from base+4, MMA Channel 0 address port)
- *
- * These bits are auto-cleared on read.
+ * MMA status register bits + the pure decode of them. The status is a direct
+ * read of base+4 (38CH); the bit layout (FIF0 FIF1 RRQ TRQ ...) and the
+ * level-sensitive semantics are documented and tested once in mmastatus.h.
  */
-#define MMA_STATUS_TRQ          0x01    /* Timer interrupt request            */
-#define MMA_STATUS_PRQ          0x02    /* Playback FIFO request              */
-#define MMA_STATUS_RRQ          0x04    /* MIDI receive data ready            */
+#include "mmastatus.h"
 
 /*****************************************************************************
  * Control Chip register indices (0x00 through 0x18)
@@ -326,6 +324,12 @@ DECLARE_INTERFACE_(IAdapterCommon, IUnknown)
     STDMETHOD_(BYTE,ReadMMA)
     (   THIS_
         IN      BYTE    Register
+    )   PURE;
+
+    /* Read the MMA status register: a direct read of base+4 (38CH), not the
+     * register/data protocol. Non-paged; called at DIRQL from the ISR. */
+    STDMETHOD_(BYTE,ReadMMAStatus)
+    (   THIS
     )   PURE;
 
     /* Miniport registration for ISR dispatch */
