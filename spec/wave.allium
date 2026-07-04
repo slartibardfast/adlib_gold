@@ -73,6 +73,12 @@ entity MmaService {
     position_advanced: Boolean
 }
 
+-- The PnP-assigned DMA channel programmed into the control chip, validated to a channel
+-- the 2-bit select field can hold before use.
+entity DmaConfig {
+    validated: Boolean
+}
+
 -- The KS wave-render boundary the port class drives.
 surface WaveRender {
     facing stream: Stream
@@ -172,4 +178,13 @@ rule ServiceAdvancesPosition {
     when: service: MmaService.created
     requires: service.render_serviced
     ensures: service.position_advanced = true
+}
+
+-- The DMA channel is validated to a supported channel before it is programmed; an
+-- out-of-range channel falls back rather than masking to a wrong channel. The mapping is
+-- the pure tested WaveDmaSelectBits, so a change that drops the check is caught, mirroring
+-- the IRQ validation.
+rule DmaChannelValidated {
+    when: cfg: DmaConfig.created
+    ensures: cfg.validated = true
 }

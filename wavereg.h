@@ -53,4 +53,20 @@ WaveMmaFormatInterleave(int channels)
     return (unsigned char)((channels >= 2) ? WAVE_FMT_ILV : 0);
 }
 
+/* Control-chip reg 13h DMA-select field shift (D6-D5), matching CTRL_DMA0_SEL_SHIFT. */
+#define WAVE_DMA0_SEL_SHIFT   5
+
+/*
+ * The reg-13h DMA-select bits for a PnP-assigned DMA channel. The 2-bit field only holds
+ * channels 0..3; an out-of-range channel falls back to DMA 1 (a Gold 1000 default) rather
+ * than silently masking to a wrong channel, mirroring the IRQ validation. Pure so a test
+ * pins the mapping (finding: DMA channel validated like the IRQ).
+ */
+static unsigned char
+WaveDmaSelectBits(int channel)
+{
+    unsigned char ch = (channel >= 0 && channel <= 3) ? (unsigned char)channel : 1;
+    return (unsigned char)(ch << WAVE_DMA0_SEL_SHIFT);
+}
+
 #endif /* _WAVEREG_H_ */

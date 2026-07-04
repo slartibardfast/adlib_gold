@@ -51,3 +51,5 @@ rule-failure.StartRender.1             => waived: no wave test harness until pla
 rule-success.PauseRender               => waived: no wave test harness until plan/0004 (needs a build; call/0008)
 rule-success.ReadPosition              => waived: no wave test harness until plan/0004 (needs a build; call/0008)
 rule-failure.ReadPosition.1            => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+entity-fields.DmaConfig                => structural
+rule-success.DmaChannelValidated       => test:test_wave_dma exercises=WaveDmaSelectBits

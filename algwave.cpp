@@ -551,9 +551,16 @@ ConfigureDmaAndIrq
     }
 
     /*
-     * Map DMA channel number to DMA select bits (D6-D5 of reg 13h).
+     * Map DMA channel number to DMA select bits (D6-D5 of reg 13h), validated like the
+     * IRQ: an out-of-range channel is reported and falls back to DMA 1 rather than
+     * silently masking to a wrong channel.
      */
-    BYTE dmaSel = (BYTE)((dmaChan & 0x03) << CTRL_DMA0_SEL_SHIFT);
+    if (dmaChan > 3)
+    {
+        _DbgPrintF(DEBUGLVL_TERSE,
+            ("ConfigureDmaAndIrq: unexpected DMA %d, using 1", dmaChan));
+    }
+    BYTE dmaSel = WaveDmaSelectBits((int)dmaChan);
 
     /*
      * Register 13h: DMA ch0 enable + DMA select + IRQ enable + IRQ select
