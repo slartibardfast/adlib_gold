@@ -17,7 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Install the allium CLI (pinned)
-        run: cargo install allium-cli@3.2.4
+        # --locked uses the crate's published Cargo.lock, pinning allium-parser to the
+        # version 3.2.4 was built against (a newer 3.5.0 broke the unpinned build).
+        run: cargo install allium-cli@3.2.4 --locked
       - name: Install host-lifecycle (the obligations gate, pinned)
         run: cargo install --git https://github.com/connollydavid/host-lifecycle --rev 7e63d99e3a3a8afd9837288cb1b80654e1de55bf --root "$HOME/.local"
       - name: Check and analyse every spec, then discharge its obligations
