@@ -16,7 +16,7 @@ Signature="$CHICAGO$"
 Class=MEDIA
 ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
 provider=%MfgName%
-DriverVer=02/12/2026,1.00.0000.1
+DriverVer=08/02/1999,1.00.0000.2
 
 [SourceDisksNames.x86]
 222=%DiskDescription%,,,
@@ -34,7 +34,7 @@ adlibgold.sys=222
 ;; ALG1000 is a vendor-assigned device ID for manual installation.
 ;;
 [AdLibGold]
-%AdLibGold.DeviceDesc%=AdLibGold_Device, , ALG1000
+%AdLibGold.DeviceDesc%=AdLibGold_Device, ALG1000
 
 [AdLibGold_Device]
 AlsoInstall=ks.registration(ks.inf),wdmaudio.registration(wdmaudio.inf)
@@ -43,38 +43,38 @@ CopyFiles=AdLibGold.CopyList
 AddReg=AdLibGold.AddReg
 
 [AdLibGold_Device.Interfaces]
-AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Wave%,AdLibGold.Interface.Wave
-AddInterface=%KSCATEGORY_RENDER%,%KSNAME_Wave%,AdLibGold.Interface.Wave
-AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_Wave%,AdLibGold.Interface.Wave
-AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Topology%,AdLibGold.Interface.Topology
-AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_FMSynth%,AdLibGold.Interface.FMSynth
-AddInterface=%KSCATEGORY_RENDER%,%KSNAME_FMSynth%,AdLibGold.Interface.FMSynth
-AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_MIDI%,AdLibGold.Interface.MIDI
-AddInterface=%KSCATEGORY_RENDER%,%KSNAME_MIDI%,AdLibGold.Interface.MIDI
-AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_MIDI%,AdLibGold.Interface.MIDI
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Wave%,ALG.I.Wave
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_Wave%,ALG.I.Wave
+AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_Wave%,ALG.I.Wave
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Topology%,ALG.I.Topology
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_FMSynth%,ALG.I.FMSynth
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_FMSynth%,ALG.I.FMSynth
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_MIDI%,ALG.I.MIDI
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_MIDI%,ALG.I.MIDI
+AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_MIDI%,ALG.I.MIDI
 
-[AdLibGold.Interface.Wave]
-AddReg=AdLibGold.Interface.Wave.AddReg
-[AdLibGold.Interface.Wave.AddReg]
+[ALG.I.Wave]
+AddReg=ALG.I.Wave.AddReg
+[ALG.I.Wave.AddReg]
 HKR,,CLSID,,%Proxy.CLSID%
 HKR,,FriendlyName,,%AdLibGold.Wave.szPname%
 
-[AdLibGold.Interface.Topology]
-AddReg=AdLibGold.Interface.Topo.AddReg
+[ALG.I.Topology]
+AddReg=ALG.I.Topo.AddReg
 ;; warning!! must be "Topo" because "Topology" is too long
-[AdLibGold.Interface.Topo.AddReg]
+[ALG.I.Topo.AddReg]
 HKR,,CLSID,,%Proxy.CLSID%
 HKR,,FriendlyName,,%AdLibGold.Topology.szPname%
 
-[AdLibGold.Interface.FMSynth]
-AddReg=AdLibGold.Interface.FMSynth.AddReg
-[AdLibGold.Interface.FMSynth.AddReg]
+[ALG.I.FMSynth]
+AddReg=ALG.I.FMSynth.AddReg
+[ALG.I.FMSynth.AddReg]
 HKR,,CLSID,,%Proxy.CLSID%
 HKR,,FriendlyName,,%AdLibGold.FMSynth.szPname%
 
-[AdLibGold.Interface.MIDI]
-AddReg=AdLibGold.Interface.MIDI.AddReg
-[AdLibGold.Interface.MIDI.AddReg]
+[ALG.I.MIDI]
+AddReg=ALG.I.MIDI.AddReg
+[ALG.I.MIDI.AddReg]
 HKR,,CLSID,,%Proxy.CLSID%
 HKR,,FriendlyName,,%AdLibGold.MIDI.szPname%
 
@@ -157,15 +157,15 @@ IRQConfig=7
 DMAConfig=1
 
 [AdLibGold_Device.NT.Interfaces]
-AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Wave%,AdLibGold.Interface.Wave
-AddInterface=%KSCATEGORY_RENDER%,%KSNAME_Wave%,AdLibGold.Interface.Wave
-AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_Wave%,AdLibGold.Interface.Wave
-AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Topology%,AdLibGold.Interface.Topology
-AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_FMSynth%,AdLibGold.Interface.FMSynth
-AddInterface=%KSCATEGORY_RENDER%,%KSNAME_FMSynth%,AdLibGold.Interface.FMSynth
-AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_MIDI%,AdLibGold.Interface.MIDI
-AddInterface=%KSCATEGORY_RENDER%,%KSNAME_MIDI%,AdLibGold.Interface.MIDI
-AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_MIDI%,AdLibGold.Interface.MIDI
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Wave%,ALG.I.Wave
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_Wave%,ALG.I.Wave
+AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_Wave%,ALG.I.Wave
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Topology%,ALG.I.Topology
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_FMSynth%,ALG.I.FMSynth
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_FMSynth%,ALG.I.FMSynth
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_MIDI%,ALG.I.MIDI
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_MIDI%,ALG.I.MIDI
+AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_MIDI%,ALG.I.MIDI
 
 [AdLibGold_Device.NT.Services]
 AddService = adlibgold, 0x00000002, AdLibGold_Service_Inst
