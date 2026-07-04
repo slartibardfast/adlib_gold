@@ -12,6 +12,7 @@
 
 #include "common.h"
 #include "wavedsp.h"   /* pure, tested DSP: NearestSupportedRate + dither (call/0011) */
+#include "wavesrc.h"   /* pure, tested sample-rate converter (call/0011)             */
 
 
 /*****************************************************************************
@@ -288,6 +289,13 @@ private:
     ULONG       m_SoftwarePosition;     /* Read/write position in DMA buffer */
     ULONG       m_DmaBufferSize;        /* Size of allocated DMA buffer      */
     USHORT      m_LfsrState;            /* LFSR state for dither generation  */
+
+    /* Off-rate resampling (mono 16-bit PIO): source rate vs the hardware rate.
+     * m_ResampleStep is source-samples-per-output in Q16; 0x10000 (== 1.0) is the
+     * identity case (on-rate, stereo, or 8-bit), where the fill is unchanged. */
+    ULONG       m_SourceRate;           /* rate the app requested (may be off-rate) */
+    ULONG       m_ResampleStep;         /* Q16 input step per output sample         */
+    ULONG       m_ResamplePhase;        /* Q16 fractional read position             */
 
     /*
      * Private methods

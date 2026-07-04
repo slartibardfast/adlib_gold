@@ -626,7 +626,20 @@ ValidateFormat
         return STATUS_INVALID_PARAMETER;
     }
 
-    /* Sample rate: must be one of the four discrete hardware rates */
+    /*
+     * Sample rate. Mono 16-bit plays through the software PIO fill, which can
+     * resample an off-rate source to the nearest hardware rate (call/0011), so it
+     * accepts any rate in the audio range. Every other path (8-bit ISA DMA, and
+     * stereo, whose interleaved frames the streaming fill does not resample) must
+     * be one of the four discrete hardware rates.
+     */
+    if (wfx->wBitsPerSample == 16 && wfx->nChannels == 1)
+    {
+        if (wfx->nSamplesPerSec < 4000 || wfx->nSamplesPerSec > 48000)
+            return STATUS_INVALID_PARAMETER;
+        return STATUS_SUCCESS;
+    }
+
     BOOLEAN rateValid = FALSE;
     ULONG i;
     for (i = 0; i < NUM_SUPPORTED_RATES; i++)
@@ -1143,6 +1156,11 @@ Init
     m_DmaBufferSize    = m_Miniport->m_DmaChannel->BufferSize();
     m_LfsrState        = 0xACE1;    /* Non-zero seed */
 
+    /* Resampler: identity until SetFormat sizes it to the source rate. */
+    m_SourceRate       = wfx->nSamplesPerSec;
+    m_ResampleStep     = 0x10000;
+    m_ResamplePhase    = 0;
+
     return STATUS_SUCCESS;
 }
 
@@ -1171,19 +1189,30 @@ SetFormat
     {
         PWAVEFORMATEX wfx = PWAVEFORMATEX(Format + 1);
 
+        /* Mono 16-bit resamples an off-rate source to the nearest hardware rate;
+         * every other path runs the hardware at the source rate directly. */
+        ULONG   source = wfx->nSamplesPerSec;
+        BOOLEAN mono16 = (wfx->wBitsPerSample == 16 && wfx->nChannels == 1);
+        ULONG   hwRate = mono16 ? NearestSupportedRate(source) : source;
+
         /*
-         * Full-duplex constraint: if the other direction is active,
-         * the sample rate must match.
+         * Full-duplex constraint: the two directions share the hardware clock,
+         * so their hardware rates must match.
          */
         if ((m_Miniport->m_CaptureAllocated && m_Miniport->m_RenderAllocated) &&
-            (m_Miniport->m_SamplingFrequency != wfx->nSamplesPerSec))
+            (m_Miniport->m_SamplingFrequency != hwRate))
         {
             return STATUS_INVALID_PARAMETER;
         }
 
         m_16Bit  = (wfx->wBitsPerSample == 16);
         m_Stereo = (wfx->nChannels == 2);
-        m_Miniport->m_SamplingFrequency = wfx->nSamplesPerSec;
+        m_SourceRate = source;
+        m_Miniport->m_SamplingFrequency = hwRate;
+
+        /* Q16 input-samples-per-output; 0x10000 (identity) unless we resample. */
+        m_ResampleStep  = (source << 16) / hwRate;
+        m_ResamplePhase = 0;
     }
 
     return ntStatus;
@@ -1320,6 +1349,7 @@ ProgramMmaStart
     if (m_16Bit)
     {
         m_SoftwarePosition = 0;
+        m_ResamplePhase    = 0;     /* restart the resampler cleanly */
         m_DmaBufferSize    = m_Miniport->m_DmaChannel->BufferSize();
 
         if (!m_Capture)
@@ -1404,11 +1434,14 @@ ProgramMmaStop
 /*****************************************************************************
  * CMiniportWaveCyclicStreamAdLibGold::FillFifo()
  *****************************************************************************
- * 16-bit playback PIO: read samples from DMA buffer, apply TPDF dither,
- * truncate to 12-bit, write byte pairs to FIFO.
+ * 16-bit playback PIO: read samples from the DMA buffer, resample an off-rate
+ * mono source to the hardware rate (call/0011), apply TPDF dither, truncate to
+ * 12-bit, and write byte pairs to the FIFO.
  *
- * Called from the DPC (via PortCls notification) or during pre-fill.
- * Writes up to MMA_FIFO_SIZE bytes to the FIFO.
+ * The read position advances by m_ResampleStep (Q16 input samples per output);
+ * when it is 0x10000 (on-rate, stereo, or 8-bit) the fill is the plain 1:1 copy.
+ * Called from the DPC (via PortCls notification) or during pre-fill. Writes up to
+ * MMA_FIFO_SIZE bytes to the FIFO.
  */
 #pragma code_seg()
 
@@ -1434,8 +1467,15 @@ FillFifo
 
     while (bytesWritten < bytesToWrite)
     {
-        /* Read a 16-bit sample from the cyclic buffer */
-        SHORT sample = *((SHORT *)(pBuffer + m_SoftwarePosition));
+        /* Read this sample and its neighbour, then interpolate at the fractional
+         * read position (identity when m_ResampleStep == 0x10000). */
+        SHORT s0 = *((SHORT *)(pBuffer + m_SoftwarePosition));
+        ULONG nextPos = m_SoftwarePosition + 2;
+        if (nextPos >= m_DmaBufferSize)
+            nextPos = 0;
+        SHORT s1 = *((SHORT *)(pBuffer + nextPos));
+
+        SHORT sample = WaveSrcInterp(s0, s1, m_ResamplePhase);
 
         /* Apply TPDF dither and truncate to 12-bit */
         SHORT dithered = DitherSample(sample, &m_LfsrState);
@@ -1444,13 +1484,17 @@ FillFifo
         ac->WriteMMA(MMA_REG_PCM_DATA, (BYTE)(dithered & 0xFF));
         ac->WriteMMA(MMA_REG_PCM_DATA, (BYTE)((dithered >> 8) & 0xFF));
 
-        m_SoftwarePosition += 2;    /* 2 bytes per 16-bit sample */
         bytesWritten += 2;
 
-        /* Wrap at buffer end */
-        if (m_SoftwarePosition >= m_DmaBufferSize)
+        /* Advance the fractional read position, stepping over whole input samples.
+         * step < 0x10000 upsamples (reuses a sample), step > 0x10000 downsamples. */
+        m_ResamplePhase += m_ResampleStep;
+        while (m_ResamplePhase >= 0x10000)
         {
-            m_SoftwarePosition = 0;
+            m_ResamplePhase -= 0x10000;
+            m_SoftwarePosition += 2;        /* 2 bytes per 16-bit sample */
+            if (m_SoftwarePosition >= m_DmaBufferSize)
+                m_SoftwarePosition = 0;
         }
     }
 }
