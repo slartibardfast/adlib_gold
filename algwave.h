@@ -11,6 +11,7 @@
 #define _ALGWAVE_PRIVATE_H_
 
 #include "common.h"
+#include "wavedsp.h"   /* pure, tested DSP: NearestSupportedRate + dither (call/0011) */
 
 
 /*****************************************************************************
@@ -122,28 +123,8 @@ DitherSample
     IN OUT  USHORT *    pLfsr
 )
 {
-    /*
-     * Two uniform random values in [-8, +7] summed give triangular
-     * PDF in [-16, +14].  One LSB at 12-bit resolution = 16 at
-     * 16-bit resolution, so this is +/- 1 LSB dither.
-     */
-    LONG r1;
-    LONG r2;
-    LONG dithered;
-
-    r1 = (LONG)(*pLfsr & 0x0F) - 8;
-    *pLfsr = LfsrNext(*pLfsr);
-    r2 = (LONG)(*pLfsr & 0x0F) - 8;
-    *pLfsr = LfsrNext(*pLfsr);
-
-    dithered = (LONG)Sample16 + r1 + r2;
-
-    /* Clamp to signed 16-bit range */
-    if (dithered > 32767)  dithered = 32767;
-    if (dithered < -32768) dithered = -32768;
-
-    /* Truncate: clear lower 4 bits */
-    return (SHORT)(dithered & 0xFFF0);
+    /* delegate to the pure, unit-tested implementation (wavedsp.h, call/0011) */
+    return WaveDspDither(Sample16, pLfsr);
 }
 
 

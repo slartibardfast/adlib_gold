@@ -1,0 +1,26 @@
+name: Tests
+
+# Userspace unit tests for the driver's pure logic (no DDK/hardware needed): the
+# WaveCyclic DSP decisions (nearest-rate mapping and TPDF dither, call/0011). These
+# run the tests that discharge the corresponding wave.allium obligations.
+
+on:
+  push:
+    branches: [main]
+    paths: ['tests/**', 'wavedsp.h', '.github/workflows/tests.yml']
+  pull_request:
+    paths: ['tests/**', 'wavedsp.h', '.github/workflows/tests.yml']
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build and run the DSP unit tests
+        run: |
+          set -e
+          for t in tests/*_test.c; do
+            echo "== $t =="
+            cc -O2 -Wall -Werror -I. -o "/tmp/$(basename "$t" .c)" "$t"
+            "/tmp/$(basename "$t" .c)"
+          done
