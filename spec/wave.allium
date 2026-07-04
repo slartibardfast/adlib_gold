@@ -1,0 +1,120 @@
+-- allium: 3
+-- adlib_gold wave: the WaveCyclic render path over the YMZ263 (MMA) digital audio.
+-- A render stream accepts a PCM format, moves through the KS transport states, and
+-- plays its buffer to the 12-bit DAC: 8-bit over ISA DMA, 16-bit dithered to 12 bits
+-- over PIO, and an off-rate source resampled to a supported hardware rate. Distilled
+-- from algwave.cpp; the chip timing figures live in the .tla timing spec.
+
+config {
+    -- The discrete sample rates the MMA clocks, in Hz (SDK; algwave.h).
+    rate_high: Integer = 44100
+    rate_upper_mid: Integer = 22050
+    rate_lower_mid: Integer = 11025
+    rate_low: Integer = 7350
+    -- FIFO interrupt threshold in bytes the refill DPC leaves in hand.
+    fifo_threshold: Integer = 32
+}
+
+given {
+    stream: Stream
+}
+
+enum BitDepth {
+    pcm8
+    pcm16
+}
+
+enum ChannelCount {
+    mono
+    stereo
+}
+
+-- A requested PCM render format. requested_rate is what Windows asks for; it need not
+-- be a hardware rate, and then the stream resamples to the nearest supported rate.
+entity Format {
+    bits: BitDepth
+    channels: ChannelCount
+    requested_rate: Integer
+    resampled: Boolean
+    dithered: Boolean
+}
+
+-- One render stream across its KS transport lifecycle. ACQUIRE folds to PAUSE.
+entity Stream {
+    format: Format?
+    position: Integer
+    state: stopped | paused | running
+
+    transitions state {
+        stopped -> paused
+        paused -> running
+        running -> paused
+        paused -> stopped
+        running -> stopped
+        terminal: stopped
+    }
+
+    -- The DAC clocks only while a configured stream is running.
+    invariant RunningIsConfigured {
+        state = running implies format != none
+    }
+}
+
+-- The KS wave-render boundary the port class drives.
+surface WaveRender {
+    facing stream: Stream
+    provides:
+        Started(stream)
+        Paused(stream)
+        Stopped(stream)
+        PositionRead(stream)
+}
+
+-- A format is accepted only as audio PCM, mono or stereo, 8 or 16 bit; the port class
+-- refuses anything else before a stream is configured.
+rule AcceptPcmFormat {
+    when: format: Format.created
+    requires: (format.bits = pcm8 or format.bits = pcm16)
+        and (format.channels = mono or format.channels = stereo)
+    ensures: stream.format = format
+}
+
+-- A source rate that is not one of the four hardware rates is resampled to the nearest
+-- one (call/0011). The skeleton rejects it today; the spec leads, and plan/0004 closes
+-- the gap.
+rule ResampleOffRate {
+    when: format: Format.created
+    requires: not (format.requested_rate = config.rate_high
+        or format.requested_rate = config.rate_upper_mid
+        or format.requested_rate = config.rate_lower_mid
+        or format.requested_rate = config.rate_low)
+    ensures: format.resampled = true
+}
+
+-- A 16-bit source is dithered down to the 12-bit DAC with triangular-PDF dither, so
+-- the quantization error is noise rather than distortion (call/0011).
+rule DitherWideFormat {
+    when: format: Format.created
+    requires: format.bits = pcm16
+    ensures: format.dithered = true
+}
+
+-- Running starts the DAC; RUN programs the MMA and starts playback.
+rule StartRender {
+    when: stream: Stream.state transitions_to running
+    requires: stream.format != none
+    ensures: Started(stream)
+}
+
+-- Pausing stops the engine and masks the FIFO interrupt.
+rule PauseRender {
+    when: stream: Stream.state transitions_to paused
+    ensures: Paused(stream)
+}
+
+-- Position is read while running, and never runs backward within a run.
+rule ReadPosition {
+    when: PositionRead(stream)
+    requires: stream.state = running
+    ensures: stream.position >= 0
+}

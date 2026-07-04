@@ -1,0 +1,34 @@
+name: Specs
+
+# Behavioural specs (allium) for the driver, verified spec-first. Each spec/*.allium is
+# checked, analysed, and planned, and every plan obligation must be dispositioned in its
+# sibling .obligations manifest. Runs in the driver's own CI, as the methodology requires.
+
+on:
+  push:
+    branches: [main]
+    paths: ['spec/**', '.github/workflows/allium.yml']
+  pull_request:
+    paths: ['spec/**', '.github/workflows/allium.yml']
+
+jobs:
+  allium:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install the allium CLI (pinned)
+        run: cargo install allium-cli@3.2.4
+      - name: Install host-lifecycle (the obligations gate, pinned)
+        run: cargo install --git https://github.com/connollydavid/host-lifecycle --rev 7e63d99e3a3a8afd9837288cb1b80654e1de55bf --root "$HOME/.local"
+      - name: Check and analyse every spec, then discharge its obligations
+        run: |
+          set -e
+          for s in spec/*.allium; do
+            echo "== $s =="
+            for cmd in check analyse; do
+              allium "$cmd" "$s" > out.json
+              python3 -c "import json,sys; d=json.load(open('out.json')); n=len(d.get('diagnostics',[]))+len(d.get('findings',[])); print(f'  {\"$cmd\"}: {n} diagnostic(s)/finding(s)'); sys.exit(1 if n else 0)" || { cat out.json; exit 1; }
+            done
+            allium plan "$s" > /dev/null
+            "$HOME/.local/bin/host-lifecycle" obligations "$s" --tests tests
+          done

@@ -1,0 +1,44 @@
+# wave.obligations — disposition for every `allium plan` obligation of wave.allium.
+# `host-lifecycle obligations spec/wave.allium --tests tests` checks this is complete.
+#   <id> => structural | test:<name> exercises=<symbol> | waived: <reason>
+# structural = the spec's own check/analyse lane discharges it (field presence, enum
+# comparability, surface shape, the declared transition graph's rejection and terminals).
+# waived  = an honest recorded gap. The wave path has no runnable test harness yet: the
+# driver is not buildable in CI until the vendored DDK bundle lands (call/0008), and the
+# kernel-mode WaveCyclic code needs a userspace-testable extraction. plan/0004 lands that
+# harness and converts these to test: dispositions exercising the decision symbols.
+
+# --- Spec-integrity (covered by the check/analyse lane) ---
+config-default.rate_high            => structural
+config-default.rate_upper_mid       => structural
+config-default.rate_lower_mid       => structural
+config-default.rate_low             => structural
+config-default.fifo_threshold       => structural
+enum-comparable.BitDepth            => structural
+enum-comparable.ChannelCount        => structural
+entity-fields.Format                => structural
+entity-fields.Stream                => structural
+entity-optional.Stream.format       => structural
+surface-actor.WaveRender            => structural
+surface-provides.WaveRender         => structural
+transition-rejected.Stream.state    => structural
+transition-terminal.Stream.state    => structural
+
+# --- Behavioural (no runnable harness yet; discharged by tests under plan/0004) ---
+transition-edge.Stream.stopped.paused  => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+transition-edge.Stream.paused.running  => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+transition-edge.Stream.running.paused  => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+transition-edge.Stream.paused.stopped  => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+transition-edge.Stream.running.stopped => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+invariant.Stream.RunningIsConfigured   => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-success.AcceptPcmFormat           => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-failure.AcceptPcmFormat.1         => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-success.ResampleOffRate           => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-failure.ResampleOffRate.1         => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-success.DitherWideFormat          => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-failure.DitherWideFormat.1        => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-success.StartRender               => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-failure.StartRender.1             => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-success.PauseRender               => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-success.ReadPosition              => waived: no wave test harness until plan/0004 (needs a build; call/0008)
+rule-failure.ReadPosition.1            => waived: no wave test harness until plan/0004 (needs a build; call/0008)
