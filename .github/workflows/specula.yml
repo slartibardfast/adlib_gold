@@ -1,0 +1,33 @@
+name: Timing
+
+# TLA+ timing specs (the Specula lane) for the driver, model-checked with TLC. Each
+# spec/*.tla is checked against its sibling .cfg on the versions the methodology pins
+# (Temurin 21 + tla2tools v1.8.0). This carries the chip-access timing (call/0013).
+# Deadlock checking is off: the bounded timing model terminates by design.
+
+on:
+  push:
+    branches: [main]
+    paths: ['spec/**', '.github/workflows/specula.yml']
+  pull_request:
+    paths: ['spec/**', '.github/workflows/specula.yml']
+
+jobs:
+  tlc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Fetch tla2tools (pinned)
+        run: curl -sSL -o tla2tools.jar https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
+      - name: Model-check every TLA+ spec
+        run: |
+          set -e
+          for t in spec/*.tla; do
+            cfg="${t%.tla}.cfg"
+            echo "== $t =="
+            java -cp tla2tools.jar tlc2.TLC -deadlock -config "$cfg" "$t"
+          done
