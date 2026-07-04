@@ -1,19 +1,20 @@
 # topology.obligations — disposition for every `allium plan` obligation of topology.allium.
 #   <id> => structural | test:<name> exercises=<symbol> | waived: <reason>
-# The behavioural obligations, including the SP2 node presence (call/0012), get runnable
-# tests under plan/0005 once the driver builds from the vendored DDK bundle (call/0008).
+# The SP2 mode data path (the presets the sp2_mode node downloads) is unit-tested by
+# tests/sp2modes_test.c. The node-reachability rules still need the KS topology exercised
+# in a loaded driver (plan/0005) plus GoldLib hardware; those stay honestly waived.
 
 # --- Spec-integrity (covered by the check/analyse lane) ---
-config-default.sp2_mode_count     => structural
+config-default.sp2_mode_count     => test:test_sp2_mode_count exercises=Sp2ModeCount
 enum-comparable.ControlKind       => structural
 entity-fields.Node                => structural
 entity-fields.Mixer               => structural
 surface-actor.Topology            => structural
 surface-provides.Topology         => structural
 
-# --- Behavioural (no runnable tests yet; discharged under plan/0005) ---
-rule-success.CoreNodeReachable        => waived: no runnable tests until plan/0005 (needs a build; call/0008)
-rule-failure.CoreNodeReachable.1      => waived: no runnable tests until plan/0005 (needs a build; call/0008)
-rule-success.Sp2NodeTracksHardware    => waived: no runnable tests until plan/0005 (needs a build; call/0008)
-rule-failure.Sp2NodeTracksHardware.1  => waived: no runnable tests until plan/0005 (needs a build; call/0008)
-rule-success.SurroundResolves         => waived: no runnable tests until plan/0005 (needs a build; call/0008)
+# --- Behavioural node-reachability (needs a loaded-driver KS harness + hardware) ---
+rule-success.CoreNodeReachable        => waived: needs the KS topology exercised in a loaded driver (plan/0005 + GoldLib hardware)
+rule-failure.CoreNodeReachable.1      => waived: needs the KS topology exercised in a loaded driver (plan/0005 + GoldLib hardware)
+rule-success.Sp2NodeTracksHardware    => waived: needs the KS topology exercised in a loaded driver (plan/0005 + GoldLib hardware)
+rule-failure.Sp2NodeTracksHardware.1  => waived: needs the KS topology exercised in a loaded driver (plan/0005 + GoldLib hardware)
+rule-success.SurroundResolves         => waived: needs the KS topology exercised in a loaded driver (plan/0005 + GoldLib hardware)

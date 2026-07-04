@@ -45,6 +45,13 @@ enum
     NODE_TREBLE,                /* Treble tone (reg 07h)              */
     NODE_MUTE,                  /* Master mute (reg 08h, D5)          */
 
+    NODE_BASE_ELEMENT_COUNT,    /* Count of always-present mixer nodes */
+
+    /* SP2 (YM7128) surround nodes — surfaced only when the card reports the
+     * surround module present (call/0012). */
+    NODE_SP2_ENABLE = NODE_BASE_ELEMENT_COUNT,  /* Effect on/off (loudness)  */
+    NODE_SP2_MODE,              /* Surround mode select (wideness)    */
+
     NODE_TOP_ELEMENT_COUNT      /* Must be last                        */
 };
 
@@ -61,10 +68,16 @@ class CMiniportTopologyAdLibGold
 private:
     PADAPTERCOMMON  AdapterCommon;
 
+    BOOL    Sp2Present;         /* card reports the SP2 surround module      */
+    BOOL    Sp2Enabled;         /* surround effect currently enabled         */
+    ULONG   Sp2Mode;            /* selected mode (0..SP2_MODE_COUNT-1)       */
+
     NTSTATUS ProcessResources
     (
         IN      PRESOURCELIST   ResourceList
     );
+
+    void Sp2Download(void);     /* download the current preset to the SP2    */
 
 public:
     DECLARE_STD_UNKNOWN();
@@ -120,6 +133,18 @@ public:
     friend
     NTSTATUS
     PropertyHandler_Tone
+    (
+        IN      PPCPROPERTY_REQUEST PropertyRequest
+    );
+    friend
+    NTSTATUS
+    PropertyHandler_Sp2OnOff
+    (
+        IN      PPCPROPERTY_REQUEST PropertyRequest
+    );
+    friend
+    NTSTATUS
+    PropertyHandler_Sp2Mode
     (
         IN      PPCPROPERTY_REQUEST PropertyRequest
     );

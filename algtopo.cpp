@@ -11,6 +11,7 @@
  */
 
 #include "algtopo.h"
+#include "sp2modes.h"   /* SP2 surround presets the sp2_mode node downloads (call/0012) */
 
 #define STR_MODULENAME "AdLibGoldTopo: "
 
@@ -244,6 +245,52 @@ PCPROPERTY_ITEM PropertiesTone[] =
 DEFINE_PCAUTOMATION_TABLE_PROP(AutomationTone, PropertiesTone);
 
 
+/* SP2 surround enable (KSPROPERTY_AUDIO_LOUDNESS on/off) */
+static NTSTATUS PropertyHandler_Sp2OnOff(PPCPROPERTY_REQUEST);
+
+static
+PCPROPERTY_ITEM PropertiesSp2Enable[] =
+{
+    {
+        &KSPROPSETID_Audio,
+        KSPROPERTY_AUDIO_LOUDNESS,
+        KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET | KSPROPERTY_TYPE_BASICSUPPORT,
+        PropertyHandler_Sp2OnOff
+    },
+    {
+        &KSPROPSETID_Audio,
+        KSPROPERTY_AUDIO_CPU_RESOURCES,
+        KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_BASICSUPPORT,
+        PropertyHandler_CpuResources
+    }
+};
+
+DEFINE_PCAUTOMATION_TABLE_PROP(AutomationSp2Enable, PropertiesSp2Enable);
+
+
+/* SP2 surround mode select (KSPROPERTY_AUDIO_WIDENESS, one step per documented mode) */
+static NTSTATUS PropertyHandler_Sp2Mode(PPCPROPERTY_REQUEST);
+
+static
+PCPROPERTY_ITEM PropertiesSp2Mode[] =
+{
+    {
+        &KSPROPSETID_Audio,
+        KSPROPERTY_AUDIO_WIDENESS,
+        KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET | KSPROPERTY_TYPE_BASICSUPPORT,
+        PropertyHandler_Sp2Mode
+    },
+    {
+        &KSPROPSETID_Audio,
+        KSPROPERTY_AUDIO_CPU_RESOURCES,
+        KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_BASICSUPPORT,
+        PropertyHandler_CpuResources
+    }
+};
+
+DEFINE_PCAUTOMATION_TABLE_PROP(AutomationSp2Mode, PropertiesSp2Mode);
+
+
 /*****************************************************************************
  * MiniportNodes
  *****************************************************************************
@@ -251,8 +298,11 @@ DEFINE_PCAUTOMATION_TABLE_PROP(AutomationTone, PropertiesTone);
  * Topology:
  *   Pin0 (wave)  -> [SampVol] -+
  *   Pin1 (FM)    -> [FMVol]   -+-> [MasterVol] -> [Bass] -> [Treble]
- *   Pin2 (aux)   -> [AuxVol]  -+       -> [Mute] -> Pin4 (lineout)
+ *   Pin2 (aux)   -> [AuxVol]  -+     -> [Mute] -> Pin4 (lineout)
  *   Pin3 (mic)   -> [MicVol]  -+
+ *
+ * When the card reports the SP2 surround module, two more nodes sit between
+ * Treble and Mute:  [Treble] -> [Sp2Enable] -> [Sp2Mode] -> [Mute].
  */
 static
 PCNODE_DESCRIPTOR
@@ -313,6 +363,20 @@ MiniportNodes[] =
         &AutomationMute,
         &KSNODETYPE_MUTE,
         NULL
+    },
+    /* NODE_SP2_ENABLE */
+    {
+        0,
+        &AutomationSp2Enable,
+        &KSNODETYPE_LOUDNESS,
+        NULL
+    },
+    /* NODE_SP2_MODE */
+    {
+        0,
+        &AutomationSp2Mode,
+        &KSNODETYPE_STEREO_WIDE,
+        NULL
     }
 };
 
@@ -350,9 +414,43 @@ MiniportConnections[] =
 
 
 /*****************************************************************************
- * MiniportFilterDescriptor
+ * MiniportConnectionsSp2
  *****************************************************************************
- * Complete topology filter descriptor.
+ * Wiring for a card that has the SP2 surround module: identical to the base
+ * graph except the output runs treble -> [Sp2Enable] -> [Sp2Mode] -> mute.
+ */
+static
+PCCONNECTION_DESCRIPTOR
+MiniportConnectionsSp2[] =
+{
+    /* Source pins -> source volume nodes */
+    { PCFILTER_NODE,  PIN_WAVEOUT_SOURCE,  NODE_SAMP_VOLUME,    1 },
+    { PCFILTER_NODE,  PIN_FMSYNTH_SOURCE,  NODE_FM_VOLUME,      1 },
+    { PCFILTER_NODE,  PIN_AUX_SOURCE,      NODE_AUX_VOLUME,     1 },
+    { PCFILTER_NODE,  PIN_MIC_SOURCE,      NODE_MIC_VOLUME,     1 },
+
+    /* Source volume nodes -> master volume */
+    { NODE_SAMP_VOLUME,  0,  NODE_MASTER_VOLUME,  1 },
+    { NODE_FM_VOLUME,    0,  NODE_MASTER_VOLUME,  1 },
+    { NODE_AUX_VOLUME,   0,  NODE_MASTER_VOLUME,  1 },
+    { NODE_MIC_VOLUME,   0,  NODE_MASTER_VOLUME,  1 },
+
+    /* Master -> bass -> treble -> SP2 enable -> SP2 mode -> mute -> lineout */
+    { NODE_MASTER_VOLUME, 0,  NODE_BASS,       1 },
+    { NODE_BASS,          0,  NODE_TREBLE,     1 },
+    { NODE_TREBLE,        0,  NODE_SP2_ENABLE, 1 },
+    { NODE_SP2_ENABLE,    0,  NODE_SP2_MODE,   1 },
+    { NODE_SP2_MODE,      0,  NODE_MUTE,       1 },
+    { NODE_MUTE,          0,  PCFILTER_NODE,   PIN_LINEOUT_DEST }
+};
+
+
+/*****************************************************************************
+ * MiniportFilterDescriptor / MiniportFilterDescriptorSp2
+ *****************************************************************************
+ * Two topology filter descriptors sharing one node array: the base exposes the
+ * always-present mixer nodes; the SP2 variant additionally exposes the two
+ * surround nodes and routes through them. GetDescription() picks by hardware.
  */
 static
 PCFILTER_DESCRIPTOR MiniportFilterDescriptor =
@@ -363,10 +461,27 @@ PCFILTER_DESCRIPTOR MiniportFilterDescriptor =
     SIZEOF_ARRAY(MiniportPins),             /* PinCount               */
     MiniportPins,                           /* Pins                   */
     sizeof(PCNODE_DESCRIPTOR),              /* NodeSize               */
-    SIZEOF_ARRAY(MiniportNodes),            /* NodeCount              */
+    NODE_BASE_ELEMENT_COUNT,                /* NodeCount (no SP2)     */
     MiniportNodes,                          /* Nodes                  */
     SIZEOF_ARRAY(MiniportConnections),      /* ConnectionCount        */
     MiniportConnections,                    /* Connections            */
+    0,                                      /* CategoryCount          */
+    NULL                                    /* Categories             */
+};
+
+static
+PCFILTER_DESCRIPTOR MiniportFilterDescriptorSp2 =
+{
+    0,                                      /* Version                */
+    NULL,                                   /* AutomationTable        */
+    sizeof(PCPIN_DESCRIPTOR),               /* PinSize                */
+    SIZEOF_ARRAY(MiniportPins),             /* PinCount               */
+    MiniportPins,                           /* Pins                   */
+    sizeof(PCNODE_DESCRIPTOR),              /* NodeSize               */
+    NODE_TOP_ELEMENT_COUNT,                 /* NodeCount (with SP2)   */
+    MiniportNodes,                          /* Nodes                  */
+    SIZEOF_ARRAY(MiniportConnectionsSp2),   /* ConnectionCount        */
+    MiniportConnectionsSp2,                 /* Connections            */
     0,                                      /* CategoryCount          */
     NULL                                    /* Categories             */
 };
@@ -500,6 +615,14 @@ Init
         if (NT_SUCCESS(ntStatus))
         {
             AdapterCommon->ControlRegReset();
+
+            /* Detect the SP2 surround module: ID register D6 is 0 when present
+             * (active low). Seed the surround state to off (the chip's own
+             * initial-clear leaves VM/VC/VL/VR = 0). */
+            BYTE id = AdapterCommon->ControlRegRead(CTRL_REG_CONTROL_ID);
+            Sp2Present = (id & CTRL_ID_OPT_SURROUND) ? FALSE : TRUE;
+            Sp2Enabled = FALSE;
+            Sp2Mode    = 1;     /* first active mode, applied when enabled */
         }
     }
 
@@ -565,7 +688,11 @@ GetDescription
 
     ASSERT(OutFilterDescriptor);
 
-    *OutFilterDescriptor = &MiniportFilterDescriptor;
+    /* Surface the SP2 surround nodes only where the card reports the module,
+     * so the mixer reflects the hardware rather than offering a dead control
+     * (topology.allium SurroundResolves, call/0012). */
+    *OutFilterDescriptor = Sp2Present ? &MiniportFilterDescriptorSp2
+                                      : &MiniportFilterDescriptor;
 
     return STATUS_SUCCESS;
 }
@@ -980,6 +1107,195 @@ PropertyHandler_Tone
             desc->Reserved          = 0;
 
             PropertyRequest->ValueSize = sizeof(KSPROPERTY_DESCRIPTION);
+            ntStatus = STATUS_SUCCESS;
+        }
+        else if (PropertyRequest->ValueSize >= sizeof(ULONG))
+        {
+            *(PULONG(PropertyRequest->Value)) =
+                KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET |
+                KSPROPERTY_TYPE_BASICSUPPORT;
+            PropertyRequest->ValueSize = sizeof(ULONG);
+            ntStatus = STATUS_SUCCESS;
+        }
+    }
+
+    return ntStatus;
+}
+
+
+/*****************************************************************************
+ * CMiniportTopologyAdLibGold::Sp2Download()
+ *****************************************************************************
+ * Download the currently selected surround preset to the SP2. When disabled we
+ * send the off preset (the datasheet initial-clear state), so toggling the
+ * enable node is audible without changing the mode. Each of the 31 registers
+ * goes out over Control-Chip register 0x18 (WriteSurroundReg, call/0012).
+ */
+void
+CMiniportTopologyAdLibGold::
+Sp2Download
+(   void
+)
+{
+    PAGED_CODE();
+
+    if (!AdapterCommon || !Sp2Present)
+        return;
+
+    unsigned char preset[SP2_NUM_REGS];
+    int i;
+
+    Sp2ModePreset(Sp2Enabled ? (int)Sp2Mode : 0, preset);
+
+    for (i = 0; i < SP2_NUM_REGS; i++)
+        AdapterCommon->WriteSurroundReg((BYTE)i, preset[i]);
+}
+
+
+/*****************************************************************************
+ * PropertyHandler_Sp2OnOff()
+ *****************************************************************************
+ * SP2 surround enable get/set (KSPROPERTY_AUDIO_LOUDNESS, a BOOL on/off).
+ */
+static
+NTSTATUS
+PropertyHandler_Sp2OnOff
+(
+    IN      PPCPROPERTY_REQUEST PropertyRequest
+)
+{
+    PAGED_CODE();
+
+    ASSERT(PropertyRequest);
+
+    CMiniportTopologyAdLibGold *that =
+        (CMiniportTopologyAdLibGold *)PropertyRequest->MajorTarget;
+
+    NTSTATUS ntStatus = STATUS_INVALID_PARAMETER;
+
+    if (PropertyRequest->Node == ULONG(-1))
+        return ntStatus;
+
+    if (PropertyRequest->ValueSize < sizeof(BOOL))
+        return STATUS_BUFFER_TOO_SMALL;
+
+    if (PropertyRequest->Verb & KSPROPERTY_TYPE_GET)
+    {
+        *(PBOOL(PropertyRequest->Value)) = that->Sp2Enabled;
+        PropertyRequest->ValueSize = sizeof(BOOL);
+        ntStatus = STATUS_SUCCESS;
+    }
+    else if (PropertyRequest->Verb & KSPROPERTY_TYPE_SET)
+    {
+        that->Sp2Enabled = *(PBOOL(PropertyRequest->Value)) ? TRUE : FALSE;
+        that->Sp2Download();
+        ntStatus = STATUS_SUCCESS;
+    }
+    else if (PropertyRequest->Verb & KSPROPERTY_TYPE_BASICSUPPORT)
+    {
+        if (PropertyRequest->ValueSize >= sizeof(ULONG))
+        {
+            *(PULONG(PropertyRequest->Value)) =
+                KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET |
+                KSPROPERTY_TYPE_BASICSUPPORT;
+            PropertyRequest->ValueSize = sizeof(ULONG);
+            ntStatus = STATUS_SUCCESS;
+        }
+    }
+
+    return ntStatus;
+}
+
+
+/*****************************************************************************
+ * PropertyHandler_Sp2Mode()
+ *****************************************************************************
+ * SP2 surround mode select (KSPROPERTY_AUDIO_WIDENESS, one step per documented
+ * mode). The value is a mode index 0..SP2_MODE_COUNT-1.
+ */
+static
+NTSTATUS
+PropertyHandler_Sp2Mode
+(
+    IN      PPCPROPERTY_REQUEST PropertyRequest
+)
+{
+    PAGED_CODE();
+
+    ASSERT(PropertyRequest);
+
+    CMiniportTopologyAdLibGold *that =
+        (CMiniportTopologyAdLibGold *)PropertyRequest->MajorTarget;
+
+    NTSTATUS ntStatus = STATUS_INVALID_PARAMETER;
+
+    if (PropertyRequest->Node == ULONG(-1))
+        return ntStatus;
+
+    if (PropertyRequest->Verb & KSPROPERTY_TYPE_GET)
+    {
+        if (PropertyRequest->ValueSize < sizeof(LONG))
+            return STATUS_BUFFER_TOO_SMALL;
+
+        *(PLONG(PropertyRequest->Value)) = (LONG)that->Sp2Mode;
+        PropertyRequest->ValueSize = sizeof(LONG);
+        ntStatus = STATUS_SUCCESS;
+    }
+    else if (PropertyRequest->Verb & KSPROPERTY_TYPE_SET)
+    {
+        if (PropertyRequest->ValueSize < sizeof(LONG))
+            return STATUS_BUFFER_TOO_SMALL;
+
+        LONG mode = *(PLONG(PropertyRequest->Value));
+
+        if (mode < 0)
+            mode = 0;
+        if (mode >= SP2_MODE_COUNT)
+            mode = SP2_MODE_COUNT - 1;
+
+        that->Sp2Mode = (ULONG)mode;
+        that->Sp2Download();        /* no-op unless enabled */
+        ntStatus = STATUS_SUCCESS;
+    }
+    else if (PropertyRequest->Verb & KSPROPERTY_TYPE_BASICSUPPORT)
+    {
+        if (PropertyRequest->ValueSize >= (sizeof(KSPROPERTY_DESCRIPTION) +
+                                           sizeof(KSPROPERTY_MEMBERSHEADER) +
+                                           sizeof(KSPROPERTY_STEPPING_LONG)))
+        {
+            PKSPROPERTY_DESCRIPTION desc =
+                PKSPROPERTY_DESCRIPTION(PropertyRequest->Value);
+
+            desc->AccessFlags       = KSPROPERTY_TYPE_GET | KSPROPERTY_TYPE_SET |
+                                      KSPROPERTY_TYPE_BASICSUPPORT;
+            desc->DescriptionSize   = sizeof(KSPROPERTY_DESCRIPTION) +
+                                      sizeof(KSPROPERTY_MEMBERSHEADER) +
+                                      sizeof(KSPROPERTY_STEPPING_LONG);
+            desc->PropTypeSet.Set   = KSPROPTYPESETID_General;
+            desc->PropTypeSet.Id    = VT_I4;
+            desc->PropTypeSet.Flags = 0;
+            desc->MembersListCount  = 1;
+            desc->Reserved          = 0;
+
+            PKSPROPERTY_MEMBERSHEADER members =
+                PKSPROPERTY_MEMBERSHEADER(desc + 1);
+
+            members->MembersFlags   = KSPROPERTY_MEMBER_STEPPEDRANGES;
+            members->MembersSize    = sizeof(KSPROPERTY_STEPPING_LONG);
+            members->MembersCount   = 1;
+            members->Flags          = 0;
+
+            PKSPROPERTY_STEPPING_LONG range =
+                PKSPROPERTY_STEPPING_LONG(members + 1);
+
+            range->Bounds.SignedMinimum = 0;
+            range->Bounds.SignedMaximum = SP2_MODE_COUNT - 1;
+            range->SteppingDelta        = 1;
+            range->Reserved             = 0;
+
+            PropertyRequest->ValueSize = sizeof(KSPROPERTY_DESCRIPTION) +
+                                         sizeof(KSPROPERTY_MEMBERSHEADER) +
+                                         sizeof(KSPROPERTY_STEPPING_LONG);
             ntStatus = STATUS_SUCCESS;
         }
         else if (PropertyRequest->ValueSize >= sizeof(ULONG))
