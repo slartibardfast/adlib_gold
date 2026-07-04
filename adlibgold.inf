@@ -16,7 +16,7 @@ Signature="$CHICAGO$"
 Class=MEDIA
 ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
 provider=%MfgName%
-DriverVer=08/02/1999,1.00.0000.3
+DriverVer=08/02/1999,1.00.0000.4
 
 [SourceDisksNames.x86]
 222=%DiskDescription%,,,
@@ -37,7 +37,8 @@ adlibgold.sys=222
 %AdLibGold.DeviceDesc%=AdLibGold_Device, ALG1000
 
 [AdLibGold_Device]
-AlsoInstall=ks.registration(ks.inf),wdmaudio.registration(wdmaudio.inf)
+Include=ks.inf, wdmaudio.inf
+Needs=KS.Registration, WDMAUDIO.Registration
 LogConfig=ALG.LC1,ALG.LC2
 CopyFiles=AdLibGold.CopyList
 AddReg=AdLibGold.AddReg
