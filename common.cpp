@@ -19,6 +19,25 @@
  *****************************************************************************
  * Adapter common object.
  */
+/*
+ * Synchronized shared-port access (plan/0008, spec/BankAccess.tla). The Control Chip
+ * and OPL3 array 1 share the base+2/base+3 ports; every access is an
+ * enable/write/restore sequence that the DIRQL ISR must not interleave. Each write to
+ * those ports runs inside the one interrupt-sync lock through these routines. The
+ * context carries the register (or OPL3 address) and value into the locked body.
+ */
+class CAdapterCommon;
+
+typedef struct _SYNC_PORT_CONTEXT
+{
+    CAdapterCommon *That;
+    ULONG           Address;
+    BYTE            Value;
+} SYNC_PORT_CONTEXT, *PSYNC_PORT_CONTEXT;
+
+NTSTATUS SynchronizedControlRegWrite(IN PINTERRUPTSYNC, IN PVOID);
+NTSTATUS SynchronizedWriteOPL3Bank1(IN PINTERRUPTSYNC, IN PVOID);
+
 class CAdapterCommon
 :   public IAdapterCommon,
     public IAdapterPowerManagement,
@@ -36,6 +55,13 @@ private:
     PMIDIMINIPORTADLIBGOLD  m_pMidiMiniport;
 
     BOOLEAN WaitForReady(void);
+
+    /* Locked bodies run at DIRQL inside the interrupt-sync routine (plan/0008). */
+    void ControlRegWriteLocked(IN BYTE Register, IN BYTE Value);
+    void WriteOPL3Bank1Locked(IN ULONG Address, IN BYTE Data);
+
+    friend NTSTATUS SynchronizedControlRegWrite(IN PINTERRUPTSYNC, IN PVOID);
+    friend NTSTATUS SynchronizedWriteOPL3Bank1(IN PINTERRUPTSYNC, IN PVOID);
 
 public:
     DECLARE_STD_UNKNOWN();
@@ -516,13 +542,64 @@ WaitForReady
  * Always updates the shadow cache, even if the hardware write is skipped
  * due to power state.
  *
- * CALLER RESPONSIBILITY: After the interrupt is connected, this must be
- * called within InterruptSync->CallSynchronizedRoutine() to prevent
- * races with the ISR.  During Init (before Connect), no sync is needed.
+ * The enable/write/restore sequence runs inside the interrupt-sync lock so the
+ * DIRQL ISR can never interleave it and flip the bank mid-sequence (plan/0008,
+ * spec/BankAccess.tla). Before the interrupt is connected (Init), the locked body
+ * runs directly, since no ISR is armed yet.
  */
 STDMETHODIMP_(void)
 CAdapterCommon::
 ControlRegWrite
+(
+    IN      BYTE    Register,
+    IN      BYTE    Value
+)
+{
+    SYNC_PORT_CONTEXT ctx;
+    ctx.That    = this;
+    ctx.Address = Register;
+    ctx.Value   = Value;
+
+    if (m_pInterruptSync)
+    {
+        m_pInterruptSync->CallSynchronizedRoutine(
+            SynchronizedControlRegWrite, PVOID(&ctx));
+    }
+    else
+    {
+        ControlRegWriteLocked(Register, Value);
+    }
+}
+
+
+/*****************************************************************************
+ * SynchronizedControlRegWrite()
+ *****************************************************************************
+ * Interrupt-sync routine (DIRQL) that wraps the Control Chip register write, so
+ * the shared bank-switch sequence is atomic against the ISR (plan/0008).
+ */
+NTSTATUS
+SynchronizedControlRegWrite
+(
+    IN      PINTERRUPTSYNC  InterruptSync,
+    IN      PVOID           Context
+)
+{
+    PSYNC_PORT_CONTEXT ctx = (PSYNC_PORT_CONTEXT)Context;
+    ctx->That->ControlRegWriteLocked((BYTE)ctx->Address, ctx->Value);
+    return STATUS_SUCCESS;
+}
+
+
+/*****************************************************************************
+ * CAdapterCommon::ControlRegWriteLocked()
+ *****************************************************************************
+ * The bank-switch enable/write/restore sequence. Runs at DIRQL under the
+ * interrupt-sync lock (or directly during Init). Always updates the shadow cache.
+ */
+void
+CAdapterCommon::
+ControlRegWriteLocked
 (
     IN      BYTE    Register,
     IN      BYTE    Value
@@ -647,7 +724,7 @@ WriteOPL3
 
     if (Address < 0x100)
     {
-        /* Bank 0: direct access, no conflict */
+        /* Bank 0 (ports base+0/1): not shared with the Control Chip, no sync needed */
         WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM0_ADDR, (UCHAR)Address);
         KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_OPL3, 0));
         WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM0_DATA, Data);
@@ -655,13 +732,64 @@ WriteOPL3
     }
     else
     {
-        /* Bank 1: ensure OPL3 mode, then write */
-        WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_ADDR, ALG_BANK_OPL3);
-        WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_ADDR, (UCHAR)(Address & 0xFF));
-        KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_OPL3, 0));
-        WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_DATA, Data);
-        KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_OPL3, 0));
+        /* Bank 1 (ports base+2/3): shared with the Control Chip. Serialize the write
+         * against the ISR through the interrupt-sync lock (plan/0008). */
+        SYNC_PORT_CONTEXT ctx;
+        ctx.That    = this;
+        ctx.Address = Address;
+        ctx.Value   = Data;
+
+        if (m_pInterruptSync)
+        {
+            m_pInterruptSync->CallSynchronizedRoutine(
+                SynchronizedWriteOPL3Bank1, PVOID(&ctx));
+        }
+        else
+        {
+            WriteOPL3Bank1Locked(Address, Data);
+        }
     }
+}
+
+
+/*****************************************************************************
+ * SynchronizedWriteOPL3Bank1()
+ *****************************************************************************
+ * Interrupt-sync routine (DIRQL) wrapping the OPL3 array-1 write, so it is
+ * atomic against the ISR on the shared base+2/base+3 ports (plan/0008).
+ */
+NTSTATUS
+SynchronizedWriteOPL3Bank1
+(
+    IN      PINTERRUPTSYNC  InterruptSync,
+    IN      PVOID           Context
+)
+{
+    PSYNC_PORT_CONTEXT ctx = (PSYNC_PORT_CONTEXT)Context;
+    ctx->That->WriteOPL3Bank1Locked(ctx->Address, ctx->Value);
+    return STATUS_SUCCESS;
+}
+
+
+/*****************************************************************************
+ * CAdapterCommon::WriteOPL3Bank1Locked()
+ *****************************************************************************
+ * Write an OPL3 array-1 register on the shared ports. Runs at DIRQL under the
+ * interrupt-sync lock (or directly during Init).
+ */
+void
+CAdapterCommon::
+WriteOPL3Bank1Locked
+(
+    IN      ULONG   Address,
+    IN      BYTE    Data
+)
+{
+    WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_ADDR, ALG_BANK_OPL3);
+    WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_ADDR, (UCHAR)(Address & 0xFF));
+    KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_OPL3, 0));
+    WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_DATA, Data);
+    KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_OPL3, 0));
 }
 
 
