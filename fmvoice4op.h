@@ -47,6 +47,19 @@ FourOpIsSecondary(int slot)
     return 0;
 }
 
+/* If `slot` is the secondary of a 4-operator voice, that voice's index; otherwise -1. The
+ * voice's primary is then gFourOpPrimary[result], letting a caller skip a reserved secondary
+ * by testing whether that primary is an active 4-op voice. */
+static int
+FourOpVoiceOfSecondary(int slot)
+{
+    int v;
+    for (v = 0; v < FOUR_OP_COUNT; v++)
+        if (gFourOpSecondary[v] == slot)
+            return v;
+    return -1;
+}
+
 /* Find a free 4-operator voice given the busy state of the 18 slots (busy[slot] != 0 when
  * occupied); return its index, or -1 when no pair is free. A voice is free only when both
  * its primary and secondary slots are free. */

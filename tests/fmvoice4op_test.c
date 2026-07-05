@@ -28,6 +28,8 @@ static void test_fmvoice4op(void)
         CHECK(!FourOpIsSecondary(gFourOpPrimary[v]), "a primary is never a secondary");
         CHECK(FourOpIsSecondary(gFourOpSecondary[v]), "a secondary reads as a secondary");
         CHECK(FourOpVoiceOfPrimary(gFourOpSecondary[v]) == -1, "a secondary is not a primary");
+        CHECK(FourOpVoiceOfSecondary(gFourOpSecondary[v]) == v, "secondary maps back to its voice");
+        CHECK(FourOpVoiceOfSecondary(gFourOpPrimary[v]) == -1, "a primary is not a secondary");
     }
 
     /* Slots outside any pair (6,7,8,15,16,17) are neither primary nor secondary. */

@@ -15,7 +15,9 @@
  */
 
 #include "fmsynth.h"
-#include "fmvoice.h"   /* pure voice-allocation policy (call/0014), unit-tested */
+#include "fmvoice.h"    /* pure voice-allocation policy (call/0014), unit-tested */
+#include "fmvoice4op.h" /* pure 4-operator voice model (plan/0009), unit-tested */
+#include "fmbank4op.h"  /* generated 4-operator GM overlay from OPL3.BNK (plan/0009) */
 
 #define STR_MODULENAME "AdLibGoldFM: "
 
@@ -1107,7 +1109,9 @@ Opl3_BoardReset()
 
     _DbgPrintF(DEBUGLVL_VERBOSE, ("Opl3_BoardReset"));
 
-    /* Enable OPL3 mode (stereo, 18 voices, extra waveforms) */
+    /* Enable OPL3 mode (stereo, 18 voices, extra waveforms). Connection-select starts clear,
+     * so all 18 channels are 2-operator; a 4-op note sets only its own pair's bit and clears
+     * it on release (Opl3_UpdateConnection, plan/0009), keeping full 2-op polyphony. */
     SoundMidiSendFM(AD_NEW, 0x01);
     SoundMidiSendFM(AD_MASK, 0x60);
     SoundMidiSendFM(AD_CONNECTION, 0x00);
@@ -1160,8 +1164,10 @@ MiniportMidiFMResume()
     SoundMidiSendFM(AD_TIMER1, m_SavedRegValues[AD_TIMER1]);
     SoundMidiSendFM(AD_TIMER2, m_SavedRegValues[AD_TIMER2]);
     SoundMidiSendFM(AD_MASK, m_SavedRegValues[AD_MASK]);
-    SoundMidiSendFM(AD_CONNECTION, m_SavedRegValues[AD_CONNECTION]);
+    /* NEW gates every Array-1 register (reg 0x105), so it must be restored before
+     * CONNECTION (reg 0x104) or the 4-op enable write is dropped (plan/0009). */
     SoundMidiSendFM(AD_NEW, m_SavedRegValues[AD_NEW]);
+    SoundMidiSendFM(AD_CONNECTION, m_SavedRegValues[AD_CONNECTION]);
     SoundMidiSendFM(AD_NTS, m_SavedRegValues[AD_NTS]);
     SoundMidiSendFM(AD_DRUM, m_SavedRegValues[AD_DRUM]);
 
@@ -1585,6 +1591,18 @@ Opl3_NoteOff
         m_Voice[wTemp].bBlock[0] &= 0x1f;
         m_Voice[wTemp].bBlock[1] &= 0x1f;
         m_Voice[wTemp].dwTime = m_dwCurTime;
+
+        /* A 4-op voice keys off through its primary channel; also free the reserved
+         * secondary slot and clear the pair's connection-select bit so the pair reverts to
+         * two 2-operator channels (plan/0009). */
+        if (m_Voice[wTemp].b4Op)
+        {
+            int voice = FourOpVoiceOfPrimary(wTemp);
+            if (voice >= 0)
+                m_Voice[gFourOpSecondary[voice]].bOn = FALSE;
+            m_Voice[wTemp].b4Op = FALSE;
+            Opl3_UpdateConnection();
+        }
     }
 }
 
@@ -1662,6 +1680,89 @@ Opl3_FMNote
 }
 
 
+/*****************************************************************************
+ * Opl3_FMNote4Op - program one 4-operator voice (plan/0009).
+ *
+ * A 4-operator voice pairs two 2-op slots: operators 1-2 on the primary slot, operators
+ * 3-4 on the secondary. The play registers (F-number, block, key-on) and feedback come
+ * from the primary channel only; each channel of the pair carries its own connection bit
+ * in its C-register. lpSN->op[0..3] and bAtC0[0..1] are the converted OPL3.BNK timbre.
+ */
+#pragma code_seg()
+void
+CMiniportMidiStreamFMAdLibGold::
+Opl3_FMNote4Op
+(
+    WORD                wVoice,
+    noteStruct FAR *    lpSN
+)
+{
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
+
+    WORD    i, off, primOff, secOff;
+    int     prim = gFourOpPrimary[wVoice];
+    int     sec  = gFourOpSecondary[wVoice];
+
+    /* Channel register offsets (A0/B0/C0) for the primary and secondary channels. */
+    primOff = (WORD)((prim < 9) ? prim : (prim + 0x100 - 9));
+    secOff  = (WORD)((sec  < 9) ? sec  : (sec  + 0x100 - 9));
+
+    /* Key the primary channel off before reprogramming. */
+    m_Miniport->SoundMidiSendFM(AD_BLOCK + primOff, 0);
+
+    /* Operators 1-2 on the primary slot; operators 3-4 on the secondary slot. */
+    for (i = 0; i < 2; i++)
+    {
+        off = gw2OpOffset[prim][i];
+        m_Miniport->SoundMidiSendFM(0x20 + off, lpSN->op[i].bAt20);
+        m_Miniport->SoundMidiSendFM(0x40 + off, lpSN->op[i].bAt40);
+        m_Miniport->SoundMidiSendFM(0x60 + off, lpSN->op[i].bAt60);
+        m_Miniport->SoundMidiSendFM(0x80 + off, lpSN->op[i].bAt80);
+        m_Miniport->SoundMidiSendFM(0xE0 + off, lpSN->op[i].bAtE0);
+    }
+    for (i = 0; i < 2; i++)
+    {
+        off = gw2OpOffset[sec][i];
+        m_Miniport->SoundMidiSendFM(0x20 + off, lpSN->op[2 + i].bAt20);
+        m_Miniport->SoundMidiSendFM(0x40 + off, lpSN->op[2 + i].bAt40);
+        m_Miniport->SoundMidiSendFM(0x60 + off, lpSN->op[2 + i].bAt60);
+        m_Miniport->SoundMidiSendFM(0x80 + off, lpSN->op[2 + i].bAt80);
+        m_Miniport->SoundMidiSendFM(0xE0 + off, lpSN->op[2 + i].bAtE0);
+    }
+
+    /* Each channel of the pair carries its own connection bit in its C-register. */
+    m_Miniport->SoundMidiSendFM(0xC0 + primOff, lpSN->bAtC0[0]);
+    m_Miniport->SoundMidiSendFM(0xC0 + secOff,  lpSN->bAtC0[1]);
+
+    /* F-number, block and key-on come from the primary channel only (manual ch07). */
+    m_Miniport->SoundMidiSendFM(0xA0 + primOff, lpSN->bAtA0[0]);
+    m_Miniport->SoundMidiSendFM(0xB0 + primOff, (BYTE)(lpSN->bAtB0[0] | 0x20));
+}
+
+
+/*****************************************************************************
+ * Opl3_UpdateConnection - recompute and write connection-select (reg 0x104).
+ *
+ * Bit v is set while voice v's primary slot is a live 4-op voice, so a pair is 4-operator
+ * exactly while it is playing one and 2-operator otherwise, keeping full 2-op polyphony
+ * (plan/0009). Called after a 4-op voice is allocated or released.
+ */
+#pragma code_seg()
+void
+CMiniportMidiStreamFMAdLibGold::
+Opl3_UpdateConnection(void)
+{
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
+
+    BYTE mask = 0;
+    int  v;
+    for (v = 0; v < FOUR_OP_COUNT; v++)
+        if (m_Voice[gFourOpPrimary[v]].b4Op)
+            mask |= (BYTE)(1 << v);
+    m_Miniport->SoundMidiSendFM(AD_CONNECTION, mask);
+}
+
+
 #pragma code_seg()
 void
 CMiniportMidiStreamFMAdLibGold::
@@ -1677,12 +1778,11 @@ Opl3_NoteOn
     ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
 
     WORD             wTemp, i, j;
-    BYTE             b4Op, bTemp, bMode, bStereo;
+    BYTE             b4Op, bTemp, bMode, bStereo, numOps;
+    int              fourOp;
     patchStruct FAR  *lpPS;
     DWORD            dwBasicPitch, dwPitch[2];
     noteStruct       NS;
-
-    lpPS = glpPatch + bPatch;
 
     dwBasicPitch = gdwPitch[bNote % 12];
     bTemp = bNote / (BYTE)12;
@@ -1691,8 +1791,29 @@ Opl3_NoteOn
     else if (bTemp < (BYTE)(60 / 12))
         dwBasicPitch = AsULSHR(dwBasicPitch, (BYTE)((BYTE)(60 / 12) - bTemp));
 
-    RtlCopyMemory((LPSTR)&NS, (LPSTR)&lpPS->note, sizeof(noteStruct));
-    b4Op = (BYTE)(NS.bOp != PATCH_1_2OP);
+    /* A melodic patch with a 4-operator overlay (plan/0009) plays a 4-op voice when one of
+     * the six pairs is free; otherwise it falls back to the 2-operator glpPatch entry. Drum
+     * patches (128+) and unmatched programs stay 2-operator. */
+    fourOp = -1;
+    if (bPatch < 128 && gGm4OpHas[bPatch])
+    {
+        unsigned char busy[NUM2VOICES];
+        for (i = 0; i < NUM2VOICES; i++)
+            busy[i] = (unsigned char)(m_Voice[i].bOn ? 1 : 0);
+        fourOp = FourOpFindFree(busy);
+    }
+
+    if (fourOp >= 0)
+    {
+        RtlCopyMemory((LPSTR)&NS, (LPSTR)&gGm4OpNote[bPatch], sizeof(noteStruct));
+        b4Op = TRUE;
+    }
+    else
+    {
+        lpPS = glpPatch + bPatch;
+        RtlCopyMemory((LPSTR)&NS, (LPSTR)&lpPS->note, sizeof(noteStruct));
+        b4Op = FALSE;
+    }
 
     for (j = 0; j < 2; j++)
     {
@@ -1708,9 +1829,15 @@ Opl3_NoteOn
         NS.bAtB0[j] = (BYTE)0x20 | (BYTE)(wTemp >> 8);
     }
 
-    bMode = (BYTE)((NS.bAtC0[0] & 0x01) * 2 + 4);
+    /* 4-op: the algorithm is the two channels' CNT bits together (Opl3_CalcVolume cases
+     * 0-3); 2-op: the single CNT bit selects mode 4 or 6. */
+    if (b4Op)
+        bMode = (BYTE)((NS.bAtC0[0] & 0x01) | ((NS.bAtC0[1] & 0x01) << 1));
+    else
+        bMode = (BYTE)((NS.bAtC0[0] & 0x01) * 2 + 4);
 
-    for (i = 0; i < 2; i++)
+    numOps = (BYTE)(b4Op ? 4 : 2);
+    for (i = 0; i < numOps; i++)
     {
         wTemp = (BYTE)Opl3_CalcVolume(
             (BYTE)(NS.op[i].bAt40 & (BYTE)0x3f),
@@ -1720,21 +1847,60 @@ Opl3_NoteOn
 
     bStereo = Opl3_CalcStereoMask(bChannel);
     NS.bAtC0[0] &= bStereo;
+    if (b4Op)
+        NS.bAtC0[1] &= bStereo;
 
-    wTemp = Opl3_FindEmptySlot(bPatch);
+    if (b4Op)
+    {
+        int prim = gFourOpPrimary[fourOp];
+        int sec  = gFourOpSecondary[fourOp];
 
-    Opl3_FMNote(wTemp, &NS);
-    m_Voice[wTemp].bNote = bNote;
-    m_Voice[wTemp].bChannel = bChannel;
-    m_Voice[wTemp].bPatch = bPatch;
-    m_Voice[wTemp].bVelocity = bVelocity;
-    m_Voice[wTemp].bOn = TRUE;
-    m_Voice[wTemp].dwTime = m_dwCurTime++;
-    m_Voice[wTemp].dwOrigPitch[0] = dwPitch[0];
-    m_Voice[wTemp].dwOrigPitch[1] = dwPitch[1];
-    m_Voice[wTemp].bBlock[0] = NS.bAtB0[0];
-    m_Voice[wTemp].bBlock[1] = NS.bAtB0[1];
-    m_Voice[wTemp].bSusHeld = 0;
+        /* Mark the pair 4-op and set its connection-select bit before programming, so the
+         * chip treats the two channels as one 4-operator voice as it is written. */
+        m_Voice[prim].b4Op = TRUE;
+        Opl3_UpdateConnection();
+
+        Opl3_FMNote4Op((WORD)fourOp, &NS);
+
+        m_Voice[prim].bNote = bNote;
+        m_Voice[prim].bChannel = bChannel;
+        m_Voice[prim].bPatch = bPatch;
+        m_Voice[prim].bVelocity = bVelocity;
+        m_Voice[prim].bOn = TRUE;
+        m_Voice[prim].dwTime = m_dwCurTime++;
+        m_Voice[prim].dwOrigPitch[0] = dwPitch[0];
+        m_Voice[prim].dwOrigPitch[1] = dwPitch[1];
+        m_Voice[prim].bBlock[0] = NS.bAtB0[0];
+        m_Voice[prim].bBlock[1] = NS.bAtB0[1];
+        m_Voice[prim].bSusHeld = 0;
+
+        /* Reserve the secondary slot from the 2-op allocator (bOn), and hide it from the
+         * per-channel volume and note-off scans with an invalid note and channel; note-off
+         * of the primary releases it. */
+        m_Voice[sec].bOn = TRUE;
+        m_Voice[sec].b4Op = FALSE;
+        m_Voice[sec].bChannel = 0xFE;
+        m_Voice[sec].bNote = 0xFF;
+        m_Voice[sec].dwTime = m_Voice[prim].dwTime;
+    }
+    else
+    {
+        wTemp = Opl3_FindEmptySlot(bPatch);
+
+        Opl3_FMNote(wTemp, &NS);
+        m_Voice[wTemp].bNote = bNote;
+        m_Voice[wTemp].bChannel = bChannel;
+        m_Voice[wTemp].bPatch = bPatch;
+        m_Voice[wTemp].bVelocity = bVelocity;
+        m_Voice[wTemp].bOn = TRUE;
+        m_Voice[wTemp].b4Op = FALSE;
+        m_Voice[wTemp].dwTime = m_dwCurTime++;
+        m_Voice[wTemp].dwOrigPitch[0] = dwPitch[0];
+        m_Voice[wTemp].dwOrigPitch[1] = dwPitch[1];
+        m_Voice[wTemp].bBlock[0] = NS.bAtB0[0];
+        m_Voice[wTemp].bBlock[1] = NS.bAtB0[1];
+        m_Voice[wTemp].bSusHeld = 0;
+    }
 }
 
 
@@ -1869,6 +2035,18 @@ Opl3_SetVolume
 
     for (i = 0; i < NUM2VOICES; i++)
     {
+        /* Skip 4-op voices: a 4-op primary and its reserved secondary are programmed as a
+         * pair at note-on, and updating them here through the 2-op path would corrupt the
+         * paired voice. Mid-note volume for a 4-op voice is a documented limitation
+         * (plan/0009); the note holds its note-on volume. */
+        if (m_Voice[i].b4Op)
+            continue;
+        {
+            int sv = FourOpVoiceOfSecondary((int)i);
+            if (sv >= 0 && m_Voice[gFourOpPrimary[sv]].b4Op)
+                continue;
+        }
+
         if ((m_Voice[i].bChannel == bChannel) || (bChannel == 0xff))
         {
             lpPS = &(glpPatch + m_Voice[i].bPatch)->note;
@@ -1995,17 +2173,28 @@ Opl3_FindEmptySlot(BYTE bPatch)
      * a free voice, else the oldest released, else the oldest of this patch, else
      * the globally oldest. Always a valid voice, so no more than 18 ever sound. */
     unsigned long time[NUM2VOICES];
-    unsigned char on[NUM2VOICES], patch[NUM2VOICES];
+    unsigned char on[NUM2VOICES], patch[NUM2VOICES], protect[NUM2VOICES];
     WORD i;
 
     for (i = 0; i < NUM2VOICES; i++)
     {
+        int sv;
         time[i]  = m_Voice[i].dwTime;
         on[i]    = (unsigned char)(m_Voice[i].bOn ? 1 : 0);
         patch[i] = m_Voice[i].bPatch;
+
+        /* Protect an active 4-op primary and its reserved secondary so the 2-op path never
+         * steals half of a paired voice (plan/0009). */
+        protect[i] = (unsigned char)(m_Voice[i].b4Op ? 1 : 0);
+        if (!protect[i])
+        {
+            sv = FourOpVoiceOfSecondary((int)i);
+            if (sv >= 0 && m_Voice[gFourOpPrimary[sv]].b4Op)
+                protect[i] = 1;
+        }
     }
 
-    return (WORD)FmVoiceAllocate(time, on, patch, NUM2VOICES, bPatch);
+    return (WORD)FmVoiceAllocate(time, on, patch, protect, NUM2VOICES, bPatch);
 }
 
 

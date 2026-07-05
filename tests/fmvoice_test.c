@@ -14,20 +14,21 @@ static int failures = 0;
 static unsigned long vtime[FM_VOICE_COUNT];
 static unsigned char von[FM_VOICE_COUNT], vpatch[FM_VOICE_COUNT];
 static unsigned char vchan[FM_VOICE_COUNT], vnote[FM_VOICE_COUNT];
+static unsigned char vprotect[FM_VOICE_COUNT];   /* 4-op-reserved slots (plan/0009) */
 static unsigned long clock_;
 
 static void reset_voices(void)
 {
     int i;
     for (i = 0; i < FM_VOICE_COUNT; i++)
-    { vtime[i] = 0; von[i] = 0; vpatch[i] = 0; vchan[i] = 0; vnote[i] = 0; }
+    { vtime[i] = 0; von[i] = 0; vpatch[i] = 0; vchan[i] = 0; vnote[i] = 0; vprotect[i] = 0; }
     clock_ = 0;
 }
 
 /* Note-on: allocate a voice (free or stolen) and mark it sounding. */
 static int note_on(unsigned char ch, unsigned char note, unsigned char patch)
 {
-    int v = FmVoiceAllocate(vtime, von, vpatch, FM_VOICE_COUNT, patch);
+    int v = FmVoiceAllocate(vtime, von, vpatch, vprotect, FM_VOICE_COUNT, patch);
     von[v] = 1; vtime[v] = ++clock_;
     vpatch[v] = patch; vchan[v] = ch; vnote[v] = note;
     return v;
@@ -103,11 +104,36 @@ static void test_fm_find(void)
           "a released note is no longer found");
 }
 
+/* A protected slot (a 4-op primary or its reserved secondary) is never handed out, even
+ * under full polyphony where the allocator must steal (plan/0009). */
+static void test_fm_protect(void)
+{
+    int i, v;
+    reset_voices();
+    /* Protect two slots, then fill every slot and keep allocating (forcing steals). */
+    vprotect[3] = 1;
+    vprotect[7] = 1;
+    for (i = 0; i < FM_VOICE_COUNT; i++)
+        note_on((unsigned char)(i & 0x0f), (unsigned char)(60 + i), (unsigned char)i);
+    for (i = 0; i < 40; i++)
+    {
+        v = note_on(1, (unsigned char)(30 + (i & 0x1f)), (unsigned char)(i & 0x7f));
+        CHECK(v != 3 && v != 7, "a protected slot is never allocated, even when stealing");
+    }
+    /* With no protected slots the allocator uses every slot. */
+    reset_voices();
+    for (i = 0; i < FM_VOICE_COUNT; i++)
+        vtime[i] = 0;
+    v = note_on(0, 60, 0);
+    CHECK(v == 0, "first free slot is index 0 when nothing is protected");
+}
+
 int main(void)
 {
     test_fm_drum_channel();
     test_fm_allocate();
     test_fm_find();
+    test_fm_protect();
     if (failures == 0) { printf("fmvoice_test: all checks passed\n"); return 0; }
     printf("fmvoice_test: %d failure(s)\n", failures);
     return 1;

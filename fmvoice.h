@@ -29,6 +29,8 @@ FmVoiceIsDrum(int channel)
  *   time[i]  - allocation timestamp, 0 meaning the voice was never used
  *   on[i]    - nonzero while the voice is currently sounding (key down)
  *   patch[i] - the program the voice last played
+ *   protect[i] - nonzero for a voice the 2-op path must never take (a 4-op primary or its
+ *                reserved secondary, plan/0009); skipped in every pass
  * Preference, matching the classic OPL3 allocator:
  *   1. a never-used voice (time == 0),
  *   2. else the oldest released (on == 0) voice,
@@ -39,31 +41,32 @@ FmVoiceIsDrum(int channel)
  */
 static int
 FmVoiceAllocate(const unsigned long *time, const unsigned char *on,
-                const unsigned char *patch, int count, unsigned char newpatch)
+                const unsigned char *patch, const unsigned char *protect,
+                int count, unsigned char newpatch)
 {
     int i, found;
     unsigned long oldest;
 
     for (i = 0; i < count; i++)
-        if (time[i] == 0)
+        if (!protect[i] && time[i] == 0)
             return i;
 
     oldest = 0xFFFFFFFFUL; found = -1;
     for (i = 0; i < count; i++)
-        if (!on[i] && time[i] < oldest) { oldest = time[i]; found = i; }
+        if (!protect[i] && !on[i] && time[i] < oldest) { oldest = time[i]; found = i; }
     if (found >= 0)
         return found;
 
     oldest = 0xFFFFFFFFUL; found = -1;
     for (i = 0; i < count; i++)
-        if (patch[i] == newpatch && time[i] < oldest) { oldest = time[i]; found = i; }
+        if (!protect[i] && patch[i] == newpatch && time[i] < oldest) { oldest = time[i]; found = i; }
     if (found >= 0)
         return found;
 
-    found = 0; oldest = time[0];
-    for (i = 1; i < count; i++)
-        if (time[i] < oldest) { oldest = time[i]; found = i; }
-    return found;
+    oldest = 0xFFFFFFFFUL; found = -1;
+    for (i = 0; i < count; i++)
+        if (!protect[i] && time[i] < oldest) { oldest = time[i]; found = i; }
+    return (found >= 0) ? found : 0;
 }
 
 /*

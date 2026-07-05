@@ -146,7 +146,7 @@ typedef struct _voiceStruct {
     BYTE    bPatch;             /* patch number (drums = note + 128) */
     BYTE    bOn;                /* TRUE if note is on        */
     BYTE    bVelocity;          /* velocity                  */
-    BYTE    bJunk;              /* padding                   */
+    BYTE    b4Op;              /* TRUE if this slot is a 4-op primary (plan/0009) */
     DWORD   dwTime;             /* timestamp (0 = unused)    */
     DWORD   dwOrigPitch[2];     /* original pitch for bends  */
     BYTE    bBlock[2];          /* block register value       */
@@ -311,6 +311,8 @@ private:
     WORD Opl3_FindEmptySlot(BYTE bPatch);
     void Opl3_SetVolume(BYTE bChannel);
     void Opl3_FMNote(WORD wNote, noteStruct FAR * lpSN);
+    void Opl3_FMNote4Op(WORD wVoice, noteStruct FAR * lpSN);
+    void Opl3_UpdateConnection(void);
     void Opl3_SetSustain(BYTE bChannel, BYTE bSusLevel);
 
 public:

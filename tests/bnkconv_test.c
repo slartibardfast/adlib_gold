@@ -45,6 +45,9 @@ static void test_bank4op(void)
             CHECK(ns->bOp == PATCH_1_4OP, "matched program carries the 4-op marker");
             CHECK(op_nonzero(&ns->op[0]) && op_nonzero(&ns->op[2]),
                   "matched program has operators 1 and 3 populated");
+            /* Both C-registers must set the STL/STR output bits, or the voice is silent. */
+            CHECK((ns->bAtC0[0] & 0x30) == 0x30 && (ns->bAtC0[1] & 0x30) == 0x30,
+                  "every 4-op override sets the output bits in both C-registers");
         }
         else
         {
@@ -65,8 +68,12 @@ static void test_bank4op(void)
           gGm4OpNote[0].op[0].bAt80 == 0x06 &&
           gGm4OpNote[0].op[0].bAtE0 == 0x80,
           "program 0 first operator converts to the traced bytes");
-    CHECK(gGm4OpNote[0].bAtC0[0] == 0x08 && gGm4OpNote[0].bAtC0[1] == 0x00,
-          "program 0 connect byte splits into C0=0x08, C3=0x00");
+    /* Connect byte splits into C0 (FB+CNT_A) and C3 (CNT_B), each with the STL/STR output
+     * bits (0x30) baked in so the voice is not silent. */
+    CHECK(gGm4OpNote[0].bAtC0[0] == 0x38 && gGm4OpNote[0].bAtC0[1] == 0x30,
+          "program 0 C-registers are 0x38 (FB+CNT_A+output) and 0x30 (CNT_B+output)");
+    CHECK((gGm4OpNote[0].bAtC0[0] & 0x30) == 0x30 && (gGm4OpNote[0].bAtC0[1] & 0x30) == 0x30,
+          "both 4-op C-registers set the STL/STR output bits");
 
     printf("bnkconv_test: %d of 128 programs are 4-operator overrides\n", matched);
 }

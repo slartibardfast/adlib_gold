@@ -126,9 +126,13 @@ int main(int argc, char **argv)
             printf("{0x%02x,0x%02x,0x%02x,0x%02x,0x%02x}%s",
                    o[0], o[1], o[2], o[3], o[4], op < 3 ? "," : "");
         }
-        /* connect byte: D3-D0 (FB + first CNT) -> C0; D7 (second CNT) -> C3 */
-        unsigned char c0 = (unsigned char)(r[24] & 0x0F);
-        unsigned char c1 = (unsigned char)((r[24] >> 7) & 1);
+        /* connect byte: D3-D0 (FB + first CNT) -> C0; D7 (second CNT) -> C3. The OPL3 enables
+         * a voice's output only through the STL/STR bits (D5/D4 = 0x30) of each C-register,
+         * exactly as the 2-op glpPatch bank bakes them in; the driver's note path masks these
+         * bits (for pan) but never sets them, so bake 0x30 into both C-registers here or the
+         * 4-op voice is silent. */
+        unsigned char c0 = (unsigned char)((r[24] & 0x0F) | 0x30);
+        unsigned char c1 = (unsigned char)(((r[24] >> 7) & 1) | 0x30);
         printf("}, {0,0},{0,0},{0x%02x,0x%02x}, %d, 0 },  /* %d: %s */\n",
                c0, c1, PATCH_1_4OP, prog, name[rec]);
     }
