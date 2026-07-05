@@ -764,31 +764,199 @@ GetDescription
  * Mapping table: node ID -> Control Chip register pair (left, right).
  * For mono nodes, RegRight == 0 (unused).
  */
+/*
+ * Register encoding family for a level node (call/0026):
+ *   NK_DBCODE  - master 04/05: byte = 0xC0|field, field 0x1C..0x3F == -64..+6 dB, 2 dB/step.
+ *   NK_LINVOL  - mixing volumes 09-0F: linear-in-amplitude, code 128 (silent) .. 255 (0 dB).
+ *   NK_LINGAIN - record gain 02/03: linear gain = (val*10)/256, val 0..255.
+ * KSPROPERTY_AUDIO_VOLUMELEVEL is a signed LONG in 1/65536 dB, NOT a raw register byte, so
+ * the handler converts through the tables/helpers below (SB16 template, DDK wdm.txt:24077).
+ */
+enum NODE_KIND { NK_DBCODE, NK_LINVOL, NK_LINGAIN };
+
+#define KSDB(x)   ((LONG)(x) * 65536)      /* integer dB -> KS 1/65536-dB units */
+
 typedef struct
 {
-    BYTE    RegLeft;
-    BYTE    RegRight;
-    BYTE    MinVal;     /* Minimum valid register value            */
-    BYTE    MaxVal;     /* Maximum valid register value            */
+    BYTE        RegLeft;
+    BYTE        RegRight;
+    BYTE        MinVal;     /* Raw register clamp, low  (write backstop) */
+    BYTE        MaxVal;     /* Raw register clamp, high (write backstop) */
+    NODE_KIND   Kind;       /* Register encoding family                  */
+    LONG        DbMin;      /* Advertised range floor,   1/65536 dB      */
+    LONG        DbMax;      /* Advertised range ceiling, 1/65536 dB      */
+    LONG        DbDelta;    /* Advertised stepping,      1/65536 dB      */
 } NODE_REG_MAP;
+
+/*
+ * LinVolTab[idx] : register code (128+idx) -> KS 1/65536 dB, for the linear mixing
+ * volumes. idx 1..127 == code 129..255; code 255 == 0 dB (unity). value = round(
+ * 20*log10(idx/127.0)*65536). value[0] is the silent sentinel (code 128, owned by MUTE).
+ * Generated offline (call/0026); no floating point runs in the kernel.
+ */
+static const LONG LinVolTab[128] =
+{
+    (LONG)0x80000000, -2757498, -2362932, -2132125, -1968366, -1841344, -1737559, -1649811,
+    -1573800, -1506753, -1446778, -1392523, -1342993, -1297430, -1255245, -1215971,
+    -1179233, -1144724, -1112187, -1081410, -1052212, -1024438, -997957, -972654,
+    -948427, -925190, -902864, -881381, -860679, -840703, -821405, -802740,
+    -784667, -767151, -750158, -733657, -717621, -702024, -686844, -672057,
+    -657646, -643590, -629872, -616478, -603391, -590599, -578088, -565846,
+    -553861, -542124, -530624, -519351, -508298, -497455, -486814, -476369,
+    -466113, -456037, -446137, -436406, -426839, -417430, -408174, -399066,
+    -390101, -381276, -372585, -364025, -355592, -347281, -339091, -331016,
+    -323055, -315203, -307458, -299817, -292278, -284836, -277491, -270240,
+    -263080, -256008, -249024, -242124, -235306, -228570, -221912, -215331,
+    -208825, -202393, -196033, -189743, -183522, -177368, -171279, -165256,
+    -159295, -153396, -147558, -141779, -136058, -130394, -124785, -119232,
+    -113732, -108284, -102889, -97544, -92248, -87002, -81803, -76652,
+    -71547, -66487, -61471, -56500, -51571, -46685, -41840, -37037,
+    -32273, -27549, -22864, -18217, -13608, -9036, -4500, 0,
+};
+
+/*
+ * RecGainTab[val] : record-gain register value -> KS 1/65536 dB. val 1..255,
+ * gain = (val*10)/256, value = round(20*log10(val*10.0/256)*65536). value[0] = -inf sentinel.
+ */
+static const LONG RecGainTab[256] =
+{
+    (LONG)0x80000000, -1845808, -1451242, -1220436, -1056676, -929654, -825870, -738121,
+    -662110, -595064, -535088, -480834, -431304, -385740, -343555, -304282,
+    -267544, -233034, -200498, -169720, -140522, -112749, -86268, -60964,
+    -36738, -13500, 8826, 30309, 51011, 70986, 90284, 108949,
+    127022, 144538, 161532, 178033, 194069, 209665, 224846, 239632,
+    254044, 268100, 281817, 295211, 308298, 321090, 333602, 345844,
+    357828, 369566, 381066, 392338, 403392, 414235, 424875, 435320,
+    445577, 455652, 465552, 475283, 484850, 494259, 503515, 512623,
+    521588, 530414, 539104, 547664, 556098, 564408, 572599, 580673,
+    588635, 596486, 604231, 611872, 619412, 626853, 634198, 641449,
+    648610, 655681, 662666, 669566, 676383, 683120, 689778, 696358,
+    702864, 709296, 715656, 721946, 728168, 734322, 740410, 746434,
+    752394, 758293, 764132, 769911, 775632, 781296, 786904, 792458,
+    797958, 803405, 808801, 814146, 819441, 824687, 829886, 835037,
+    840143, 845203, 850218, 855190, 860118, 865004, 869849, 874653,
+    879416, 884140, 888825, 893472, 898081, 902654, 907189, 911689,
+    916154, 920584, 924980, 929342, 933670, 937967, 942231, 946463,
+    950664, 954834, 958974, 963084, 967165, 971216, 975239, 979234,
+    983201, 987140, 991052, 994938, 998797, 1002630, 1006438, 1010220,
+    1013978, 1017710, 1021419, 1025103, 1028764, 1032401, 1036016, 1039607,
+    1043176, 1046723, 1050247, 1053750, 1057232, 1060692, 1064132, 1067551,
+    1070949, 1074327, 1077686, 1081024, 1084344, 1087644, 1090924, 1094187,
+    1097430, 1100655, 1103862, 1107051, 1110222, 1113376, 1116512, 1119632,
+    1122734, 1125819, 1128888, 1131940, 1134976, 1137996, 1141000, 1143988,
+    1146960, 1149917, 1152859, 1155786, 1158698, 1161594, 1164477, 1167344,
+    1170198, 1173037, 1175862, 1178673, 1181470, 1184254, 1187024, 1189780,
+    1192524, 1195254, 1197971, 1200675, 1203367, 1206045, 1208712, 1211365,
+    1214007, 1216636, 1219253, 1221859, 1224452, 1227034, 1229603, 1232162,
+    1234709, 1237244, 1239769, 1242282, 1244784, 1247275, 1249756, 1252225,
+    1254684, 1257132, 1259570, 1261998, 1264415, 1266822, 1269219, 1271605,
+    1273982, 1276349, 1278706, 1281054, 1283391, 1285719, 1288038, 1290347,
+    1292647, 1294938, 1297220, 1299492, 1301755, 1304010, 1306255, 1308492,
+};
 
 static
 NODE_REG_MAP NodeRegMap[] =
 {
-    /* NODE_SAMP_VOLUME */ { CTRL_REG_SAMP_VOL_L,   CTRL_REG_SAMP_VOL_R,   0x80, 0xFF },
-    /* NODE_FM_VOLUME   */ { CTRL_REG_FM_VOL_L,     CTRL_REG_FM_VOL_R,     0x80, 0xFF },
-    /* NODE_AUX_VOLUME  */ { CTRL_REG_AUX_VOL_L,    CTRL_REG_AUX_VOL_R,    0x80, 0xFF },
-    /* NODE_MIC_VOLUME  */ { CTRL_REG_MIC_VOL,       0,                     0x80, 0xFF },
-    /* NODE_MASTER_VOLUME*/ { CTRL_REG_MASTER_VOL_L, CTRL_REG_MASTER_VOL_R, 0xDC, 0xFF },  /* dB code: <0xDC is -80dB OFF (call/0025) */
-    /* NODE_BASS   -- not reached via PropertyHandler_Level (uses PropertyHandler_Tone) */
-                          { 0,                     0,                     0,    0    },
-    /* NODE_TREBLE -- not reached via PropertyHandler_Level (uses PropertyHandler_Tone) */
-                          { 0,                     0,                     0,    0    },
-    /* NODE_MUTE   -- not reached via PropertyHandler_Level (uses PropertyHandler_OnOff) */
-                          { 0,                     0,                     0,    0    },
-    /* NODE_RECORD_GAIN -- ADC sampling gain, full 0..255 range (regs 02h/03h) */
-    /* NODE_RECORD_GAIN */ { CTRL_REG_GAIN_L,       CTRL_REG_GAIN_R,       0x00, 0xFF },
+    /* NODE_SAMP_VOLUME  */ { CTRL_REG_SAMP_VOL_L,   CTRL_REG_SAMP_VOL_R,   0x80, 0xFF, NK_LINVOL,  -2757498,   0,       KSDB(1) },
+    /* NODE_FM_VOLUME    */ { CTRL_REG_FM_VOL_L,     CTRL_REG_FM_VOL_R,     0x80, 0xFF, NK_LINVOL,  -2757498,   0,       KSDB(1) },
+    /* NODE_AUX_VOLUME   */ { CTRL_REG_AUX_VOL_L,    CTRL_REG_AUX_VOL_R,    0x80, 0xFF, NK_LINVOL,  -2757498,   0,       KSDB(1) },
+    /* NODE_MIC_VOLUME   */ { CTRL_REG_MIC_VOL,      0,                     0x80, 0xFF, NK_LINVOL,  -2757498,   0,       KSDB(1) },
+    /* NODE_MASTER_VOLUME*/ { CTRL_REG_MASTER_VOL_L, CTRL_REG_MASTER_VOL_R, 0xDC, 0xFF, NK_DBCODE,  KSDB(-64),  KSDB(6), KSDB(2) },
+    /* NODE_BASS   -- PropertyHandler_Tone  */ { 0, 0, 0, 0, NK_DBCODE, 0, 0, 0 },
+    /* NODE_TREBLE -- PropertyHandler_Tone  */ { 0, 0, 0, 0, NK_DBCODE, 0, 0, 0 },
+    /* NODE_MUTE   -- PropertyHandler_OnOff */ { 0, 0, 0, 0, NK_DBCODE, 0, 0, 0 },
+    /* NODE_RECORD_GAIN  */ { CTRL_REG_GAIN_L,       CTRL_REG_GAIN_R,       0x00, 0xFF, NK_LINGAIN, -1845808, 1308492,  KSDB(1) },
 };
+
+
+/*
+ * RegToKsDb() - Control Chip register byte -> KS 1/65536 dB (per node family).
+ */
+static
+LONG
+RegToKsDb
+(
+    IN  NODE_REG_MAP *m,
+    IN  BYTE          b
+)
+{
+    switch (m->Kind)
+    {
+    case NK_DBCODE:
+        {
+            BYTE field = (BYTE)(b & 0x3F);
+            if (field < 0x1C)                    /* off region (-80 dB), report floor */
+                return m->DbMin;
+            return m->DbMin + (LONG)(field - 0x1C) * KSDB(2);
+        }
+    case NK_LINVOL:
+        {
+            int idx = (int)b - 128;
+            if (idx <= 0)  return m->DbMin;      /* silent -> advertised floor */
+            if (idx > 127) idx = 127;
+            return LinVolTab[idx];
+        }
+    case NK_LINGAIN:
+        if (b == 0) return m->DbMin;
+        return RecGainTab[b];
+    }
+    return m->DbMin;
+}
+
+/*
+ * KsDbToReg() - KS 1/65536 dB -> Control Chip register byte (clamped, nearest).
+ */
+static
+BYTE
+KsDbToReg
+(
+    IN  NODE_REG_MAP *m,
+    IN  LONG          lvl
+)
+{
+    if (lvl < m->DbMin) lvl = m->DbMin;
+    if (lvl > m->DbMax) lvl = m->DbMax;
+
+    switch (m->Kind)
+    {
+    case NK_DBCODE:
+        {
+            LONG steps = (lvl - m->DbMin + KSDB(1)) / KSDB(2);   /* nearest 2 dB, 0..35 */
+            if (steps < 0)  steps = 0;
+            if (steps > 35) steps = 35;
+            return (BYTE)(0xC0 | (0x1C + (BYTE)steps));          /* D6,D7 forced 1 */
+        }
+    case NK_LINVOL:
+        {
+            int  best  = 1;
+            LONG bestd = LinVolTab[1] - lvl;
+            int  i;
+            if (bestd < 0) bestd = -bestd;
+            for (i = 2; i <= 127; i++)
+            {
+                LONG d = LinVolTab[i] - lvl;
+                if (d < 0) d = -d;
+                if (d < bestd) { bestd = d; best = i; }
+            }
+            return (BYTE)(128 + best);
+        }
+    case NK_LINGAIN:
+        {
+            int  best  = 1;
+            LONG bestd = RecGainTab[1] - lvl;
+            int  i;
+            if (bestd < 0) bestd = -bestd;
+            for (i = 2; i <= 255; i++)
+            {
+                LONG d = RecGainTab[i] - lvl;
+                if (d < 0) d = -d;
+                if (d < bestd) { bestd = d; best = i; }
+            }
+            return (BYTE)best;
+        }
+    }
+    return m->MinVal;
+}
 
 
 /*****************************************************************************
@@ -796,10 +964,11 @@ NODE_REG_MAP NodeRegMap[] =
  *****************************************************************************
  * Volume level get/set for source and master volume nodes.
  *
- * Values are stored as the raw Control Chip register value.
- * KS VOLUMELEVEL is a LONG in 1/65536 dB units, but here we
- * use a linear mapping from the register's usable range (MinVal..MaxVal)
- * scaled to 0..0xFFFF and stored in the low 16 bits of the LONG.
+ * KS VOLUMELEVEL is a signed LONG in 1/65536 dB units. GET/SET convert
+ * to/from the Control Chip register byte per the node's encoding family via
+ * RegToKsDb()/KsDbToReg(), and BASICSUPPORT advertises the range in dB. A
+ * unity (0 dB) SET therefore lands on the audible register value rather than
+ * clamping a raw (BYTE)0 up to the silent minimum (call/0026).
  */
 static
 NTSTATUS
@@ -846,17 +1015,25 @@ PropertyHandler_Level
             reg = map->RegLeft;
 
         BYTE val = that->AdapterCommon->ControlRegRead(reg);
-        *(PLONG(PropertyRequest->Value)) = (LONG)val;
+        *(PLONG(PropertyRequest->Value)) = RegToKsDb(map, val);
         PropertyRequest->ValueSize = sizeof(LONG);
         ntStatus = STATUS_SUCCESS;
     }
     else if (PropertyRequest->Verb & KSPROPERTY_TYPE_SET)
     {
-        BYTE val = (BYTE)(*(PLONG(PropertyRequest->Value)));
+        LONG ksval = *(PLONG(PropertyRequest->Value));
+        BYTE val   = KsDbToReg(map, ksval);   /* KS 1/65536 dB -> register byte */
 
-        /* Clamp to valid range */
+        /* Raw-register safety backstop (KsDbToReg already returns in-range) */
         if (val < map->MinVal) val = map->MinVal;
         if (val > map->MaxVal) val = map->MaxVal;
+
+        /* Diagnostic: what the mixer/system SETs, and the register value it maps to.
+         * Compiles out of the free build (checked build only). */
+        _DbgPrintF(DEBUGLVL_VERBOSE,
+            ("VolSet node=%d ch=%d ksval=%d -> reg0x%02X=0x%02X",
+             (ULONG)PropertyRequest->Node, (LONG)channel, ksval,
+             (ULONG)map->RegLeft, (ULONG)val));
 
         if (channel == CHAN_RIGHT && map->RegRight)
         {
@@ -909,9 +1086,9 @@ PropertyHandler_Level
             PKSPROPERTY_STEPPING_LONG range =
                 PKSPROPERTY_STEPPING_LONG(members + 1);
 
-            range->Bounds.SignedMinimum = (LONG)map->MinVal;
-            range->Bounds.SignedMaximum = (LONG)map->MaxVal;
-            range->SteppingDelta        = 1;
+            range->Bounds.SignedMinimum = map->DbMin;
+            range->Bounds.SignedMaximum = map->DbMax;
+            range->SteppingDelta        = map->DbDelta;
             range->Reserved             = 0;
 
             PropertyRequest->ValueSize = sizeof(KSPROPERTY_DESCRIPTION) +

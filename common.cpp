@@ -750,6 +750,11 @@ ControlRegWriteLocked
     {
         m_ControlRegs[Register] = Value;
     }
+
+    /* Diagnostic: every control-chip write, to see exactly what reaches the mixer.
+     * Compiles out of the free build (checked build only). */
+    _DbgPrintF(DEBUGLVL_VERBOSE,
+        ("CtrlWr r0x%02X = 0x%02X (pwr=%d)", (ULONG)Register, (ULONG)Value, (ULONG)m_PowerState));
 }
 
 
