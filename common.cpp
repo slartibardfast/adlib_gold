@@ -1379,8 +1379,11 @@ SaveToEEPROM
     /* Write ST bit (D1) to trigger EEPROM save */
     WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_DATA, CTRL_ID_SAVE);
 
-    /* Wait for RB to clear (hardware auto-clears ST when done) */
-    WaitForReady();
+    /* The EEPROM save takes ~2.5ms, and RB covers register access rather than the EEPROM
+     * cycle, so wait the full tabulated cycle (chiptiming.h reg 0 = 2500us) instead of a
+     * bounded ready poll that would return before the save completes (as RestoreFromEEPROM
+     * does for the same reason). */
+    KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_CONTROL, CTRL_REG_CONTROL_ID));
 
     /* Restore OPL3 bank */
     WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_ADDR, ALG_BANK_OPL3);

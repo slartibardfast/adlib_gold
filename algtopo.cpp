@@ -6,8 +6,8 @@
  * Property handlers translate between KS volume/mute/tone properties
  * and Control Chip register reads/writes via the adapter common object.
  *
- * Phase 2: All property handlers functional — volume (Level), mute (OnOff),
- * bass/treble (Tone) with dB-scaled get/set/basicsupport, CPU resources.
+ * All property handlers are functional: volume (Level), mute (OnOff), and
+ * bass/treble (Tone) with dB-scaled get/set/basicsupport, plus CPU resources.
  */
 
 #include "algtopo.h"
@@ -739,7 +739,7 @@ NODE_REG_MAP NodeRegMap[] =
  * Volume level get/set for source and master volume nodes.
  *
  * Values are stored as the raw Control Chip register value.
- * KS VOLUMELEVEL is a LONG in 1/65536 dB units, but for Phase 1 we
+ * KS VOLUMELEVEL is a LONG in 1/65536 dB units, but here we
  * use a linear mapping from the register's usable range (MinVal..MaxVal)
  * scaled to 0..0xFFFF and stored in the low 16 bits of the LONG.
  */

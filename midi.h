@@ -29,7 +29,7 @@
 /*****************************************************************************
  * Register 0Dh (MIDI and Interrupt Control) bit definitions
  *
- * From SDK Chapter 7.3 — Register Reference.
+ * From the SDK register reference (ch07).
  */
 #define MMA_MIDI_MSK_POV        0x80    /* D7: Mask digital overrun IRQ       */
 #define MMA_MIDI_MSK_MOV        0x40    /* D6: Mask MIDI overrun IRQ          */

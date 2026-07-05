@@ -310,7 +310,7 @@ StartDevice
 
     //
     // Validate minimum resources: 1 port range, 1 IRQ.
-    // DMA is needed for wave but not for Phase 1 (topology only).
+    // DMA is needed for the wave subdevice but not for the topology-only subdevice.
     //
     if ((ResourceList->NumberOfPorts() < 1) ||
         (ResourceList->NumberOfInterrupts() < 1))
