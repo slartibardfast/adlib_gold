@@ -722,6 +722,13 @@ ControlRegWriteLocked
             /* Registers 9-16h: 5us delay */
             KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_CONTROL, Register));
         }
+        else
+        {
+            /* Every other control register still honours its tabulated settle rather
+             * than none: the SP2 serial port (0x17+) and reg 0 (EEPROM, 2500us) get
+             * their delay from the same table, so no control write is left unpaced. */
+            KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_CONTROL, Register));
+        }
 
         /* 6. Restore OPL3 bank 1 access */
         WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_ADDR, ALG_BANK_OPL3);
