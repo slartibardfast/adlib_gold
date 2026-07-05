@@ -995,8 +995,17 @@ NewStream
                  */
                 m_pActiveStream = stream;
 
+                /* Resolve the hardware rate the same way SetFormat does, so
+                 * m_SamplingFrequency always means the rate the hardware clocks -- never
+                 * the raw source rate on one path and the resolved rate on another.
+                 * Only mono 16-bit resamples an off-rate source; every other path clocks
+                 * the source rate directly. */
                 PWAVEFORMATEX wfx = PWAVEFORMATEX(DataFormat + 1);
-                m_SamplingFrequency = wfx->nSamplesPerSec;
+                BOOLEAN mono16 =
+                    (wfx->wBitsPerSample == 16 && wfx->nChannels == 1);
+                m_SamplingFrequency = mono16
+                    ? NearestSupportedRate(wfx->nSamplesPerSec)
+                    : wfx->nSamplesPerSec;
 
                 *OutStream = PMINIPORTWAVECYCLICSTREAM(stream);
                 stream->AddRef();
