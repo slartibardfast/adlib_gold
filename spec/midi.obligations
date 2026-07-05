@@ -1,0 +1,19 @@
+# midi.obligations — disposition for every `allium plan` obligation of midi.allium.
+# The transmit flow-control count and the receive ring admission are pure (midififo.h),
+# unit-tested by tests/midififo_test.c; midi.cpp's SynchronizedMidiWrite and ServiceMidiISR
+# delegate to them.
+
+# --- Spec-integrity (covered by the check/analyse lane) ---
+config-default.tx_fifo_depth            => structural
+entity-fields.TransmitRequest           => structural
+entity-fields.ReceiveRing               => structural
+surface-actor.MidiUart                  => structural
+surface-provides.MidiUart               => structural
+
+# --- Behavioural (discharged by the pure FIFO decisions, tests/midififo_test.c) ---
+rule-success.TransmitOnlyWithSpace      => test:test_midi_tx exercises=MidiTxCount
+rule-failure.TransmitOnlyWithSpace.1    => test:test_midi_tx exercises=MidiTxCount
+rule-success.TransmitDefersWhenFull     => test:test_midi_tx exercises=MidiTxCount
+rule-failure.TransmitDefersWhenFull.1   => test:test_midi_tx exercises=MidiTxCount
+rule-success.ReceiveKeepsUntilFull      => test:test_midi_ring exercises=MidiRingFits
+rule-failure.ReceiveKeepsUntilFull.1    => test:test_midi_ring exercises=MidiRingFits

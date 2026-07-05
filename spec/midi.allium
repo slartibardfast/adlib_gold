@@ -1,0 +1,61 @@
+-- allium: 3
+-- adlib_gold midi: the YMZ263 UART MIDI miniport (midi.cpp). Outgoing bytes transmit
+-- through a 16-byte hardware FIFO with flow control so a burst cannot overrun it; incoming
+-- bytes fill a software receive ring that keeps every byte until it is full. Distilled from
+-- midi.cpp; the pure FIFO decisions are in midififo.h and unit-tested without a build.
+
+config {
+    -- YMZ263 transmit FIFO depth in bytes (midififo.h MIDI_TX_FIFO_DEPTH).
+    tx_fifo_depth: Integer = 16
+}
+
+-- One transmit request the port hands the miniport. fifo_empty is whether the hardware
+-- transmit FIFO is empty (the TRQ status bit); bounded records that the write stayed within
+-- the FIFO depth; deferred records that nothing was written and the port must retry.
+entity TransmitRequest {
+    fifo_empty: Boolean
+    bounded: Boolean
+    deferred: Boolean
+}
+
+-- The software receive ring ServiceMidiISR fills. accepted records that an incoming byte
+-- was kept rather than dropped.
+entity ReceiveRing {
+    full: Boolean
+    accepted: Boolean
+}
+
+given {
+    tx: TransmitRequest
+}
+
+-- The KS MIDI UART boundary the port class drives.
+surface MidiUart {
+    facing tx: TransmitRequest
+    provides:
+        Transmitted(tx)
+}
+
+-- With space (the FIFO empty), a transmit writes at most the FIFO depth, so a burst cannot
+-- overrun the hardware FIFO. The pure MidiTxCount is the tested source of truth.
+rule TransmitOnlyWithSpace {
+    when: tx: TransmitRequest.created
+    requires: tx.fifo_empty
+    ensures: tx.bounded = true
+}
+
+-- With no space (the FIFO not empty), nothing is written and the port retries the message,
+-- rather than overrunning the FIFO.
+rule TransmitDefersWhenFull {
+    when: tx: TransmitRequest.created
+    requires: not tx.fifo_empty
+    ensures: tx.deferred = true
+}
+
+-- A received byte is kept while the ring has room, so no byte is lost silently before the
+-- ring is genuinely full. The pure MidiRingFits is the tested source of truth.
+rule ReceiveKeepsUntilFull {
+    when: ring: ReceiveRing.created
+    requires: not ring.full
+    ensures: ring.accepted = true
+}

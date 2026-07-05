@@ -18,6 +18,7 @@
  */
 
 #include "midi.h"
+#include "midififo.h"   /* pure, tested transmit-count + receive-ring decisions (midi.allium) */
 
 #define STR_MODULENAME "AdLibGoldMIDI: "
 
@@ -674,8 +675,9 @@ ServiceMidiISR
         /*
          * Check for buffer overflow.
          */
-        ULONG nextTail = (m_InputBufferTail + 1) % MIDI_INPUT_BUFFER_SIZE;
-        if (nextTail == m_InputBufferHead)
+        /* Keep the byte while the ring has room; only a genuinely full ring drops it.
+         * MidiRingFits is the pure tested admission (midi.allium ReceiveKeepsUntilFull). */
+        if (!MidiRingFits(m_InputBufferHead, m_InputBufferTail, MIDI_INPUT_BUFFER_SIZE))
         {
             _DbgPrintF(DEBUGLVL_TERSE,
                 ("ServiceMidiISR: input buffer overflow"));
@@ -683,7 +685,7 @@ ServiceMidiISR
         }
 
         m_InputBuffer[m_InputBufferTail] = dataByte;
-        m_InputBufferTail = nextTail;
+        m_InputBufferTail = (m_InputBufferTail + 1) % MIDI_INPUT_BUFFER_SIZE;
         newBytesAvailable = TRUE;
     }
 
@@ -801,7 +803,20 @@ SynchronizedMidiWrite
      * We write up to 16 bytes per call (FIFO depth).  If the caller
      * has more data (e.g., SysEx), the port driver will retry.
      */
-    while (count < context->Length && count < 16)
+    /*
+     * Flow control against the 16-byte transmit FIFO. The YMZ263's TRQ signals the FIFO
+     * is EMPTY (manual ch07), so when it is set a full 16-byte burst cannot overrun; when
+     * it is not set the FIFO still holds bytes and we write nothing. We do NOT spin at
+     * DIRQL waiting for it to drain -- that would hold the interrupt lock for milliseconds.
+     * Instead we write only what the empty FIFO can take and report the true count, and the
+     * port driver retries the remainder once the FIFO has drained. The number of bytes to
+     * write is the pure tested decision MidiTxCount (spec/midi.allium TransmitOnlyWithSpace).
+     */
+    BOOLEAN fifoEmpty =
+        MmaStatusMidiTxReady(context->Miniport->m_AdapterCommon->ReadMMAStatus());
+    ULONG toWrite = MidiTxCount(fifoEmpty, context->Length);
+
+    while (count < toWrite)
     {
         /* WriteMMALocked: this runs at DIRQL inside CallSynchronizedRoutine's lock. */
         context->Miniport->m_AdapterCommon->WriteMMALocked(
