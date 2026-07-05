@@ -427,43 +427,41 @@ StartDevice
     }
 
     //
-    // Build the resource sub-list for the FM synth miniport (ports only).
+    //
+    // Build the resource sub-list for the FM synth miniport (ports only) and install it.
+    // The FM synth is optional, so ANY failure here -- the sublist allocation as well as the
+    // install -- is non-fatal and leaves the main ntStatus untouched (topology and wave still
+    // work). The sublist status is kept local so a sublist failure cannot abort the device.
     //
     PRESOURCELIST resourceListFmSynth = NULL;
     if (NT_SUCCESS(ntStatus))
     {
-        ntStatus = PcNewResourceSublist(&resourceListFmSynth,
-                                        NULL,
-                                        PagedPool,
-                                        ResourceList,
-                                        1);
-        if (NT_SUCCESS(ntStatus))
+        NTSTATUS fmStatus = PcNewResourceSublist(&resourceListFmSynth,
+                                                 NULL,
+                                                 PagedPool,
+                                                 ResourceList,
+                                                 1);
+        if (NT_SUCCESS(fmStatus))
         {
             SUCCEEDS(resourceListFmSynth->AddPortFromParent(ResourceList, 0));
+
+            fmStatus = InstallSubdevice(DeviceObject,
+                                        Irp,
+                                        L"FMSynth",
+                                        CLSID_PortMidi,
+                                        CLSID_PortMidi,     /* not used */
+                                        CreateMiniportMidiFMAdLibGold,
+                                        pAdapterCommon,
+                                        resourceListFmSynth,
+                                        GUID_NULL,
+                                        NULL,
+                                        &unknownFmSynth);
         }
-    }
 
-    //
-    // Install the FM synth miniport.
-    //
-    if (NT_SUCCESS(ntStatus) && resourceListFmSynth)
-    {
-        ntStatus = InstallSubdevice(DeviceObject,
-                                    Irp,
-                                    L"FMSynth",
-                                    CLSID_PortMidi,
-                                    CLSID_PortMidi,     /* not used */
-                                    CreateMiniportMidiFMAdLibGold,
-                                    pAdapterCommon,
-                                    resourceListFmSynth,
-                                    GUID_NULL,
-                                    NULL,
-                                    &unknownFmSynth);
-
-        if (!NT_SUCCESS(ntStatus))
+        if (!NT_SUCCESS(fmStatus))
         {
-            _DbgPrintF(DEBUGLVL_TERSE, ("StartDevice: FM synth install failed (0x%08X)", ntStatus));
-            ntStatus = STATUS_SUCCESS;  /* Non-fatal -- topology still works */
+            _DbgPrintF(DEBUGLVL_TERSE,
+                ("StartDevice: FM synth setup failed (0x%08X), continuing without it", fmStatus));
         }
     }
 

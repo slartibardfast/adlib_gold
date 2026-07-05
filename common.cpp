@@ -698,8 +698,10 @@ ControlRegWriteLocked
         /* 1. Enable control bank */
         WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_ADDR, ALG_BANK_CONTROL);
 
-        /* 2. Poll until not busy */
-        WaitForReady();
+        /* 2. Poll until not busy; report a stuck chip rather than writing anyway */
+        if (!WaitForReady())
+            _DbgPrintF(DEBUGLVL_TERSE,
+                ("ControlRegWrite: chip busy timeout before reg 0x%02X", (ULONG)Register));
 
         /* 3. Write register index */
         WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_FM1_ADDR, Register);
@@ -711,7 +713,9 @@ ControlRegWriteLocked
         if (Register >= 0x04 && Register <= 0x08)
         {
             /* Registers 4-8: ~450us — poll SB/RB for completion */
-            WaitForReady();
+            if (!WaitForReady())
+                _DbgPrintF(DEBUGLVL_TERSE,
+                    ("ControlRegWrite: chip busy timeout after reg 0x%02X", (ULONG)Register));
         }
         else if (Register >= 0x09 && Register <= 0x16)
         {
@@ -1232,6 +1236,13 @@ RestoreMixerSettingsFromRegistry
                             );
                         }
                     }
+
+                    /* The restore is complete: every setting was either restored from the
+                     * registry or defaulted. A per-key miss is not a failure, so do not let
+                     * the loop's last QueryValueKey status leak out -- that made a good
+                     * restore look failed, and ControlRegReset then clobbered it with
+                     * defaults. */
+                    ntStatus = STATUS_SUCCESS;
 
                     ExFreePool(KeyInfo);
                 }
