@@ -779,7 +779,7 @@ NODE_REG_MAP NodeRegMap[] =
     /* NODE_FM_VOLUME   */ { CTRL_REG_FM_VOL_L,     CTRL_REG_FM_VOL_R,     0x80, 0xFF },
     /* NODE_AUX_VOLUME  */ { CTRL_REG_AUX_VOL_L,    CTRL_REG_AUX_VOL_R,    0x80, 0xFF },
     /* NODE_MIC_VOLUME  */ { CTRL_REG_MIC_VOL,       0,                     0x80, 0xFF },
-    /* NODE_MASTER_VOLUME*/ { CTRL_REG_MASTER_VOL_L, CTRL_REG_MASTER_VOL_R, 0xC0, 0xFF },
+    /* NODE_MASTER_VOLUME*/ { CTRL_REG_MASTER_VOL_L, CTRL_REG_MASTER_VOL_R, 0xDC, 0xFF },  /* dB code: <0xDC is -80dB OFF (call/0025) */
     /* NODE_BASS   -- not reached via PropertyHandler_Level (uses PropertyHandler_Tone) */
                           { 0,                     0,                     0,    0    },
     /* NODE_TREBLE -- not reached via PropertyHandler_Level (uses PropertyHandler_Tone) */

@@ -180,8 +180,8 @@ static
 MIXERSETTING DefaultMixerSettings[] =
 {
     /*                               Reg    Default                         */
-    { L"LeftMasterVol",  CTRL_REG_MASTER_VOL_L,  0xD8 },  /* ~-20dB, D7-D6 set */
-    { L"RightMasterVol", CTRL_REG_MASTER_VOL_R,  0xD8 },
+    { L"LeftMasterVol",  CTRL_REG_MASTER_VOL_L,  0xFC },  /* 0dB. Reg 04/05 is a dB code (audible 0xDC-0xFF); 0xD8 was -80dB OFF (call/0025) */
+    { L"RightMasterVol", CTRL_REG_MASTER_VOL_R,  0xFC },
     { L"Bass",           CTRL_REG_BASS,           0xF6 },  /* 0dB flat, D7-D4 set */
     { L"Treble",         CTRL_REG_TREBLE,         0xF6 },  /* 0dB flat, D7-D4 set */
     { L"OutputMode",     CTRL_REG_OUTPUT_MODE,    0xC4 },  /* Linear stereo, both ch, unmuted */
@@ -1269,10 +1269,18 @@ RestoreMixerSettingsFromRegistry
 
                             if (PartialInfo->DataLength == sizeof(DWORD))
                             {
-                                ControlRegWrite(
-                                    DefaultMixerSettings[i].RegisterIndex,
-                                    BYTE(*(PDWORD(PartialInfo->Data)))
-                                );
+                                BYTE reg = DefaultMixerSettings[i].RegisterIndex;
+                                BYTE val = BYTE(*(PDWORD(PartialInfo->Data)));
+                                /* The master output volume (reg 04/05) is a dB code whose
+                                 * audible floor is 0xDC (-64dB); below that is -80dB OFF.
+                                 * A value saved from the old buggy default (0xD8) would
+                                 * silence the card, so recover it to 0dB (call/0025). */
+                                if ((reg == CTRL_REG_MASTER_VOL_L ||
+                                     reg == CTRL_REG_MASTER_VOL_R) && val < 0xDC)
+                                {
+                                    val = 0xFC;
+                                }
+                                ControlRegWrite(reg, val);
                             }
                         }
                         else

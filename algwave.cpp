@@ -1468,6 +1468,12 @@ ProgramMmaStart
     ac->WriteMMA(MMA_REG_PLAYBACK, 0x00);
 
     /*
+     * Set the MMA digital-audio output volume to full (reg 0Ah). The power-on default
+     * is undocumented and left the sampling path silent (call/0025).
+     */
+    ac->WriteMMA(MMA_REG_VOLUME, 0xFF);
+
+    /*
      * Program register 0Ch (format, FIFO threshold, DMA/PIO mode).
      */
     BYTE fmtReg = (BYTE)(
@@ -1591,6 +1597,13 @@ ProgramMmaStartStereo
     KeStallExecutionProcessor(1);
     ac->WriteMMA (MMA_REG_PLAYBACK, 0x00);
     ac->WriteMMA1(MMA_REG_PLAYBACK, 0x00);
+
+    /*
+     * Set both channels' MMA digital-audio output volume to full (reg 0Ah); the
+     * power-on default is undocumented and left PCM silent (call/0025).
+     */
+    ac->WriteMMA (MMA_REG_VOLUME, 0xFF);
+    ac->WriteMMA1(MMA_REG_VOLUME, 0xFF);
 
     /*
      * Program each channel's play/rate register (reg 9), GO deferred. Channel 0 -> right
