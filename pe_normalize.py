@@ -1,5 +1,9 @@
-# Zero the non-deterministic PE fields so the driver build is byte-reproducible:
-# the COFF TimeDateStamp, the Debug Directory timestamp, and the PE checksum.
+# Normalize the non-deterministic PE fields so the driver build is byte-reproducible:
+# zero the COFF TimeDateStamp and the Debug Directory timestamp, then recompute the PE
+# checksum LAST over the now-deterministic bytes. The checksum is recomputed, not zeroed,
+# because link /release sets it so a driver carries a valid checksum, and zeroing it discarded
+# that (call/0024). Recomputing over already-normalized content keeps the build byte-identical
+# AND restores the /release checksum.
 import sys, struct
 p = sys.argv[1]; d = bytearray(open(p,'rb').read())
 pe = struct.unpack_from('<I', d, 0x3c)[0]
@@ -26,4 +30,16 @@ if dbg_rva and dbg_sz:
     if off:
         for k in range(0, dbg_sz, 28):                   # each IMAGE_DEBUG_DIRECTORY
             struct.pack_into('<I', d, off+k+4, 0)         # TimeDateStamp field
+# Recompute the PE checksum last, over the fully-normalized (deterministic) bytes. The CheckSum
+# field is already zeroed above, so summing the whole file treats it as zero, matching the
+# imagehlp CheckSumMappedFile algorithm the loader validates. Deterministic input -> identical
+# checksum every build, so byte-reproducibility is preserved and the /release checksum is valid.
+n = len(d); full = n - (n & 3); s = 0
+for dw in struct.unpack('<%dI' % (full // 4), bytes(d[:full])):
+    s += dw; s = (s & 0xffffffff) + (s >> 32)
+if n & 3:
+    s += struct.unpack('<I', bytes(d[full:]) + b'\x00' * (4 - (n & 3)))[0]
+    s = (s & 0xffffffff) + (s >> 32)
+s = (s & 0xffff) + (s >> 16); s = s + (s >> 16); s &= 0xffff
+struct.pack_into('<I', d, ckoff, (s + n) & 0xffffffff)
 open(p,'wb').write(d)
