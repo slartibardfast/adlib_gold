@@ -16,7 +16,7 @@ Signature="$CHICAGO$"
 Class=MEDIA
 ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
 provider=%MfgName%
-DriverVer=08/02/1999,1.00.0000.7
+DriverVer=08/02/1999,1.00.0000.8
 
 [SourceDisksNames.x86]
 222=%DiskDescription%,,,
@@ -112,8 +112,9 @@ adlibgold.sys
 ;; fixed values, so the documented idiom (Win95 MIDI.INF, which installs an
 ;; OPL FM at base 388h) is a HARDWIRED LogConfig for the immovable range and
 ;; a NORMAL FactDef alongside. See call/0022 and the host grounding doc
-;; non-pnp-inf-install-grounding.md. The alpha.6 FORCECONFIG FactDef form
-;; ships as a second INF for an A/B test on hardware.
+;; non-pnp-inf-install-grounding.md. This single INF serves both Windows 9x
+;; (its undecorated section) and Windows 2000 (its .NT section); see call/0023
+;; and win2000-install-compatibility.md.
 ;;
 ;; The GoldLib under test uses I/O 388h, IRQ 7, DMA 1. The card decodes 16
 ;; ports from 388h (base+0 through base+0Eh): OPL3 and Control Chip at
