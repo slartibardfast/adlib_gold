@@ -16,7 +16,7 @@ Signature="$CHICAGO$"
 Class=MEDIA
 ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
 provider=%MfgName%
-DriverVer=08/02/1999,1.00.0000.5
+DriverVer=08/02/1999,1.00.0000.6
 
 [SourceDisksNames.x86]
 222=%DiskDescription%,,,
@@ -42,9 +42,7 @@ adlibgold.sys=222
 %GoldLib.DeviceDesc%=AdLibGold_Device, ALGLIB
 
 [AdLibGold_Device]
-Include=ks.inf, wdmaudio.inf
-Needs=KS.Registration, WDMAUDIO.Registration
-LogConfig=ALG.LC1,ALG.LC2
+AlsoInstall=KS.Registration(ks.inf),WDMAUDIO.Registration(wdmaudio.inf)
 CopyFiles=AdLibGold.CopyList
 AddReg=AdLibGold.AddReg
 
@@ -106,58 +104,42 @@ AdLibGold.CopyList = 10,system32\drivers ; %SystemRoot%\system32\drivers
 adlibgold.sys
 
 ;;
-;; Factory defaults for the Ad Lib Gold card.
-;; I/O base 388h, 8 ports (388h-38Fh). IRQ 7. DMA 1 (playback).
+;; Forced boot configuration for the non-PnP Ad Lib Gold card.
 ;;
-[AdLibGold_Device.FactDef]
-ConfigPriority=NORMAL
-IOConfig=388-38F
-IRQConfig=7
-DMAConfig=1
-
+;; The card has no Plug-and-Play enumerator, so it installs as a manually
+;; created root devnode. Windows 98SE's config manager (CONFIGMG) needs a
+;; FORCED boot config to instantiate that devnode; a devnode carrying only
+;; arbitratable NORMAL-priority LogConfigs and no forced config faults
+;; CONFIGMG the instant the device is selected, before any file is copied
+;; (call/0021). The card is jumpered to fixed resources, so a single forced
+;; config is exactly right: I/O 388h (8 ports, 388h-38Fh), IRQ 7, DMA 1.
 ;;
-;; Logical configurations.
-;;
-;; Audio subsystem I/O: 8 ports (base+0 through base+7)
+;; Audio subsystem I/O (8 ports, base+0 through base+7):
 ;;   base+0/1: OPL3 bank 0 (address/data)
 ;;   base+2/3: OPL3 bank 1 / Control Chip (bank-switched)
 ;;   base+4/5: MMA channel 0 (address/data)
 ;;   base+6/7: MMA channel 1 (address/data)
 ;;
-;; IRQ: Gold 1000 supports 3, 4, 5, 7
-;;      Gold 2000 supports 3, 4, 5, 7, 10, 11, 12, 15
+;; The GoldLib under test uses 388h / IRQ 7 / DMA 1. The Gold 1000/2000 IRQ
+;; and DMA alternatives return as arbitrated LogConfigs once the base
+;; install is confirmed on hardware.
 ;;
-;; DMA: Gold 1000 supports channels 1, 2, 3
-;;      Gold 2000 supports channels 0, 1, 2, 3
-;;
-;; Single DMA channel for playback.
-;;
-
-;; Gold 2000/2000MC - full IRQ and DMA range
-[ALG.LC1]
-ConfigPriority=NORMAL
+[AdLibGold_Device.FactDef]
+ConfigPriority=FORCECONFIG
 IOConfig=388-38F
-IRQConfig=3 , 4 , 5 , 7 , 10 , 11 , 12 , 15
-DMAConfig=0 , 1 , 2 , 3
-
-;; Gold 1000 - restricted IRQ and DMA range
-[ALG.LC2]
-ConfigPriority=NORMAL
-IOConfig=388-38F
-IRQConfig=3 , 4 , 5 , 7
-DMAConfig=1 , 2 , 3
+IRQConfig=7
+DMAConfig=1
 
 ;;**************** NT Install ****************
 
 [AdLibGold_Device.NT]
 Include=ks.inf, wdmaudio.inf
 Needs=KS.Registration, WDMAUDIO.Registration
-LogConfig=ALG.LC1,ALG.LC2
 CopyFiles=AdLibGold.CopyList
 AddReg=AdLibGold.AddReg
 
 [AdLibGold_Device.NT.FactDef]
-ConfigPriority=NORMAL
+ConfigPriority=FORCECONFIG
 IOConfig=388-38F
 IRQConfig=7
 DMAConfig=1
