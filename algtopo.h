@@ -24,6 +24,8 @@ enum
     PIN_AUX_SOURCE,             /* External aux line input             */
     PIN_MIC_SOURCE,             /* Microphone input                    */
     PIN_LINEOUT_DEST,           /* Line output / speaker               */
+    PIN_LINEIN_SOURCE,          /* Analog capture source (ADC input)   */
+    PIN_WAVEIN_DEST,            /* To Wave capture miniport (bridge)   */
 
     PIN_TOP_ELEMENT_COUNT       /* Must be last                        */
 };
@@ -44,6 +46,7 @@ enum
     NODE_BASS,                  /* Bass tone (reg 06h)                */
     NODE_TREBLE,                /* Treble tone (reg 07h)              */
     NODE_MUTE,                  /* Master mute (reg 08h, D5)          */
+    NODE_RECORD_GAIN,           /* ADC record gain L/R (regs 02h/03h) */
 
     NODE_BASE_ELEMENT_COUNT,    /* Count of always-present mixer nodes */
 

@@ -61,6 +61,8 @@ PKSDATARANGE PinDataRangePointersBridge[] =
  * Pin 2: Aux line input     (external)
  * Pin 3: Mic input          (external)
  * Pin 4: Line output        (to speakers)
+ * Pin 5: Line capture input (external, the analog source the ADC records)
+ * Pin 6: Wave capture output (to the wave capture miniport)
  */
 static
 PCPIN_DESCRIPTOR
@@ -143,6 +145,38 @@ MiniportPins[] =
             KSPIN_COMMUNICATION_NONE,
             &KSNODETYPE_SPEAKER,
             &KSAUDFNAME_VOLUME_CONTROL,
+            0
+        }
+    },
+    /* PIN_LINEIN_SOURCE — the analog source the ADC records (bridge in) */
+    {
+        0,0,0,
+        NULL,
+        {
+            0, NULL,
+            0, NULL,
+            SIZEOF_ARRAY(PinDataRangePointersBridge),
+            PinDataRangePointersBridge,
+            KSPIN_DATAFLOW_IN,
+            KSPIN_COMMUNICATION_NONE,
+            &KSNODETYPE_LINE_CONNECTOR,
+            NULL,
+            0
+        }
+    },
+    /* PIN_WAVEIN_DEST — bridge to the Wave capture miniport (dataflow out) */
+    {
+        0,0,0,
+        NULL,
+        {
+            0, NULL,
+            0, NULL,
+            SIZEOF_ARRAY(PinDataRangePointersBridge),
+            PinDataRangePointersBridge,
+            KSPIN_DATAFLOW_OUT,
+            KSPIN_COMMUNICATION_NONE,
+            &KSNODETYPE_LEGACY_AUDIO_CONNECTOR,
+            NULL,
             0
         }
     }
@@ -364,6 +398,14 @@ MiniportNodes[] =
         &KSNODETYPE_MUTE,
         NULL
     },
+    /* NODE_RECORD_GAIN -- ADC record level (regs 02h/03h), on the capture path. Reuses the
+     * volume automation table; PropertyHandler_Level reads NodeRegMap[NODE_RECORD_GAIN]. */
+    {
+        0,
+        &AutomationVolume,
+        &KSNODETYPE_VOLUME,
+        NULL
+    },
     /* NODE_SP2_ENABLE */
     {
         0,
@@ -409,7 +451,11 @@ MiniportConnections[] =
     { NODE_MASTER_VOLUME, 0,  NODE_BASS,     1 },
     { NODE_BASS,          0,  NODE_TREBLE,   1 },
     { NODE_TREBLE,        0,  NODE_MUTE,     1 },
-    { NODE_MUTE,          0,  PCFILTER_NODE, PIN_LINEOUT_DEST }
+    { NODE_MUTE,          0,  PCFILTER_NODE, PIN_LINEOUT_DEST },
+
+    /* Capture path: analog line in -> ADC record gain -> wave capture bridge */
+    { PCFILTER_NODE,  PIN_LINEIN_SOURCE,  NODE_RECORD_GAIN,  1 },
+    { NODE_RECORD_GAIN,  0,  PCFILTER_NODE, PIN_WAVEIN_DEST }
 };
 
 
@@ -441,7 +487,11 @@ MiniportConnectionsSp2[] =
     { NODE_TREBLE,        0,  NODE_SP2_ENABLE, 1 },
     { NODE_SP2_ENABLE,    0,  NODE_SP2_MODE,   1 },
     { NODE_SP2_MODE,      0,  NODE_MUTE,       1 },
-    { NODE_MUTE,          0,  PCFILTER_NODE,   PIN_LINEOUT_DEST }
+    { NODE_MUTE,          0,  PCFILTER_NODE,   PIN_LINEOUT_DEST },
+
+    /* Capture path: analog line in -> ADC record gain -> wave capture bridge */
+    { PCFILTER_NODE,  PIN_LINEIN_SOURCE,  NODE_RECORD_GAIN,  1 },
+    { NODE_RECORD_GAIN,  0,  PCFILTER_NODE, PIN_WAVEIN_DEST }
 };
 
 
@@ -730,6 +780,14 @@ NODE_REG_MAP NodeRegMap[] =
     /* NODE_AUX_VOLUME  */ { CTRL_REG_AUX_VOL_L,    CTRL_REG_AUX_VOL_R,    0x80, 0xFF },
     /* NODE_MIC_VOLUME  */ { CTRL_REG_MIC_VOL,       0,                     0x80, 0xFF },
     /* NODE_MASTER_VOLUME*/ { CTRL_REG_MASTER_VOL_L, CTRL_REG_MASTER_VOL_R, 0xC0, 0xFF },
+    /* NODE_BASS   -- not reached via PropertyHandler_Level (uses PropertyHandler_Tone) */
+                          { 0,                     0,                     0,    0    },
+    /* NODE_TREBLE -- not reached via PropertyHandler_Level (uses PropertyHandler_Tone) */
+                          { 0,                     0,                     0,    0    },
+    /* NODE_MUTE   -- not reached via PropertyHandler_Level (uses PropertyHandler_OnOff) */
+                          { 0,                     0,                     0,    0    },
+    /* NODE_RECORD_GAIN -- ADC sampling gain, full 0..255 range (regs 02h/03h) */
+    /* NODE_RECORD_GAIN */ { CTRL_REG_GAIN_L,       CTRL_REG_GAIN_R,       0x00, 0xFF },
 };
 
 

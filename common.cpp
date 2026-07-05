@@ -192,6 +192,8 @@ MIXERSETTING DefaultMixerSettings[] =
     { L"LeftAuxVol",     CTRL_REG_AUX_VOL_L,      0xC0 },
     { L"RightAuxVol",    CTRL_REG_AUX_VOL_R,      0xC0 },
     { L"MicVol",         CTRL_REG_MIC_VOL,         0x80 },  /* Silent */
+    { L"LeftRecordGain", CTRL_REG_GAIN_L,          0x80 },  /* ADC record level, mid */
+    { L"RightRecordGain",CTRL_REG_GAIN_R,          0x80 },
 };
 
 

@@ -547,6 +547,21 @@ StartDevice
     }
 
     //
+    // Register physical connection:
+    // Topology wave-in (pin 6) -> Wave capture bridge (pin 1), so the ADC record-gain
+    // node reaches the capture stream.
+    //
+    if (unknownTopology && unknownWave)
+    {
+        PcRegisterPhysicalConnection(
+            (PDEVICE_OBJECT)DeviceObject,
+            unknownTopology,
+            6,                  /* Topology pin 6 = PIN_WAVEIN_DEST      */
+            unknownWave,
+            1);                 /* Wave pin 1 = WAVE_PIN_CAPTURE_BRIDGE  */
+    }
+
+    //
     // Install MIDI UART miniport (YMZ263 MIDI subsystem).
     // Needs ports + IRQ (shared with wave).  No DMA required.
     //
