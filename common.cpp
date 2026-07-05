@@ -53,6 +53,7 @@ private:
     BYTE                    m_ControlRegs[CTRL_REG_MAX];
     BYTE                    m_CardModel;
     BYTE                    m_CardOptions;
+    BOOLEAN                 m_EepromPersist;    /* Registry-gated card-EEPROM save (call/0019) */
     PWAVEMINIPORTADLIBGOLD  m_pWaveMiniport;
     PMIDIMINIPORTADLIBGOLD  m_pMidiMiniport;
 
@@ -275,6 +276,9 @@ Init
      * Set initial power state.
      */
     m_PowerState = PowerDeviceD0;
+
+    /* Card-EEPROM save is off until the registry flag turns it on (call/0019). */
+    m_EepromPersist = FALSE;
 
     /*
      * Clear shadow cache.
@@ -1300,6 +1304,46 @@ RestoreMixerSettingsFromRegistry
                 }
             }
 
+            /* Read the registry-gated card-EEPROM save flag; absent or unreadable means
+             * off, so a fresh install never writes the EEPROM (call/0019). A local status
+             * keeps this off the restore's own success path. */
+            {
+                PVOID FlagInfo = ExAllocatePool(
+                    PagedPool,
+                    sizeof(KEY_VALUE_PARTIAL_INFORMATION) + sizeof(DWORD)
+                );
+
+                if (NULL != FlagInfo)
+                {
+                    UNICODE_STRING FlagName;
+                    ULONG          FlagLength;
+
+                    RtlInitUnicodeString(&FlagName, L"SaveToEEPROM");
+
+                    NTSTATUS flagStatus = SettingsKey->QueryValueKey(
+                        &FlagName,
+                        KeyValuePartialInformation,
+                        FlagInfo,
+                        sizeof(KEY_VALUE_PARTIAL_INFORMATION) + sizeof(DWORD),
+                        &FlagLength
+                    );
+
+                    if (NT_SUCCESS(flagStatus))
+                    {
+                        PKEY_VALUE_PARTIAL_INFORMATION FlagPartial =
+                            PKEY_VALUE_PARTIAL_INFORMATION(FlagInfo);
+
+                        if (FlagPartial->DataLength == sizeof(DWORD))
+                        {
+                            m_EepromPersist =
+                                (*(PDWORD(FlagPartial->Data)) != 0);
+                        }
+                    }
+
+                    ExFreePool(FlagInfo);
+                }
+            }
+
             SettingsKey->Release();
         }
 
@@ -1376,6 +1420,14 @@ SaveMixerSettingsToRegistry
                 {
                     break;
                 }
+            }
+
+            /* If the operator turned on the registry-gated flag (off by default, call/0019),
+             * also persist to the card's EEPROM. This is the only safe trigger: PASSIVE_LEVEL
+             * with the hardware mapped and powered, so the pageable 2.5ms save cannot fault. */
+            if (NT_SUCCESS(ntStatus) && m_EepromPersist)
+            {
+                SaveToEEPROM();
             }
 
             SettingsKey->Release();
