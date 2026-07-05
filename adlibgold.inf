@@ -34,7 +34,12 @@ adlibgold.sys=222
 ;; ALG1000 is a vendor-assigned device ID for manual installation.
 ;;
 [AdLibGold]
-%AdLibGold.DeviceDesc%=AdLibGold_Device, ALG1000
+;; Model matrix: pick the card you have. All share one install section; the driver
+;; auto-detects the exact model and the surround module at runtime. Resource ranges
+;; (both the Gold 1000 and Gold 2000 DMA/IRQ sets) are offered by the LogConfigs below.
+%Gold1000.DeviceDesc%=AdLibGold_Device, ALG1000
+%Gold2000.DeviceDesc%=AdLibGold_Device, ALG2000
+%GoldLib.DeviceDesc%=AdLibGold_Device, ALGLIB
 
 [AdLibGold_Device]
 Include=ks.inf, wdmaudio.inf
@@ -182,6 +187,9 @@ ServiceBinary  = %10%\system32\drivers\adlibgold.sys
 MfgName="Ad Lib Inc."
 DiskDescription="Ad Lib Gold WDM Audio Driver Disk"
 AdLibGold.DeviceDesc="Ad Lib Gold Sound Card"
+Gold1000.DeviceDesc="Ad Lib Gold 1000 Sound Card"
+Gold2000.DeviceDesc="Ad Lib Gold 2000 Sound Card"
+GoldLib.DeviceDesc="GoldLib (Ad Lib Gold 1000 clone)"
 
 AdLibGold.Wave.szPname="Ad Lib Gold Audio"
 AdLibGold.Topology.szPname="Ad Lib Gold Mixer"
