@@ -16,7 +16,7 @@ Signature="$CHICAGO$"
 Class=MEDIA
 ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
 provider=%MfgName%
-DriverVer=08/02/1999,1.00.0000.7
+DriverVer=08/02/1999,1.00.0000.6
 
 [SourceDisksNames.x86]
 222=%DiskDescription%,,,
@@ -45,7 +45,6 @@ adlibgold.sys=222
 AlsoInstall=KS.Registration(ks.inf),WDMAUDIO.Registration(wdmaudio.inf)
 CopyFiles=AdLibGold.CopyList
 AddReg=AdLibGold.AddReg
-LogConfig=ALG.LC0
 
 [AdLibGold_Device.Interfaces]
 AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Wave%,ALG.I.Wave
@@ -105,29 +104,21 @@ AdLibGold.CopyList = 10,system32\drivers ; %SystemRoot%\system32\drivers
 adlibgold.sys
 
 ;;
-;; Fixed-resource declaration for the non-PnP Ad Lib Gold card.
+;; Fixed-resource declaration for the non-PnP Ad Lib Gold card (A/B alternate).
 ;;
-;; The card has no Plug-and-Play enumerator, so it installs as a manually
-;; created root devnode and its resources come from the INF. The card uses
-;; fixed values, so the documented idiom (Win95 MIDI.INF, which installs an
-;; OPL FM at base 388h) is a HARDWIRED LogConfig for the immovable range and
-;; a NORMAL FactDef alongside. See call/0022 and the host grounding doc
-;; non-pnp-inf-install-grounding.md. The alpha.6 FORCECONFIG FactDef form
-;; ships as a second INF for an A/B test on hardware.
+;; This is the alpha.6 form: a single FORCECONFIG FactDef, no arbitratable
+;; LogConfig. It carries the corrected 388-397 range so it differs from the
+;; primary adlibgold.inf in exactly one variable: FORCECONFIG-in-FactDef vs
+;; HARDWIRED-in-LogConfig. Install this only if the primary INF still faults
+;; at select. See call/0022 and non-pnp-inf-install-grounding.md.
 ;;
 ;; The GoldLib under test uses I/O 388h, IRQ 7, DMA 1. The card decodes 16
 ;; ports from 388h (base+0 through base+0Eh): OPL3 and Control Chip at
 ;; base+0..3, MMA (YMZ263) digital audio and MIDI at base+0..0Eh. So the
 ;; claimed range is 388h-397h, not the 8 ports the earlier INF claimed.
 ;;
-[ALG.LC0]
-ConfigPriority=HARDWIRED
-IOConfig=388-397(ffff::)
-IRQConfig=7
-DMAConfig=1
-
 [AdLibGold_Device.FactDef]
-ConfigPriority=NORMAL
+ConfigPriority=FORCECONFIG
 IOConfig=388-397
 IRQConfig=7
 DMAConfig=1
@@ -139,10 +130,9 @@ Include=ks.inf, wdmaudio.inf
 Needs=KS.Registration, WDMAUDIO.Registration
 CopyFiles=AdLibGold.CopyList
 AddReg=AdLibGold.AddReg
-LogConfig=ALG.LC0
 
 [AdLibGold_Device.NT.FactDef]
-ConfigPriority=NORMAL
+ConfigPriority=FORCECONFIG
 IOConfig=388-397
 IRQConfig=7
 DMAConfig=1
