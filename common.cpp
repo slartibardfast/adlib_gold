@@ -972,9 +972,9 @@ WriteMMALocked
         return;
 
     WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_MMA0_ADDR, Register);
-    KeStallExecutionProcessor(1);
+    KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_MMA, 0));
     WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_MMA0_DATA, Value);
-    KeStallExecutionProcessor(1);
+    KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_MMA, 0));
 }
 
 
@@ -1044,7 +1044,7 @@ ReadMMALocked
         return 0;
 
     WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_MMA0_ADDR, Register);
-    KeStallExecutionProcessor(1);
+    KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_MMA, 0));
     return READ_PORT_UCHAR(m_pPortBase + ALG_REG_MMA0_DATA);
 }
 
@@ -1096,9 +1096,9 @@ WriteMMA1
         return;
 
     WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_MMA1_ADDR, Register);
-    KeStallExecutionProcessor(1);
+    KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_MMA, 0));
     WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_MMA1_DATA, Value);
-    KeStallExecutionProcessor(1);
+    KeStallExecutionProcessor(ChipWriteDelayUs(CHIP_MMA, 0));
 }
 
 

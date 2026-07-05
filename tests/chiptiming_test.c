@@ -22,7 +22,9 @@ int main(void)
     CHECK(ChipWriteDelayUs(CHIP_CONTROL, 0x17) == 5,    "reg above 0x16 = 5us");
     /* Other chips. */
     CHECK(ChipWriteDelayUs(CHIP_OPL3, 0) == 23,         "OPL3 write = 23us");
-    CHECK(ChipWriteDelayUs(CHIP_MMA,  0) >= 1,          "MMA write settles");
+    /* The SDK requires 470ns between MMA register writes; 1us is the KeStallExecutionProcessor
+     * granularity and 1us >= 470ns, so the speed-sensitive YMZ263 is never outrun on a fast CPU. */
+    CHECK(ChipWriteDelayUs(CHIP_MMA,  0) >= 1,          "MMA write spacing >= the 470ns minimum");
     CHECK(ChipWriteDelayUs(CHIP_SP2,  0) >= 1,          "SP2 byte settles");
     /* Every delay is a positive, CPU-speed-independent microsecond count. */
     CHECK(ChipWriteDelayUs(CHIP_CONTROL, 0x04) > ChipWriteDelayUs(CHIP_CONTROL, 0x09),

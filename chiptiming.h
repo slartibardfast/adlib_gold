@@ -21,7 +21,10 @@
 /*
  * Microseconds to stall after writing register `reg` of `chip`, per the SDK table:
  *   Control reg 0x00 (EEPROM) 2500us; regs 0x04-0x08 450us; regs 0x09-0x16 5us.
- *   OPL3 23us. MMA and the SP2 bit-serial byte a short settle.
+ *   OPL3 23us. MMA 470ns between register writes (SDK: "Respect the 470ns delay between
+ *   writes to the MMA registers"), which rounds up to the 1us KeStallExecutionProcessor
+ *   granularity -- this is what keeps the speed-sensitive YMZ263 correct on a fast CPU,
+ *   since 1us >= 470ns holds regardless of core clock. The SP2 bit-serial byte a short settle.
  */
 static unsigned long
 ChipWriteDelayUs(int chip, unsigned reg)
@@ -34,7 +37,7 @@ ChipWriteDelayUs(int chip, unsigned reg)
         if (reg >= 0x09 && reg <= 0x16)   return 5;      /* volumes, DMA/IRQ config */
         return 5;
     case CHIP_OPL3:                       return 23;      /* OPL3 register write */
-    case CHIP_MMA:                        return 1;
+    case CHIP_MMA:                        return 1;       /* >= the 470ns MMA write spacing */
     case CHIP_SP2:                        return 1;
     default:                              return 1;
     }
