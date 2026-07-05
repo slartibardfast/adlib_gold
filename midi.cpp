@@ -826,6 +826,10 @@ SynchronizedMidiWrite
 
     *(context->BytesWritten) = count;
 
+    _DbgPrintF(DEBUGLVL_VERBOSE,
+        ("MidiWrite: wrote %d of %d requested (fifo %s)",
+         count, context->Length, fifoEmpty ? "empty" : "busy"));
+
     return ntStatus;
 }
 
