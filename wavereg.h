@@ -4,20 +4,20 @@
  * programmed; call/0016). Kept free of DDK headers so a userspace test pins the
  * mapping the driver's ProgramMmaStart uses.
  *
- * Grounded in the manual (ch07):
+ * Grounded in the manual (ch07) and the validated stereo trace
+ * (plan/0008/stereo-mma-reference.md):
  *   Reg 09h (play/record), D5 = L, D6 = R: "Setting L or R enables output from the
  *     left or right channel respectively." A mono stream drives its one FIFO to both
- *     outputs; a stereo stream drives channel 0 to the left output and channel 1 to
- *     the right.
+ *     outputs; a stereo stream drives channel 0 to the right output and channel 1 to
+ *     the left, matching the reference's index-5 values (PRC_0 sets R, PRC_1 sets L).
  *   Reg 0Ch (format), D7 = ILV: stereo is interleaving, "Channel 0 initiates the
  *     transfer ... ENB must be 1 for both channels", and ENB is the DMA-mode bit. So
- *     the interleave bit is set only for stereo, and it takes effect only on the DMA
+ *     the interleave bit is set only on channel 0, and it takes effect only on the DMA
  *     path, never on the 16-bit PIO fill.
  *
- * Digital-audio output is mono today (call/0016): the driver rejects a stereo format
- * before a stream reaches ProgramMmaStart, so it only ever uses the mono result here.
- * The stereo mapping is defined and tested as the target for the deferred dual-channel
- * path, which also needs channel-1 programming the driver does not have yet.
+ * Stereo is implemented over the DMA interleave path (call/0017, superseding call/0016).
+ * The channel-to-output mapping is attested on hardware: the trace routes channel 0 to
+ * the right output, opposite the manual's default channel naming.
  *****************************************************************************/
 #ifndef _WAVEREG_H_
 #define _WAVEREG_H_
@@ -30,22 +30,24 @@
 #define WAVE_FMT_ILV    0x80    /* D7 ILV: interleave channel 0 and channel 1 */
 
 /*
- * The reg-09h output-enable bits for a stream of `channels` channels. Mono routes its
- * one FIFO to both outputs (L and R); stereo drives channel 0 to the left output alone
- * (channel 1 carries the right, programmed separately on the deferred path, call/0016).
+ * The reg-09h output-enable bits for MMA channel `mma_channel` (0 or 1) of a stream of
+ * `channels` channels. Mono routes its one FIFO (channel 0) to both outputs (L and R);
+ * stereo drives channel 0 to the right output and channel 1 to the left, per the
+ * validated reference (call/0017). The mapping is pinned by a test.
  */
 static unsigned char
-WaveMmaPlayChannelBits(int channels)
+WaveMmaPlayChannelBits(int channels, int mma_channel)
 {
-    return (unsigned char)((channels >= 2) ? WAVE_PB_LEFT
-                                           : (WAVE_PB_LEFT | WAVE_PB_RIGHT));
+    if (channels < 2)
+        return (unsigned char)(WAVE_PB_LEFT | WAVE_PB_RIGHT);   /* mono: both outputs */
+    return (unsigned char)((mma_channel == 0) ? WAVE_PB_RIGHT : WAVE_PB_LEFT);
 }
 
 /*
  * The reg-0Ch interleave bit for a stream of `channels` channels. Stereo interleaves
- * the two channels (ILV set); mono does not. Interleave takes effect only with the DMA
- * engine (ENB = 1), which is why the deferred stereo path (call/0016) is the 8-bit DMA
- * path, not the 16-bit PIO fill.
+ * the two channels (ILV set on channel 0); mono does not. Interleave takes effect only
+ * with the DMA engine (ENB = 1), which is why the stereo path is DMA, not the 16-bit
+ * PIO fill (call/0017).
  */
 static unsigned char
 WaveMmaFormatInterleave(int channels)

@@ -299,8 +299,9 @@ class CMiniportWaveCyclicStreamAdLibGold
 private:
     CMiniportWaveCyclicAdLibGold *   m_Miniport;    /* Parent miniport       */
     BOOLEAN     m_Capture;              /* TRUE for record, FALSE for play   */
-    BOOLEAN     m_16Bit;                /* TRUE for 16-bit (PIO+dither)      */
-    BOOLEAN     m_Stereo;               /* TRUE for stereo                   */
+    BOOLEAN     m_16Bit;                /* TRUE for 16-bit samples; mono uses
+                                         * PIO+dither, stereo uses DMA        */
+    BOOLEAN     m_Stereo;               /* TRUE for stereo (dual-channel DMA) */
     KSSTATE     m_State;                /* Current stream state              */
 
     /* PIO mode state (16-bit only) */
@@ -324,6 +325,7 @@ private:
     void DrainFifo(void);               /* 16-bit capture: read + zero-pad (ISR only) */
 
     void ProgramMmaStart(void);         /* Write regs 0Ch + 09h to start    */
+    void ProgramMmaStartStereo(void);   /* Dual-channel DMA interleave start */
     void ProgramMmaStop(void);          /* Reset reg 09h, mask FIFO IRQ     */
 
 public:

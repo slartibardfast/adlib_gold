@@ -34,11 +34,13 @@ enum ChannelCount {
 entity Format {
     bits: BitDepth
     channels: ChannelCount
+    pcm_subtype: Boolean
     requested_rate: Integer
     resampled: Boolean
     resample_bounded: Boolean
     dithered: Boolean
     routes_both_outputs: Boolean
+    interleaved: Boolean
 }
 
 -- One render stream across its KS transport lifecycle. ACQUIRE folds to PAUSE.
@@ -89,27 +91,34 @@ surface WaveRender {
         PositionRead(stream)
 }
 
--- A format is accepted only as audio PCM, mono, 8 or 16 bit; the port class refuses
--- anything else before a stream is configured. Stereo is deferred to a dual-channel
--- interleaved path (call/0016): the manual's interleave is a DMA feature the 16-bit PIO
--- fill cannot use, and the driver has no channel-1 access, so the pin advertises mono and
--- Windows downmixes a stereo source.
+-- A format is accepted as audio PCM, 8 or 16 bit; the port class refuses a non-PCM
+-- subtype before a stream is configured. Both mono and stereo are accepted: stereo runs
+-- the dual-channel interleaved DMA path (call/0017, superseding call/0016).
 rule AcceptPcmFormat {
     when: format: Format.created
-    requires: (format.bits = pcm8 or format.bits = pcm16)
-        and format.channels = mono
+    requires: format.pcm_subtype
     ensures: stream.format = format
 }
 
 -- A mono stream drives its one FIFO to both outputs (reg 09h L and R set) with interleave
 -- off (reg 0Ch ILV clear), the routing the pure wavereg.h helper derives from the channel
--- count. Stereo would drive channel 0 to the left output and set interleave, but that path
--- is deferred (call/0016); the mapping is the one tested source of truth, so a regression
--- that ignores the channel count is caught.
+-- count. The mapping is the one tested source of truth, so a regression that ignores the
+-- channel count is caught.
 rule MonoRoutesBothOutputs {
     when: format: Format.created
     requires: format.channels = mono
     ensures: format.routes_both_outputs = true
+}
+
+-- A stereo stream splits its channels across the outputs and interleaves them: the
+-- wavereg.h helper maps channel 0 to the right output and channel 1 to the left, and sets
+-- the reg-0Ch interleave bit on channel 0, matching the validated reference (call/0017).
+-- The mapping is the one tested source of truth, so a change that swaps or drops a channel
+-- is caught.
+rule StereoInterleavesChannels {
+    when: format: Format.created
+    requires: format.channels = stereo
+    ensures: format.interleaved = true
 }
 
 -- A source rate that is not one of the four hardware rates is resampled to the nearest

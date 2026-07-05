@@ -129,6 +129,11 @@ public:
     STDMETHODIMP_(BYTE) ReadMMAStatus
     (   void
     );
+    STDMETHODIMP_(void) WriteMMA1
+    (
+        IN      BYTE    Register,
+        IN      BYTE    Value
+    );
     STDMETHODIMP_(void) SetWaveMiniport(IN PWAVEMINIPORTADLIBGOLD Miniport);
     STDMETHODIMP_(void) SetMidiMiniport(IN PMIDIMINIPORTADLIBGOLD Miniport);
     STDMETHODIMP_(NTSTATUS) RestoreMixerSettingsFromRegistry
@@ -1058,6 +1063,36 @@ ReadMMAStatus
     ASSERT(m_pPortBase);
 
     return READ_PORT_UCHAR(m_pPortBase + ALG_REG_MMA0_ADDR);
+}
+
+
+/*****************************************************************************
+ * CAdapterCommon::WriteMMA1()
+ *****************************************************************************
+ * Write a YMZ263 MMA Channel 1 register (base+6 index / base+7 data). Channel 1 is a
+ * distinct index/data latch from Channel 0 (base+4/base+5), and the ISR touches only
+ * Channel 0, so this write cannot be interrupted mid-latch by the ISR and needs no
+ * interrupt-sync serialization (see common.h). Non-paged: reached from the wave stream's
+ * stereo start/stop, which can run at DISPATCH_LEVEL. Used only on the stereo path
+ * (call/0017).
+ */
+STDMETHODIMP_(void)
+CAdapterCommon::
+WriteMMA1
+(
+    IN      BYTE    Register,
+    IN      BYTE    Value
+)
+{
+    ASSERT(m_pPortBase);
+
+    if (m_PowerState > PowerDeviceD1)
+        return;
+
+    WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_MMA1_ADDR, Register);
+    KeStallExecutionProcessor(1);
+    WRITE_PORT_UCHAR(m_pPortBase + ALG_REG_MMA1_DATA, Value);
+    KeStallExecutionProcessor(1);
 }
 
 

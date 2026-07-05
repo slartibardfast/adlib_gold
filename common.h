@@ -351,6 +351,17 @@ DECLARE_INTERFACE_(IAdapterCommon, IUnknown)
     (   THIS
     )   PURE;
 
+    /* Write to a YMZ263 MMA Channel 1 register via base+6 (index) / base+7 (data).
+     * Channel 1 is a separate index/data latch that the ISR never touches (the ISR uses
+     * only Channel 0 at base+4/base+5), and the sole caller is the single wave stream's
+     * stereo start/stop, so this needs no interrupt-sync serialization. Used only on the
+     * stereo path (call/0017). */
+    STDMETHOD_(void,WriteMMA1)
+    (   THIS_
+        IN      BYTE    Register,
+        IN      BYTE    Value
+    )   PURE;
+
     /* Miniport registration for ISR dispatch */
     STDMETHOD_(void,SetWaveMiniport)
     (   THIS_

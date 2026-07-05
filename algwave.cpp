@@ -49,7 +49,7 @@ KSDATARANGE_AUDIO PinDataRangesStream[] =
             STATICGUIDOF(KSDATAFORMAT_SUBTYPE_PCM),
             STATICGUIDOF(KSDATAFORMAT_SPECIFIER_WAVEFORMATEX)
         },
-        1,          /* MaximumChannels (mono only; stereo deferred, call/0016) */
+        2,          /* MaximumChannels (mono, plus stereo over DMA interleave; call/0017) */
         8,          /* MinimumBitsPerSample */
         16,         /* MaximumBitsPerSample */
         7350,       /* MinimumSampleFrequency */
@@ -630,10 +630,9 @@ ValidateFormat
         return STATUS_INVALID_PARAMETER;
     }
 
-    /* Channels: mono only. Stereo needs the dual-channel interleaved path, which is
-     * deferred until it can be programmed and verified on hardware (call/0016); the
-     * pin advertises MaximumChannels = 1, so Windows downmixes a stereo source. */
-    if (wfx->nChannels != 1)
+    /* Channels: mono or stereo. Stereo runs the dual-channel interleaved DMA path
+     * (call/0017); the pin advertises MaximumChannels = 2. */
+    if (wfx->nChannels != 1 && wfx->nChannels != 2)
     {
         return STATUS_INVALID_PARAMETER;
     }
@@ -953,9 +952,10 @@ NewStream
 
     /*
      * Reject full duplex until independent per-direction channels exist (plan/0008).
-     * The driver wires only MMA channel 0 — one DMA channel, one buffer, one FIFO — so
-     * a render and a capture stream would silently share them. Allow one direction at a
-     * time until channel 1 is wired for the second direction.
+     * The driver has one DMA channel and one buffer, and a stereo stream already uses both
+     * MMA channels for its two audio channels (call/0017), not for two directions, so a
+     * render and a capture stream would silently share the transport. Allow one direction
+     * at a time.
      */
     if (NT_SUCCESS(ntStatus))
     {
@@ -1083,9 +1083,11 @@ ServiceWaveISR
 
     if (stream &&
         stream->m_State == KSSTATE_RUN &&
-        stream->m_16Bit &&
+        stream->m_16Bit && !stream->m_Stereo &&
         MmaStatusChannel0Ready(MmaStatus))
     {
+        /* Only 16-bit mono runs the software PIO FIFO fill; 8-bit mono and stereo both
+         * use DMA, where the ISR just advances the buffer position via Notify (call/0017). */
         if (stream->m_Capture)
         {
             stream->DrainFifo();
@@ -1389,10 +1391,15 @@ SetState
                  * Stop playback/recording.  Clear GO bit in reg 09h.
                  */
                 m_Miniport->m_AdapterCommon->WriteMMA(MMA_REG_PLAYBACK, 0x00);
-
-                if (!m_16Bit)
+                if (m_Stereo)
                 {
-                    /* 8-bit DMA mode: stop the DMA channel */
+                    /* Stereo drives channel 1 too (call/0017): clear its GO as well. */
+                    m_Miniport->m_AdapterCommon->WriteMMA1(MMA_REG_PLAYBACK, 0x00);
+                }
+
+                if (!m_16Bit || m_Stereo)
+                {
+                    /* DMA mode (8-bit mono or any stereo): stop the DMA channel */
                     m_Miniport->m_DmaChannel->Stop();
                 }
 
@@ -1444,6 +1451,16 @@ ProgramMmaStart
     PADAPTERCOMMON ac = m_Miniport->m_AdapterCommon;
 
     /*
+     * Stereo runs a separate dual-channel interleaved DMA path (call/0017); everything
+     * below this point is the mono path (m_Stereo is FALSE from here on).
+     */
+    if (m_Stereo)
+    {
+        ProgramMmaStartStereo();
+        return;
+    }
+
+    /*
      * Reset the MMA playback/record engine.
      */
     ac->WriteMMA(MMA_REG_PLAYBACK, MMA_PB_RST);
@@ -1456,8 +1473,8 @@ ProgramMmaStart
     BYTE fmtReg = (BYTE)(
         (MMA_FIFO_THR_DEFAULT << MMA_FMT_FIFO_SHIFT));
 
-    /* Interleave bit from the channel count (mono: off; call/0016). */
-    fmtReg |= WaveMmaFormatInterleave(m_Stereo ? 2 : 1);
+    /* Mono path: interleave is always off (stereo branched out above; call/0017). */
+    fmtReg |= WaveMmaFormatInterleave(1);
 
     if (m_16Bit)
     {
@@ -1510,9 +1527,9 @@ ProgramMmaStart
      */
     BYTE pbReg = MMA_PB_PCM | MMA_PB_GO;   /* PCM mode, start */
 
-    /* Output-channel enable from the channel count: mono drives both outputs
-     * (call/0016). Derived in the pure wavereg.h helper so a test pins the mapping. */
-    pbReg |= WaveMmaPlayChannelBits(m_Stereo ? 2 : 1);
+    /* Mono path: channel 0 drives both outputs (stereo branched out above; call/0017).
+     * Derived in the pure wavereg.h helper so a test pins the mapping. */
+    pbReg |= WaveMmaPlayChannelBits(1, 0);
 
     /* Frequency select */
     BYTE freqBits = CMiniportWaveCyclicAdLibGold::SampleRateToFreqBits(
@@ -1532,6 +1549,92 @@ ProgramMmaStart
          (ULONG)fmtReg, (ULONG)pbReg,
          m_Miniport->m_SamplingFrequency,
          m_16Bit ? "16bit-PIO" : "8bit-DMA",
+         m_Capture ? "capture" : "render"));
+}
+
+
+/*****************************************************************************
+ * CMiniportWaveCyclicStreamAdLibGold::ProgramMmaStartStereo()
+ *****************************************************************************
+ * Program both YMZ263 channels for stereo over the DMA interleave path and start it,
+ * following the validated reference sequence (plan/0008/stereo-mma-reference.md,
+ * call/0017): reset both FIFOs, program each channel's play (reg 9, GO deferred) and
+ * format (reg 12) registers, arm the single interleaved DMA stream the chip
+ * de-interleaves into the two FIFOs, then set GO on channel 0 (which governs GO for both
+ * in interleave). Channel 0 routes to the right output with interleave set; channel 1 to
+ * the left with its FIFO interrupt masked so channel 0 drives the shared interrupt.
+ *
+ * The reference's PIO pre-fill of channel 0 (4 bytes to reg 11) is deliberately omitted:
+ * PortCls owns the ISA DMA setup here, as it does on the working 8-bit mono DMA path,
+ * which likewise primes nothing. The channel-to-output mapping is attested on hardware
+ * (call/0017). Reached only via ProgramMmaStart when m_Stereo.
+ */
+void
+CMiniportWaveCyclicStreamAdLibGold::
+ProgramMmaStartStereo
+(   void
+)
+{
+    PADAPTERCOMMON ac = m_Miniport->m_AdapterCommon;
+
+    BYTE dataFmt   = (BYTE)(m_16Bit ? MMA_DATA_FMT_12B_2 : MMA_DATA_FMT_8BIT);
+    BYTE freqBits  = CMiniportWaveCyclicAdLibGold::SampleRateToFreqBits(
+                         m_Miniport->m_SamplingFrequency);
+    BYTE freqField = (BYTE)(freqBits << MMA_PB_FREQ_SHIFT);
+    BYTE prDir     = (BYTE)(m_Capture ? 0 : MMA_PB_PLAYBACK);
+
+    /*
+     * Reset both channels' FIFOs (write RST alone to reg 9), then clear.
+     */
+    ac->WriteMMA (MMA_REG_PLAYBACK, MMA_PB_RST);
+    ac->WriteMMA1(MMA_REG_PLAYBACK, MMA_PB_RST);
+    KeStallExecutionProcessor(1);
+    ac->WriteMMA (MMA_REG_PLAYBACK, 0x00);
+    ac->WriteMMA1(MMA_REG_PLAYBACK, 0x00);
+
+    /*
+     * Program each channel's play/rate register (reg 9), GO deferred. Channel 0 -> right
+     * output, channel 1 -> left. Values decode to the reference's PRC_0=0x46, PRC_1=0x26.
+     */
+    BYTE pb0 = (BYTE)(MMA_PB_PCM | prDir | freqField |
+                      WaveMmaPlayChannelBits(2, 0));   /* R output */
+    BYTE pb1 = (BYTE)(MMA_PB_PCM | prDir | freqField |
+                      WaveMmaPlayChannelBits(2, 1));   /* L output */
+    ac->WriteMMA (MMA_REG_PLAYBACK, pb0);
+    ac->WriteMMA1(MMA_REG_PLAYBACK, pb1);
+
+    /*
+     * Program each channel's format register (reg 12). Channel 0: interleave on, FIFO
+     * interrupt at 96 bytes, interrupt enabled, DMA. Channel 1: no interleave, FIFO
+     * interrupt at 112 bytes, interrupt masked, DMA. At 16-bit these are the validated
+     * index-5 values SFC_0=0xC5 and SFC_1=0x43, built from the driver's field constants.
+     */
+    BYTE fmt0 = (BYTE)((dataFmt << MMA_FMT_DATA_SHIFT) |
+                       (MMA_FIFO_THR_96 << MMA_FMT_FIFO_SHIFT) |
+                       WaveMmaFormatInterleave(2) |     /* ILV on channel 0 */
+                       MMA_FMT_ENB);                    /* DMA, interrupt enabled */
+    BYTE fmt1 = (BYTE)((dataFmt << MMA_FMT_DATA_SHIFT) |
+                       (MMA_FIFO_THR_112 << MMA_FMT_FIFO_SHIFT) |
+                       MMA_FMT_MSK | MMA_FMT_ENB);      /* interrupt masked, DMA */
+    ac->WriteMMA (MMA_REG_FORMAT, fmt0);
+    ac->WriteMMA1(MMA_REG_FORMAT, fmt1);
+
+    /*
+     * Arm the single interleaved DMA stream; the chip de-interleaves it into the two
+     * FIFOs. TRUE = write-to-device (playback), FALSE = read-from-device (capture).
+     */
+    m_Miniport->m_DmaChannel->Start(
+        m_Miniport->m_DmaChannel->BufferSize(), !m_Capture);
+
+    /*
+     * Set GO on channel 0 to start both channels.
+     */
+    ac->WriteMMA(MMA_REG_PLAYBACK, (BYTE)(pb0 | MMA_PB_GO));
+
+    _DbgPrintF(DEBUGLVL_VERBOSE,
+        ("ProgramMmaStartStereo: fmt0=0x%02X fmt1=0x%02X pb0=0x%02X pb1=0x%02X rate=%d %s",
+         (ULONG)fmt0, (ULONG)fmt1, (ULONG)pb0, (ULONG)pb1,
+         m_Miniport->m_SamplingFrequency,
          m_Capture ? "capture" : "render"));
 }
 
@@ -1557,8 +1660,17 @@ ProgramMmaStop
     /* Mask FIFO interrupt and disable DMA */
     ac->WriteMMA(MMA_REG_FORMAT, MMA_FMT_MSK);
 
-    /* Stop DMA channel if it was running (8-bit mode) */
-    if (!m_16Bit)
+    if (m_Stereo)
+    {
+        /* Stereo also drives channel 1 (call/0017): reset and mask it too. */
+        ac->WriteMMA1(MMA_REG_PLAYBACK, MMA_PB_RST);
+        KeStallExecutionProcessor(1);
+        ac->WriteMMA1(MMA_REG_PLAYBACK, 0x00);
+        ac->WriteMMA1(MMA_REG_FORMAT, MMA_FMT_MSK);
+    }
+
+    /* Stop DMA channel if it was running (8-bit mono or any stereo) */
+    if (!m_16Bit || m_Stereo)
     {
         m_Miniport->m_DmaChannel->Stop();
     }
@@ -1708,10 +1820,12 @@ GetPosition
 {
     ASSERT(Position);
 
-    if (m_16Bit)
+    if (m_16Bit && !m_Stereo)
     {
         /*
-         * PIO mode: software position tracks where we've read/written.
+         * 16-bit mono PIO mode: software position tracks where we've read/written.
+         * Stereo (and 8-bit) run over DMA, where the software position never advances,
+         * so they must use the DMA counter below (call/0017).
          */
         *Position = m_SoftwarePosition;
     }
