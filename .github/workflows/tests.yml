@@ -8,9 +8,9 @@ name: Tests
 on:
   push:
     branches: [main]
-    paths: ['tests/**', 'tools/**', 'wavedsp.h', 'wavesrc.h', 'wavereg.h', 'midififo.h', 'sp2.h', 'sp2modes.h', 'chiptiming.h', 'fmvoice.h', '.github/workflows/tests.yml']
+    paths: ['tests/**', 'tools/**', 'wavedsp.h', 'wavesrc.h', 'wavereg.h', 'midififo.h', 'sp2.h', 'sp2modes.h', 'chiptiming.h', 'fmvoice.h', 'fmbank4op.h', '.github/workflows/tests.yml']
   pull_request:
-    paths: ['tests/**', 'tools/**', 'wavedsp.h', 'wavesrc.h', 'wavereg.h', 'midififo.h', 'sp2.h', 'sp2modes.h', 'chiptiming.h', 'fmvoice.h', '.github/workflows/tests.yml']
+    paths: ['tests/**', 'tools/**', 'wavedsp.h', 'wavesrc.h', 'wavereg.h', 'midififo.h', 'sp2.h', 'sp2modes.h', 'chiptiming.h', 'fmvoice.h', 'fmbank4op.h', '.github/workflows/tests.yml']
 
 jobs:
   unit:
