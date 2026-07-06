@@ -11,11 +11,10 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['*.cpp', '*.h', 'sources', 'build.sh', 'pe_normalize.py', 'deps-bundle.lock']
+    paths: ['*.cpp', '*.h', 'sources', 'build.sh', 'pe_normalize.py', 'deps-bundle.lock', 'adlibgold.sys.sha256']
 
 env:
   BUNDLE_SHA: f60af3fd65b53b67176499d9959adc1235cb1a1d3024c0adb6b7bd3c2fadb902
-  ARTIFACT_SHA: 3f70ba6f967092d4ed67fbb9ef156ca1eeadb1963d7f1c359a88fb0136ad8def
 
 jobs:
   build:
@@ -38,4 +37,4 @@ jobs:
       - name: Build offline and prove the artifact reproduces
         run: |
           BUNDLE="$PWD/ddk/adlibgold-ddk-vc6-bundle.tar.gz" ./build.sh
-          echo "$ARTIFACT_SHA  adlibgold.sys" | sha256sum -c -
+          sha256sum -c adlibgold.sys.sha256
