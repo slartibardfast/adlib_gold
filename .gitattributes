@@ -1,2 +1,6 @@
 # INF files must ship CRLF for legacy Windows setup (setupx) to parse them.
 *.inf text eol=crlf
+
+# Checksum manifests must stay LF, or `sha256sum -c` on Windows git-bash reads the
+# filename with a trailing CR and cannot open it.
+*.sha256 text eol=lf
