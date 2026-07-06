@@ -5,9 +5,13 @@
 #   BUNDLE=<path-or-url-to-bundle.tar.gz> ./build.sh
 set -eu
 HERE=$(cd "$(dirname "$0")" && pwd)
-PFX="${WINEPREFIX:-$HERE/.winebuild}"; export WINEPREFIX="$PFX" WINEDEBUG=-all
+# Keep the Wine prefix OUT of the worktree. Wine fills a prefix with shell-folder
+# symlinks (My Documents -> $HOME, My Videos -> My Documents, ...) that escape the tree
+# and form cycles; an in-worktree prefix traps any recursive worktree walk in that cycle.
+PFX="${WINEPREFIX:-${XDG_CACHE_HOME:-$HOME/.cache}/adlibgold-winebuild}"; export WINEPREFIX="$PFX" WINEDEBUG=-all
 BUNDLE="${BUNDLE:?set BUNDLE to the deps-bundle tar.gz}"
 DRVC="$PFX/drive_c"
+mkdir -p "$PFX"   # wineboot creates the prefix leaf but not a missing parent (~/.cache)
 wineboot --init >/dev/null 2>&1 || true
 mkdir -p "$DRVC/temp" "$DRVC/drv"
 # stage the pinned toolchain (offline) + the driver sources
