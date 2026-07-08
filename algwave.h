@@ -23,10 +23,17 @@
  * register is read directly through ReadMMAStatus (base+4), not selected by
  * index, and decoded via mmastatus.h.
  */
+#define MMA_REG_TIMER_CTRL  0x08    /* Write: SBY|T2M|T1M|T0M|STB|ST2|ST1|ST0 */
 #define MMA_REG_PLAYBACK    0x09    /* Write: playback/record control        */
 #define MMA_REG_VOLUME      0x0A    /* Write: output volume (0x00-0xFF)      */
 #define MMA_REG_PCM_DATA    0x0B    /* R/W: FIFO data port                   */
 #define MMA_REG_FORMAT      0x0C    /* Write: format/DMA/FIFO control        */
+
+/*****************************************************************************
+ * Register 0x08 (Timer Control) bit definitions (SDK 7-42)
+ */
+#define MMA_TIMER_MASK_ALL  0x70    /* T2M|T1M|T0M set; SBY clear; timers and
+                                     * base counter stopped (ST bits clear)  */
 
 /*****************************************************************************
  * Register 0x09 (Playback/Record Control) bit definitions

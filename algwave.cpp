@@ -497,6 +497,10 @@ ProcessResources
     {
         m_AdapterCommon->WriteMMA (MMA_REG_FORMAT, MMA_FMT_MSK);
         m_AdapterCommon->WriteMMA1(MMA_REG_FORMAT, MMA_FMT_MSK);
+        /* The timer masks (reg 08h) are the remaining undocumented-at-power-on
+         * interrupt source on the same line; mask all three and stop the
+         * timers and base counter before AEN goes live (call/0032). */
+        m_AdapterCommon->WriteMMA (MMA_REG_TIMER_CTRL, MMA_TIMER_MASK_ALL);
         ConfigureDmaAndIrq(ResourceList);
     }
 
