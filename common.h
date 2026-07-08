@@ -109,7 +109,11 @@
 #define CTRL_REG_RESERVED       0x12    /* Reserved (must be 0)               */
 #define CTRL_REG_IRQ_DMA0       0x13    /* IRQ select + DMA channel 0         */
 #define CTRL_REG_DMA1           0x14    /* DMA channel 1                      */
-#define CTRL_REG_AUDIO_RELOC    0x15    /* Audio section I/O relocation       */
+#define CTRL_REG_AUDIO_RELOC    0x15    /* Audio I/O relocation. Never written:
+                                         * EEPROM-pinned on this non-PnP card;
+                                         * a mismatch with the claimed base
+                                         * makes the card unreachable at our
+                                         * ports entirely (call/0033)         */
 #define CTRL_REG_SCSI_IRQ_DMA   0x16    /* SCSI IRQ/DMA select                */
 #define CTRL_REG_SCSI_RELOC     0x17    /* SCSI section I/O relocation        */
 #define CTRL_REG_SURROUND       0x18    /* Surround sound module (YM7128)     */

@@ -24,6 +24,13 @@
  * index, and decoded via mmastatus.h.
  */
 #define MMA_REG_TIMER_CTRL  0x08    /* Write: SBY|T2M|T1M|T0M|STB|ST2|ST1|ST0 */
+#ifndef MMA_REG_MIDI_CTRL
+#define MMA_REG_MIDI_CTRL   0x0D    /* MIDI control (midi.h owns the fields)  */
+#endif
+#define MMA_MIDI_MASK_BOOT  0xD4    /* POV|MOV|TRQ|RRQ masked, no reset bits:
+                                     * pre-AEN insurance until the MIDI
+                                     * subdevice's Init re-owns the register
+                                     * (it installs after wave; call/0033)    */
 #define MMA_REG_PLAYBACK    0x09    /* Write: playback/record control        */
 #define MMA_REG_VOLUME      0x0A    /* Write: output volume (0x00-0xFF)      */
 #define MMA_REG_PCM_DATA    0x0B    /* R/W: FIFO data port                   */

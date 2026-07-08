@@ -1113,6 +1113,12 @@ Opl3_BoardReset()
      * so all 18 channels are 2-operator; a 4-op note sets only its own pair's bit and clears
      * it on release (Opl3_UpdateConnection, plan/0009), keeping full 2-op polyphony. */
     SoundMidiSendFM(AD_NEW, 0x01);
+    /* Zero the LSI test registers in both sets: scratch state that survives a
+     * warm reboot (call/0033). The OPL3 test register is 0x01; the DDK
+     * header's AD_LSI (0x000) is off by one, so the first-set address is
+     * literal. AD_LSI2 (0x101) is correct for the second set. */
+    SoundMidiSendFM(0x001, 0x00);
+    SoundMidiSendFM(AD_LSI2, 0x00);
     SoundMidiSendFM(AD_MASK, 0x60);
     SoundMidiSendFM(AD_CONNECTION, 0x00);
     SoundMidiSendFM(AD_NTS, 0x00);

@@ -477,6 +477,28 @@ ControlRegReset
 
     /* Ensure reserved register is zero */
     ControlRegWrite(CTRL_REG_RESERVED, 0x00);
+
+    /*
+     * Fixed hardware policy on a non-PnP card (call/0033): nothing but this
+     * driver ever configures these, and the EEPROM boot values behind them are
+     * mutable, so pin them at every reset. Deliberately not in
+     * DefaultMixerSettings, so a stale saved value can never shadow a policy
+     * change (the call/0029 lesson).
+     *
+     * Reg 13h first: interrupts and DMA stay off until the wave miniport has
+     * masked every source and writes the real value. Both ControlRegReset call
+     * sites (adapter Init, topology Init) run before the wave subdevice
+     * installs, so this zeroing can never follow ConfigureDmaAndIrq.
+     */
+    ControlRegWrite(CTRL_REG_IRQ_DMA0,  0x00);      /* AEN + DMA ch0 off      */
+    ControlRegWrite(CTRL_REG_DMA1,      0x00);      /* DMA ch1 enable off     */
+    ControlRegWrite(CTRL_REG_TELEPHONE, 0x00);      /* phone line disengaged  */
+    ControlRegWrite(CTRL_REG_TEL_VOL,   0x80);      /* telephone vol silent   */
+    ControlRegWrite(CTRL_REG_AUDIO_SEL, CTRL_ASEL_MFB);
+                    /* Mic out of the output mix (its volume node still feeds
+                     * the ADC path); PC speaker disconnected; aux stereo; both
+                     * antialiasing filters set for playback. Per-direction
+                     * filter switching arrives with the plan/0014 menu. */
 }
 
 

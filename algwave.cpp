@@ -487,19 +487,32 @@ ProcessResources
     }
 
     /*
-     * Configure Control Chip registers 13h/14h for IRQ and DMA. Mask both MMA
-     * channels' FIFO interrupts first: the MMA's power-on mask state is
-     * undocumented and the FIFO flags are level-sensitive, so an unmasked idle
-     * FIFO could hold the line asserted the moment reg 13h sets AEN (call/0029).
+     * Deterministic MMA boot state, then IRQ/DMA config (call/0029, call/0032,
+     * call/0033). Order matters and AEN comes last:
+     *   1. Reset both playback engines: a warm reboot can inherit a running
+     *      GO+DMA engine and set FIFO flags; the manual's RST procedure clears
+     *      both.
+     *   2. Mask both channels' FIFO interrupts (power-on mask state is
+     *      undocumented; the flags are level-sensitive).
+     *   3. Mask the MIDI interrupts: the MIDI subdevice installs after this
+     *      one, so between AEN going live and its Init, an unmasked power-on
+     *      receive interrupt would have no registered handler. MIDI Init
+     *      re-owns the register (reset, defaults, stale-byte drain).
+     *   4. Mask the timers and stop them and the base counter.
+     *   5. Only then ConfigureDmaAndIrq writes reg 13h, the sole AEN enable.
      * Stream start programs the real format values; stop re-masks.
      */
     if (NT_SUCCESS(ntStatus))
     {
+        m_AdapterCommon->WriteMMA (MMA_REG_PLAYBACK, MMA_PB_RST);
+        m_AdapterCommon->WriteMMA1(MMA_REG_PLAYBACK, MMA_PB_RST);
+        KeStallExecutionProcessor(1);
+        m_AdapterCommon->WriteMMA (MMA_REG_PLAYBACK, 0x00);
+        m_AdapterCommon->WriteMMA1(MMA_REG_PLAYBACK, 0x00);
+
         m_AdapterCommon->WriteMMA (MMA_REG_FORMAT, MMA_FMT_MSK);
         m_AdapterCommon->WriteMMA1(MMA_REG_FORMAT, MMA_FMT_MSK);
-        /* The timer masks (reg 08h) are the remaining undocumented-at-power-on
-         * interrupt source on the same line; mask all three and stop the
-         * timers and base counter before AEN goes live (call/0032). */
+        m_AdapterCommon->WriteMMA (MMA_REG_MIDI_CTRL, MMA_MIDI_MASK_BOOT);
         m_AdapterCommon->WriteMMA (MMA_REG_TIMER_CTRL, MMA_TIMER_MASK_ALL);
         ConfigureDmaAndIrq(ResourceList);
     }
@@ -533,7 +546,9 @@ ConfigureDmaAndIrq
     PAGED_CODE();
 
     /*
-     * Get the PnP-assigned IRQ and DMA channel numbers.
+     * Get the IRQ and DMA channel numbers from the resource list. On this
+     * non-PnP card they are the hardwired LogConfig's claim (call/0021,
+     * call/0022); this write is the only thing that aligns the card with it.
      */
     PCM_PARTIAL_RESOURCE_DESCRIPTOR irqDesc =
         ResourceList->FindUntranslatedInterrupt(0);
@@ -964,11 +979,12 @@ NewStream
     }
 
     /*
-     * Reject full duplex until independent per-direction channels exist (plan/0008).
-     * The driver has one DMA channel and one buffer, and a stereo stream already uses both
-     * MMA channels for its two audio channels (call/0017), not for two directions, so a
-     * render and a capture stream would silently share the transport. Allow one direction
-     * at a time.
+     * Reject a second direction on the shared engine: the GoldLib wires one DMA
+     * path (call/0031), and a stereo stream already uses both MMA channels for
+     * its two audio channels (call/0017), so a render and a capture stream would
+     * silently share the transport. Half duplex is the contract until the
+     * configuration-menu allocator (call/0032, plan/0014) admits a register-
+     * driven second direction.
      */
     if (NT_SUCCESS(ntStatus))
     {

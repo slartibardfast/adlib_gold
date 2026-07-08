@@ -674,13 +674,21 @@ Init
         {
             AdapterCommon->ControlRegReset();
 
-            /* Detect the SP2 surround module: ID register D6 is 0 when present
-             * (active low). Seed the surround state to off (the chip's own
-             * initial-clear leaves VM/VC/VL/VR = 0). */
+            /* Detect the SP2 surround module (ID register OP1, 0 when present)
+             * and seed the surround state to off. */
             BYTE id = AdapterCommon->ControlRegRead(CTRL_REG_CONTROL_ID);
             Sp2Present = (id & CTRL_ID_OPT_SURROUND) ? FALSE : TRUE;
             Sp2Enabled = FALSE;
             Sp2Mode    = 1;     /* first active mode, applied when enabled */
+            if (Sp2Present)
+            {
+                /* Download the bypass preset (every attenuator at -90 dB)
+                 * rather than trust the chip's initial-clear, which holds at
+                 * cold power-on but not across a warm reboot. The payload and
+                 * protocol are audited against the SDK's surround appendix
+                 * (call/0033). */
+                Sp2Download();
+            }
         }
     }
 
