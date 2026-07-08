@@ -55,8 +55,9 @@ WaveMmaFormatInterleave(int channels)
     return (unsigned char)((channels >= 2) ? WAVE_FMT_ILV : 0);
 }
 
-/* Control-chip reg 13h DMA-select field shift (D6-D5), matching CTRL_DMA0_SEL_SHIFT. */
-#define WAVE_DMA0_SEL_SHIFT   5
+/* Control-chip reg 13h DMA-select field shift (D6-D4, SDK register map page 7-9),
+ * matching CTRL_DMA0_SEL_SHIFT (call/0029). */
+#define WAVE_DMA0_SEL_SHIFT   4
 
 /*
  * The reg-13h DMA-select bits for a PnP-assigned DMA channel. The 2-bit field only holds

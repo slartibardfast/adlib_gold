@@ -189,6 +189,13 @@ private:
 
     POWER_STATE         m_PowerState;           /* Current device power      */
 
+#if (DBG)
+    /* Checked-only retest instrumentation (call/0029): interrupts serviced since
+     * the last RUN, reported on the stop line so one hardware log localizes a
+     * silent stream to DRQ, IRQ routing, or the analog path. */
+    ULONG               m_IsrCount;
+#endif
+
     /*
      * Private methods
      */

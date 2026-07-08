@@ -375,6 +375,9 @@ Init
     m_NotificationInterval = 0;
     m_pActiveStream     = NULL;
     m_PowerState.DeviceState = PowerDeviceD0;
+#if (DBG)
+    m_IsrCount          = 0;
+#endif
 
     /* Zero the interface pointers before any can fail: the DDK placement new does
      * not zero pool, and the destructor releases each under an `if (ptr)` guard, so
@@ -484,10 +487,16 @@ ProcessResources
     }
 
     /*
-     * Configure Control Chip registers 13h/14h for IRQ and DMA.
+     * Configure Control Chip registers 13h/14h for IRQ and DMA. Mask both MMA
+     * channels' FIFO interrupts first: the MMA's power-on mask state is
+     * undocumented and the FIFO flags are level-sensitive, so an unmasked idle
+     * FIFO could hold the line asserted the moment reg 13h sets AEN (call/0029).
+     * Stream start programs the real format values; stop re-masks.
      */
     if (NT_SUCCESS(ntStatus))
     {
+        m_AdapterCommon->WriteMMA (MMA_REG_FORMAT, MMA_FMT_MSK);
+        m_AdapterCommon->WriteMMA1(MMA_REG_FORMAT, MMA_FMT_MSK);
         ConfigureDmaAndIrq(ResourceList);
     }
 
@@ -1079,6 +1088,10 @@ ServiceWaveISR
     IN      BYTE    MmaStatus
 )
 {
+#if (DBG)
+    m_IsrCount++;
+#endif
+
     CMiniportWaveCyclicStreamAdLibGold *stream = m_pActiveStream;
 
     if (stream &&
@@ -1387,6 +1400,30 @@ SetState
         case KSSTATE_PAUSE:
             if (m_State == KSSTATE_RUN)
             {
+#if (DBG)
+                /* Retest stop line (call/0029), read before the hardware stops:
+                 * isr=0 with dmapos=0 means no DRQ; dmapos moving with isr=0
+                 * means IRQ routing is dead; both moving localizes a silent
+                 * stream to the analog path. */
+                {
+                    ULONG dbgPos = 0;
+                    if ((!m_16Bit || m_Stereo) && m_Miniport->m_DmaChannel)
+                    {
+                        ULONG dbgTc = m_Miniport->m_DmaChannel->TransferCount();
+                        if (dbgTc)
+                        {
+                            ULONG dbgCounter =
+                                m_Miniport->m_DmaChannel->ReadCounter();
+                            dbgPos = (dbgCounter != 0) ? (dbgTc - dbgCounter) : 0;
+                        }
+                    }
+                    _DbgPrintF(DEBUGLVL_TERSE,
+                        ("SetState RUN->PAUSE: isr=%d dmapos=%d mma=0x%02X",
+                         m_Miniport->m_IsrCount, dbgPos,
+                         (ULONG)m_Miniport->m_AdapterCommon->ReadMMAStatus()));
+                }
+#endif
+
                 /*
                  * Stop playback/recording.  Clear GO bit in reg 09h.
                  */
@@ -1422,6 +1459,9 @@ SetState
             break;
 
         case KSSTATE_RUN:
+#if (DBG)
+            m_Miniport->m_IsrCount = 0;     /* per-run count for the stop line */
+#endif
             ProgramMmaStart();
             break;
 
@@ -1466,6 +1506,20 @@ ProgramMmaStart
     ac->WriteMMA(MMA_REG_PLAYBACK, MMA_PB_RST);
     KeStallExecutionProcessor(1);
     ac->WriteMMA(MMA_REG_PLAYBACK, 0x00);
+
+    /*
+     * Prime the FIFO with four zero bytes on the 8-bit DMA render path, directly
+     * after the reset, as the validated AIL sequence does before GO
+     * (plan/0008/stereo-mma-reference.md :961-964, call/0029). The 16-bit PIO
+     * path pre-fills through FillFifo below instead.
+     */
+    if (!m_16Bit && !m_Capture)
+    {
+        ac->WriteMMA(MMA_REG_PCM_DATA, 0x00);
+        ac->WriteMMA(MMA_REG_PCM_DATA, 0x00);
+        ac->WriteMMA(MMA_REG_PCM_DATA, 0x00);
+        ac->WriteMMA(MMA_REG_PCM_DATA, 0x00);
+    }
 
     /*
      * Set the MMA digital-audio output volume to full (reg 0Ah). The power-on default
@@ -1597,6 +1651,21 @@ ProgramMmaStartStereo
     KeStallExecutionProcessor(1);
     ac->WriteMMA (MMA_REG_PLAYBACK, 0x00);
     ac->WriteMMA1(MMA_REG_PLAYBACK, 0x00);
+
+    /*
+     * Prime channel 0's FIFO with four zero bytes on render, directly after the
+     * reset, exactly as the validated reference does before GO
+     * (plan/0008/stereo-mma-reference.md :961-964, call/0029). The earlier
+     * omission was justified from the 8-bit mono path, which had never actually
+     * been proven on hardware.
+     */
+    if (!m_Capture)
+    {
+        ac->WriteMMA(MMA_REG_PCM_DATA, 0x00);
+        ac->WriteMMA(MMA_REG_PCM_DATA, 0x00);
+        ac->WriteMMA(MMA_REG_PCM_DATA, 0x00);
+        ac->WriteMMA(MMA_REG_PCM_DATA, 0x00);
+    }
 
     /*
      * Set both channels' MMA digital-audio output volume to full (reg 0Ah); the

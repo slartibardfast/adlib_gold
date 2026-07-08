@@ -48,14 +48,18 @@ static void test_wave_reg(void)
  * select bits; an out-of-range channel falls back to DMA 1 rather than a wrong channel. */
 static void test_wave_dma(void)
 {
-    CHECK(WaveDmaSelectBits(0) == (0 << WAVE_DMA0_SEL_SHIFT), "DMA 0 select bits");
-    CHECK(WaveDmaSelectBits(1) == (1 << WAVE_DMA0_SEL_SHIFT), "DMA 1 select bits");
-    CHECK(WaveDmaSelectBits(3) == (3 << WAVE_DMA0_SEL_SHIFT), "DMA 3 select bits");
+    /* Absolute bytes, pinned to the SDK register-map figure (DMA SEL 0 at D6-D4,
+     * page 7-9; call/0029). Shift-relative checks passed even when the shift was
+     * wrong, which is how the reg-13h layout bug survived the suite. */
+    CHECK(WaveDmaSelectBits(0) == 0x00, "DMA 0 select bits sit at D6-D4");
+    CHECK(WaveDmaSelectBits(1) == 0x10, "DMA 1 select bits sit at D6-D4");
+    CHECK(WaveDmaSelectBits(2) == 0x20, "DMA 2 select bits sit at D6-D4");
+    CHECK(WaveDmaSelectBits(3) == 0x30, "DMA 3 select bits sit at D6-D4");
 
     /* Out of range (and negative) falls back to DMA 1, never a masked wrong channel. */
-    CHECK(WaveDmaSelectBits(5) == (1 << WAVE_DMA0_SEL_SHIFT), "DMA 5 falls back to 1");
-    CHECK(WaveDmaSelectBits(7) == (1 << WAVE_DMA0_SEL_SHIFT), "DMA 7 falls back to 1");
-    CHECK(WaveDmaSelectBits(-1) == (1 << WAVE_DMA0_SEL_SHIFT), "negative falls back to 1");
+    CHECK(WaveDmaSelectBits(5) == 0x10, "DMA 5 falls back to 1");
+    CHECK(WaveDmaSelectBits(7) == 0x10, "DMA 7 falls back to 1");
+    CHECK(WaveDmaSelectBits(-1) == 0x10, "negative falls back to 1");
 }
 
 int main(void)

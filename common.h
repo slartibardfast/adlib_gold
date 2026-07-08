@@ -131,15 +131,16 @@
 #define CTRL_ID_SAVE            0x02    /* D1: Save registers to EEPROM      */
 #define CTRL_ID_RESTORE         0x01    /* D0: Restore registers from EEPROM */
 
-/* Read bits */
+/* Read bits. The option bits are OP0-OP2 at D4-D6 (SDK register map, page 7-4);
+ * a SET bit means the option is NOT present (call/0029). */
 #define CTRL_ID_MODEL_MASK      0x0F    /* D3-D0: Model identifier           */
-#define CTRL_ID_OPT_TEL         0x20    /* D5: 0=telephone present           */
-#define CTRL_ID_OPT_SURROUND   0x40    /* D6: 0=surround present            */
-#define CTRL_ID_OPT_SCSI        0x80    /* D7: 0=SCSI present                */
+#define CTRL_ID_OPT_TEL         0x10    /* D4 (OP0): 0=telephone present     */
+#define CTRL_ID_OPT_SURROUND    0x20    /* D5 (OP1): 0=surround present      */
+#define CTRL_ID_OPT_SCSI        0x40    /* D6 (OP2): 0=SCSI present          */
 
-/* Model ID values */
-#define ALG_MODEL_GOLD1000      0x00
-#define ALG_MODEL_GOLD2000      0x01
+/* Model ID values (SDK page 7-4: 0 = Gold 2000, 1 = Gold 1000, 2 = 2000MC) */
+#define ALG_MODEL_GOLD2000      0x00
+#define ALG_MODEL_GOLD1000      0x01
 #define ALG_MODEL_GOLD2000MC    0x02
 
 /*****************************************************************************
@@ -147,12 +148,15 @@
  */
 #define CTRL_MODE_FORCED_BITS   0xC0    /* D7-D6 must be 1                   */
 #define CTRL_MODE_MUTE          0x20    /* D5: Mute                          */
-#define CTRL_MODE_STEREO_MASK   0x0C    /* D3-D2: Stereo mode                */
+#define CTRL_MODE_STEREO_MASK   0x18    /* D4-D3: ST-MONO output effect      */
 #define CTRL_MODE_STEREO_MONO   0x00    /* Forced mono                       */
-#define CTRL_MODE_STEREO_LINEAR 0x04    /* Linear stereo                     */
-#define CTRL_MODE_STEREO_PSEUDO 0x08    /* Pseudo stereo                     */
-#define CTRL_MODE_STEREO_SPATIAL 0x0C   /* Spatial stereo                    */
-#define CTRL_MODE_SOURCE_MASK   0x03    /* D1-D0: Source select              */
+#define CTRL_MODE_STEREO_LINEAR 0x08    /* Linear stereo                     */
+#define CTRL_MODE_STEREO_PSEUDO 0x10    /* Pseudo stereo                     */
+#define CTRL_MODE_STEREO_SPATIAL 0x18   /* Spatial stereo                    */
+#define CTRL_MODE_SOURCE_MASK   0x07    /* D2-D0: Output channel select      */
+#define CTRL_MODE_SOURCE_BOTH   0x06    /* Left and right                    */
+#define CTRL_MODE_SOURCE_RIGHT  0x04    /* Right only (mirrored to both)     */
+#define CTRL_MODE_SOURCE_LEFT   0x02    /* Left only (mirrored to both)      */
 
 /*****************************************************************************
  * Registers 0x06/0x07 (Bass/Treble) bit definitions
@@ -166,16 +170,16 @@
 #define CTRL_ASEL_SPKR          0x20    /* D5: PC speaker connected          */
 #define CTRL_ASEL_MFB           0x08    /* D3: Mic feedback removed          */
 #define CTRL_ASEL_XMO           0x04    /* D2: Aux input mono                */
-#define CTRL_ASEL_FLT1          0x02    /* D1: Ch1 filter (1=input,0=output) */
-#define CTRL_ASEL_FLT0          0x01    /* D0: Ch0 filter (1=input,0=output) */
+#define CTRL_ASEL_FLT0          0x02    /* D1: Ch0 filter (1=input,0=output) */
+#define CTRL_ASEL_FLT1          0x01    /* D0: Ch1 filter (1=input,0=output) */
 
 /*****************************************************************************
  * Register 0x13 (IRQ/DMA Channel 0) bit definitions
  */
 #define CTRL_DMA0_ENABLE        0x80    /* D7: DMA channel 0 enable          */
-#define CTRL_DMA0_SEL_SHIFT     5       /* D6-D5: DMA channel select         */
-#define CTRL_DMA0_SEL_MASK      0x60
-#define CTRL_IRQ_ENABLE         0x10    /* D4: Audio interrupt enable         */
+#define CTRL_DMA0_SEL_SHIFT     4       /* D6-D4: DMA channel select         */
+#define CTRL_DMA0_SEL_MASK      0x70
+#define CTRL_IRQ_ENABLE         0x08    /* D3: Audio interrupt enable (AEN)  */
 #define CTRL_IRQ_SEL_MASK       0x07    /* D2-D0: IRQ line select            */
 
 /* IRQ select values (D2-D0 of register 0x13) */
@@ -192,8 +196,8 @@
  * Register 0x14 (DMA Channel 1) bit definitions
  */
 #define CTRL_DMA1_ENABLE        0x80    /* D7: DMA channel 1 enable          */
-#define CTRL_DMA1_SEL_SHIFT     5       /* D6-D5: DMA channel select         */
-#define CTRL_DMA1_SEL_MASK      0x60
+#define CTRL_DMA1_SEL_SHIFT     4       /* D6-D4: DMA channel select         */
+#define CTRL_DMA1_SEL_MASK      0x70
 
 /*****************************************************************************
  * SIZEOF_ARRAY helper (if not already defined)

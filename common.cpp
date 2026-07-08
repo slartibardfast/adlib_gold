@@ -184,7 +184,7 @@ MIXERSETTING DefaultMixerSettings[] =
     { L"RightMasterVol", CTRL_REG_MASTER_VOL_R,  0xFC },
     { L"Bass",           CTRL_REG_BASS,           0xF6 },  /* 0dB flat, D7-D4 set */
     { L"Treble",         CTRL_REG_TREBLE,         0xF6 },  /* 0dB flat, D7-D4 set */
-    { L"OutputMode",     CTRL_REG_OUTPUT_MODE,    0xC4 },  /* Linear stereo, both ch, unmuted */
+    { L"OutputMode",     CTRL_REG_OUTPUT_MODE,    0xCE },  /* Linear stereo, both ch, unmuted (call/0029) */
     { L"LeftFMVol",      CTRL_REG_FM_VOL_L,       0xC0 },  /* Mid-range (192 of 128-255) */
     { L"RightFMVol",     CTRL_REG_FM_VOL_R,       0xC0 },
     { L"LeftSampVol",    CTRL_REG_SAMP_VOL_L,     0xC0 },
@@ -1284,6 +1284,18 @@ RestoreMixerSettingsFromRegistry
                                      reg == CTRL_REG_MASTER_VOL_R) && val < 0xDC)
                                 {
                                     val = 0xFC;
+                                }
+                                /* Reg 08h's effect/channel fields were composed on a
+                                 * wrong bit layout before call/0029, and no UI writes
+                                 * them, so a saved value's low bits are stale. Rebuild
+                                 * them as linear stereo on both channels and preserve
+                                 * only the user's mute bit. */
+                                if (reg == CTRL_REG_OUTPUT_MODE)
+                                {
+                                    val = (BYTE)(CTRL_MODE_FORCED_BITS |
+                                                 (val & CTRL_MODE_MUTE) |
+                                                 CTRL_MODE_STEREO_LINEAR |
+                                                 CTRL_MODE_SOURCE_BOTH);
                                 }
                                 ControlRegWrite(reg, val);
                             }
