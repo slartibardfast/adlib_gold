@@ -21,6 +21,7 @@ static void test_mma_status(void)
     CHECK(MmaStatusChannel1Ready(0x02), "FIF1 (0x02) is the channel-1 FIFO request");
     CHECK(MmaStatusMidiRxReady(0x04),   "RRQ (0x04) is MIDI receive");
     CHECK(MmaStatusMidiTxReady(0x08),   "TRQ (0x08) is MIDI transmit-empty");
+    CHECK(MmaStatusTimer0Elapsed(0x10), "T0 (0x10) is the Timer-0 elapse");
     CHECK(MmaStatusOverrun(0x80),       "OV (0x80) is FIFO overrun");
 
     /* Each decoder ignores the other bits (no cross-talk between flags). */
@@ -28,6 +29,7 @@ static void test_mma_status(void)
     CHECK(!MmaStatusChannel1Ready(0xFD), "channel 1 ignores every bit but FIF1");
     CHECK(!MmaStatusMidiRxReady(0xFB),   "MIDI rx ignores every bit but RRQ");
     CHECK(!MmaStatusMidiTxReady(0xF7),   "MIDI tx ignores every bit but TRQ");
+    CHECK(!MmaStatusTimer0Elapsed(0xEF), "timer 0 ignores every bit but T0");
     CHECK(!MmaStatusOverrun(0x7F),       "overrun ignores every bit but OV");
 
     /* The old code read FIF0/FIF1 as TRQ/PRQ and TRQ as a timer bit; guard the

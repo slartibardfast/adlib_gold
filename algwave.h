@@ -23,6 +23,8 @@
  * register is read directly through ReadMMAStatus (base+4), not selected by
  * index, and decoded via mmastatus.h.
  */
+#define MMA_REG_TIMER0_LO   0x02    /* Write: Timer-0 reload, low byte        */
+#define MMA_REG_TIMER0_HI   0x03    /* Write: Timer-0 reload, high byte       */
 #define MMA_REG_TIMER_CTRL  0x08    /* Write: SBY|T2M|T1M|T0M|STB|ST2|ST1|ST0 */
 #ifndef MMA_REG_MIDI_CTRL
 #define MMA_REG_MIDI_CTRL   0x0D    /* MIDI control (midi.h owns the fields)  */
@@ -41,6 +43,17 @@
  */
 #define MMA_TIMER_MASK_ALL  0x70    /* T2M|T1M|T0M set; SBY clear; timers and
                                      * base counter stopped (ST bits clear)  */
+#define MMA_TIMER_RUN_T0    0x61    /* T2M|T1M set, T0M clear (Timer-0 IRQ
+                                     * live), ST0 set: load the reload value
+                                     * and count down; base counter and the
+                                     * other timers stay stopped (SDK 7-42)  */
+
+/* Timer 0 counts down at 1.88964 us per tick (SDK 7-41): 5292 ticks = 10.0 ms,
+ * the DMA transport's notification cadence. The FIFO threshold interrupt never
+ * fires while auto-initialize DMA keeps the FIFO fed, so the timer is the
+ * service clock (call/0034, spec/NotifyLiveness.tla). */
+#define MMA_TIMER0_LO_10MS  0xAC
+#define MMA_TIMER0_HI_10MS  0x14
 
 /*****************************************************************************
  * Register 0x09 (Playback/Record Control) bit definitions

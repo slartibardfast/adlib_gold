@@ -40,6 +40,8 @@ rule-success.StereoInterleavesChannels   => test:test_wave_reg exercises=WaveMma
 rule-failure.StereoInterleavesChannels.1 => test:test_wave_reg exercises=WaveMmaFormatInterleave
 rule-success.PlaybackFifoServicesRender   => test:test_mma_status exercises=MmaStatusChannel0Ready
 rule-failure.PlaybackFifoServicesRender.1 => test:test_mma_status exercises=MmaStatusChannel0Ready
+rule-success.TimerServicesDmaRender       => test:test_mma_status exercises=MmaStatusTimer0Elapsed
+rule-failure.TimerServicesDmaRender.1     => test:test_mma_status exercises=MmaStatusTimer0Elapsed
 rule-success.ServiceAdvancesPosition      => test:test_wave_wrap exercises=WaveWrapPosition
 rule-failure.ServiceAdvancesPosition.1    => test:test_wave_wrap exercises=WaveWrapPosition
 rule-success.ResampleOffRate           => test:test_nearest_rate exercises=NearestSupportedRate

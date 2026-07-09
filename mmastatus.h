@@ -59,6 +59,16 @@ MmaStatusMidiTxReady(unsigned char status)
     return (status & MMA_STATUS_TRQ) != 0;
 }
 
+/* Timer 0 elapsed: the DMA transport's service clock (call/0034). Like the rest
+ * of the byte the flag is level-sensitive, so the ISR re-arms the timer (stop,
+ * then start reloads the counter) to end the elapsed condition and drop the
+ * line for the next edge. */
+static int
+MmaStatusTimer0Elapsed(unsigned char status)
+{
+    return (status & MMA_STATUS_T0) != 0;
+}
+
 /* A FIFO overran and data was lost; the caller resets the affected FIFO. */
 static int
 MmaStatusOverrun(unsigned char status)

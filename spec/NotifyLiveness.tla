@@ -98,8 +98,11 @@ Deliver == /\ irr
            /\ isrPc' = "read"
            /\ UNCHANGED <<fifoFires, clearOnRead, fifoFlag, timerFlag, refills>>
 
-\* The routine reads the MMA status. The timer flag is documented read-to-clear;
-\* the FIFO flag clears on read only in the latched-semantics world.
+\* The routine reads the MMA status and re-arms Timer 0 (stop, then start
+\* reloads the counter), which ends the elapsed condition, so the timer flag
+\* falls within the service step whatever the flag semantics (the status flags
+\* are level-sensitive, mmastatus.h). The FIFO flag clears on read only in the
+\* latched-semantics world.
 IsrRead == /\ isrPc = "read"
            /\ timerFlag' = FALSE
            /\ fifoFlag' = IF clearOnRead THEN FALSE ELSE fifoFlag

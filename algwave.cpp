@@ -1098,8 +1098,9 @@ SyncClearActiveStream
  * MMA status byte. When the channel-0 PCM FIFO signals (FIF0) and the active 16-bit
  * PIO stream is running, service its FIFO — refill for render, drain for capture —
  * so a 16-bit stream keeps playing/recording instead of underrunning after the
- * pre-fill (plan/0008). The 8-bit DMA path has no active stream registered, so it
- * only notifies. Notify advances the port's position query either way.
+ * pre-fill (plan/0008). When Timer 0 elapses and the active DMA-transport stream
+ * is running, re-arm the timer, the DMA path's service clock (call/0034,
+ * spec/NotifyLiveness.tla). Notify advances the port's position query either way.
  */
 STDMETHODIMP_(void)
 CMiniportWaveCyclicAdLibGold::
@@ -1129,6 +1130,19 @@ ServiceWaveISR
         {
             stream->FillFifo(TRUE);     /* ISR context: raw MMA access */
         }
+    }
+
+    if (stream &&
+        stream->m_State == KSSTATE_RUN &&
+        (!stream->m_16Bit || stream->m_Stereo) &&
+        MmaStatusTimer0Elapsed(MmaStatus))
+    {
+        /* Timer 0 is the DMA transport's service clock (call/0034). The status
+         * flags are level-sensitive (a read clears nothing), so re-arm the
+         * timer: stop, then start reloads the counter, the elapsed condition
+         * ends and the line drops, and the next elapse delivers a fresh edge. */
+        m_AdapterCommon->WriteMMALocked(MMA_REG_TIMER_CTRL, MMA_TIMER_MASK_ALL);
+        m_AdapterCommon->WriteMMALocked(MMA_REG_TIMER_CTRL, MMA_TIMER_RUN_T0);
     }
 
     if (m_Port && m_ServiceGroup)
@@ -1456,8 +1470,11 @@ SetState
 
                 if (!m_16Bit || m_Stereo)
                 {
-                    /* DMA mode (8-bit mono or any stereo): stop the DMA channel */
+                    /* DMA mode (8-bit mono or any stereo): stop the DMA channel
+                     * and its Timer 0 service clock (call/0034). */
                     m_Miniport->m_DmaChannel->Stop();
+                    m_Miniport->m_AdapterCommon->WriteMMA(MMA_REG_TIMER_CTRL,
+                                                          MMA_TIMER_MASK_ALL);
                 }
 
                 /*
@@ -1564,12 +1581,13 @@ ProgramMmaStart
     }
     else
     {
-        /* 8-bit: DMA mode — hardware transfers directly. Leave the FIFO interrupt
-         * unmasked (no MMA_FMT_MSK): the threshold interrupt is the only thing that
-         * runs the ISR, and ServiceWaveISR gates the PIO fill on m_16Bit, so for an
-         * 8-bit stream it just calls Port->Notify, which is what advances the cyclic
-         * buffer position. Masking it froze 8-bit render and capture. */
+        /* 8-bit: DMA mode — hardware transfers directly. Mask the FIFO threshold
+         * interrupt: it never fires while auto-initialize DMA keeps the FIFO fed
+         * (it reads as an end-of-transfer indicator, manual ch07 tips), so it is
+         * not the service clock; Timer 0, started below after GO, is
+         * (call/0034, spec/NotifyLiveness.tla). */
         fmtReg |= (MMA_DATA_FMT_8BIT << MMA_FMT_DATA_SHIFT);
+        fmtReg |= MMA_FMT_MSK;         /* FIFO IRQ masked on the DMA transport */
         fmtReg |= MMA_FMT_ENB;         /* DMA enabled */
     }
 
@@ -1623,6 +1641,17 @@ ProgramMmaStart
     }
 
     ac->WriteMMA(MMA_REG_PLAYBACK, pbReg);
+
+    /*
+     * DMA transport: start Timer 0 as the service clock (call/0034). The reload
+     * gives the 10 ms notification cadence; the ISR re-arms it every elapse.
+     */
+    if (!m_16Bit)
+    {
+        ac->WriteMMA(MMA_REG_TIMER0_LO, MMA_TIMER0_LO_10MS);
+        ac->WriteMMA(MMA_REG_TIMER0_HI, MMA_TIMER0_HI_10MS);
+        ac->WriteMMA(MMA_REG_TIMER_CTRL, MMA_TIMER_RUN_T0);
+    }
 
     _DbgPrintF(DEBUGLVL_VERBOSE,
         ("ProgramMmaStart: fmt=0x%02X pb=0x%02X rate=%d %s %s",
@@ -1707,14 +1736,17 @@ ProgramMmaStartStereo
 
     /*
      * Program each channel's format register (reg 12). Channel 0: interleave on, FIFO
-     * interrupt at 96 bytes, interrupt enabled, DMA. Channel 1: no interleave, FIFO
-     * interrupt at 112 bytes, interrupt masked, DMA. At 16-bit these are the validated
-     * index-5 values SFC_0=0xC5 and SFC_1=0x43, built from the driver's field constants.
+     * threshold at 96 bytes, DMA. Channel 1: no interleave, FIFO threshold at 112
+     * bytes, DMA. Both FIFO interrupts are masked: the threshold interrupt never
+     * fires while auto-initialize DMA keeps the FIFOs fed, so Timer 0 (started
+     * below after GO) is the service clock (call/0034, spec/NotifyLiveness.tla).
+     * This departs from the reference's unmasked channel 0 (SFC_0=0xC5) by the
+     * masked SFC_0=0xC7; the thresholds and interleave stay the reference's.
      */
     BYTE fmt0 = (BYTE)((dataFmt << MMA_FMT_DATA_SHIFT) |
                        (MMA_FIFO_THR_96 << MMA_FMT_FIFO_SHIFT) |
                        WaveMmaFormatInterleave(2) |     /* ILV on channel 0 */
-                       MMA_FMT_ENB);                    /* DMA, interrupt enabled */
+                       MMA_FMT_MSK | MMA_FMT_ENB);      /* interrupt masked, DMA */
     BYTE fmt1 = (BYTE)((dataFmt << MMA_FMT_DATA_SHIFT) |
                        (MMA_FIFO_THR_112 << MMA_FMT_FIFO_SHIFT) |
                        MMA_FMT_MSK | MMA_FMT_ENB);      /* interrupt masked, DMA */
@@ -1732,6 +1764,14 @@ ProgramMmaStartStereo
      * Set GO on channel 0 to start both channels.
      */
     ac->WriteMMA(MMA_REG_PLAYBACK, (BYTE)(pb0 | MMA_PB_GO));
+
+    /*
+     * Start Timer 0 as the service clock at the 10 ms cadence (call/0034); the
+     * ISR re-arms it every elapse.
+     */
+    ac->WriteMMA(MMA_REG_TIMER0_LO, MMA_TIMER0_LO_10MS);
+    ac->WriteMMA(MMA_REG_TIMER0_HI, MMA_TIMER0_HI_10MS);
+    ac->WriteMMA(MMA_REG_TIMER_CTRL, MMA_TIMER_RUN_T0);
 
     _DbgPrintF(DEBUGLVL_VERBOSE,
         ("ProgramMmaStartStereo: fmt0=0x%02X fmt1=0x%02X pb0=0x%02X pb1=0x%02X rate=%d %s",
@@ -1771,10 +1811,12 @@ ProgramMmaStop
         ac->WriteMMA1(MMA_REG_FORMAT, MMA_FMT_MSK);
     }
 
-    /* Stop DMA channel if it was running (8-bit mono or any stereo) */
+    /* Stop DMA channel if it was running (8-bit mono or any stereo), and its
+     * Timer 0 service clock with it (call/0034) */
     if (!m_16Bit || m_Stereo)
     {
         m_Miniport->m_DmaChannel->Stop();
+        ac->WriteMMA(MMA_REG_TIMER_CTRL, MMA_TIMER_MASK_ALL);
     }
 
     m_SoftwarePosition = 0;

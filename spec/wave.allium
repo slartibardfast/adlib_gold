@@ -64,13 +64,16 @@ entity Stream {
     }
 }
 
--- The YMZ263 raises one shared sampling interrupt for both PCM FIFOs. The MMA status
--- register (a direct read of base+4, manual ch07) says which FIFO needs service. This
--- driver runs its single stream on channel 0, so the channel-0 FIFO request drives the
--- service; the pure mmastatus.h is the one tested decode of that byte, so a mislabeled
--- bit can no longer silence playback.
+-- The YMZ263 raises one shared sampling interrupt; the MMA status register (a direct
+-- read of base+4, manual ch07) says which source needs service, and the pure
+-- mmastatus.h is the one tested decode of that byte, so a mislabeled bit can no
+-- longer silence playback. A PIO stream services on the channel-0 FIFO request. A
+-- DMA-transport stream services on the Timer-0 elapse: the FIFO threshold interrupt
+-- never fires while auto-initialize DMA keeps the FIFO fed, so the timer is the
+-- service clock (call/0034; the liveness argument is NotifyLiveness.tla).
 entity MmaService {
     playback_fifo_ready: Boolean
+    timer_elapsed: Boolean
     render_serviced: Boolean
     position_advanced: Boolean
 }
@@ -171,12 +174,21 @@ rule ReadPosition {
     ensures: stream.position >= 0
 }
 
--- A render stream is refilled exactly when the channel-0 FIFO signals it has reached its
+-- A PIO render stream is refilled when the channel-0 FIFO signals it has reached its
 -- interrupt level. The decode is the one tested source of truth: the driver's ISR gates
 -- the render service on this bit, so a status-bit mislabel is caught by the test.
 rule PlaybackFifoServicesRender {
     when: service: MmaService.created
     requires: service.playback_fifo_ready
+    ensures: service.render_serviced = true
+}
+
+-- A DMA-transport stream is serviced when Timer 0 elapses (call/0034): the ISR re-arms
+-- the timer (the status flags are level-sensitive, so the re-arm is what drops the line
+-- for the next edge) and notifies. The decode is the one tested source of truth.
+rule TimerServicesDmaRender {
+    when: service: MmaService.created
+    requires: service.timer_elapsed
     ensures: service.render_serviced = true
 }
 
