@@ -1110,8 +1110,10 @@ Opl3_BoardReset()
     _DbgPrintF(DEBUGLVL_VERBOSE, ("Opl3_BoardReset"));
 
     /* Enable OPL3 mode (stereo, 18 voices, extra waveforms). Connection-select starts clear,
-     * so all 18 channels are 2-operator; a 4-op note sets only its own pair's bit and clears
-     * it on release (Opl3_UpdateConnection, plan/0009), keeping full 2-op polyphony. */
+     * so all 18 channels are 2-operator; a 4-op note sets only its own pair's bit, which
+     * then persists through the release and clears at reallocation once both halves are
+     * silent (Opl3_SplitPair, plan/0016), keeping full 2-op polyphony without splitting a
+     * decaying tail. */
     SoundMidiSendFM(AD_NEW, 0x01);
     /* Zero the LSI test registers in both sets: scratch state that survives a
      * warm reboot (call/0033). The OPL3 test register is 0x01; the DDK
@@ -1598,16 +1600,19 @@ Opl3_NoteOff
         m_Voice[wTemp].bBlock[1] &= 0x1f;
         m_Voice[wTemp].dwTime = m_dwCurTime;
 
-        /* A 4-op voice keys off through its primary channel; also free the reserved
-         * secondary slot and clear the pair's connection-select bit so the pair reverts to
-         * two 2-operator channels (plan/0009). */
+        /* A 4-op voice keys off through its primary channel; free the reserved secondary
+         * slot for reallocation but keep the pair's connection-select bit through the
+         * release, so the tail decays in the topology it was struck in. The bit changes
+         * only while both halves are silent: the reuse paths flip it after silencing
+         * (Opl3_SplitPair, the 4-op pre-connect silence; plan/0016). */
         if (m_Voice[wTemp].b4Op)
         {
             int voice = FourOpVoiceOfPrimary(wTemp);
             if (voice >= 0)
+            {
                 m_Voice[gFourOpSecondary[voice]].bOn = FALSE;
-            m_Voice[wTemp].b4Op = FALSE;
-            Opl3_UpdateConnection();
+                m_Voice[gFourOpSecondary[voice]].dwTime = m_dwCurTime;
+            }
         }
     }
 }
@@ -1769,6 +1774,51 @@ Opl3_UpdateConnection(void)
 }
 
 
+/*****************************************************************************
+ * Opl3_SilenceSlot - key a 2-op channel off and shut its operators (plan/0016).
+ *
+ * Both operators' total level goes to maximum attenuation and the channel keys off, so
+ * no release tail survives a connection-select change. The next note on the channel
+ * programs fresh operator levels, so the silencing is transient.
+ */
+#pragma code_seg()
+void
+CMiniportMidiStreamFMAdLibGold::
+Opl3_SilenceSlot(WORD wSlot)
+{
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
+
+    WORD wOffset = (WORD)((wSlot < 9) ? wSlot : (wSlot + 0x100 - 9));
+
+    m_Miniport->SoundMidiSendFM(AD_BLOCK + wOffset,
+        (BYTE)(m_Voice[wSlot].bBlock[0] & 0x1f));
+    m_Miniport->SoundMidiSendFM(0x40 + gw2OpOffset[wSlot][0], 0x3f);
+    m_Miniport->SoundMidiSendFM(0x40 + gw2OpOffset[wSlot][1], 0x3f);
+}
+
+
+/*****************************************************************************
+ * Opl3_SplitPair - disconnect a released 4-op pair before a half is reused (plan/0016).
+ *
+ * The connection-select bit may change only while both member channels are silent:
+ * flipping it under a live release tail splits the algorithm mid-decay and the secondary
+ * sounds alone at its stale frequency, the note-boundary garble the retest heard.
+ * Silence both halves, then clear the pair's bit.
+ */
+#pragma code_seg()
+void
+CMiniportMidiStreamFMAdLibGold::
+Opl3_SplitPair(int voice)
+{
+    ASSERT(KeGetCurrentIrql() <= DISPATCH_LEVEL);
+
+    Opl3_SilenceSlot((WORD)gFourOpPrimary[voice]);
+    Opl3_SilenceSlot((WORD)gFourOpSecondary[voice]);
+    m_Voice[gFourOpPrimary[voice]].b4Op = FALSE;
+    Opl3_UpdateConnection();
+}
+
+
 #pragma code_seg()
 void
 CMiniportMidiStreamFMAdLibGold::
@@ -1862,9 +1912,17 @@ Opl3_NoteOn
         int sec  = gFourOpSecondary[fourOp];
 
         /* Mark the pair 4-op and set its connection-select bit before programming, so the
-         * chip treats the two channels as one 4-operator voice as it is written. */
-        m_Voice[prim].b4Op = TRUE;
-        Opl3_UpdateConnection();
+         * chip treats the two channels as one 4-operator voice as it is written. A pair
+         * still connected from a released 4-op note skips the flip (a normal retrigger);
+         * a previously 2-operator pair is silenced first, so the bit never flips under a
+         * decaying tail (plan/0016). */
+        if (!m_Voice[prim].b4Op)
+        {
+            Opl3_SilenceSlot((WORD)prim);
+            Opl3_SilenceSlot((WORD)sec);
+            m_Voice[prim].b4Op = TRUE;
+            Opl3_UpdateConnection();
+        }
 
         Opl3_FMNote4Op((WORD)fourOp, &NS);
 
@@ -1892,6 +1950,17 @@ Opl3_NoteOn
     else
     {
         wTemp = Opl3_FindEmptySlot(bPatch);
+
+        /* Reusing a half of a released-but-still-connected pair: split it first,
+         * silencing both halves, so the connection bit never flips under a tail
+         * (plan/0016). */
+        {
+            int sv = FourOpVoiceOfPrimary((int)wTemp);
+            if (sv < 0)
+                sv = FourOpVoiceOfSecondary((int)wTemp);
+            if (sv >= 0 && m_Voice[gFourOpPrimary[sv]].b4Op)
+                Opl3_SplitPair(sv);
+        }
 
         Opl3_FMNote(wTemp, &NS);
         m_Voice[wTemp].bNote = bNote;
@@ -2180,25 +2249,22 @@ Opl3_FindEmptySlot(BYTE bPatch)
      * the globally oldest. Always a valid voice, so no more than 18 ever sound. */
     unsigned long time[NUM2VOICES];
     unsigned char on[NUM2VOICES], patch[NUM2VOICES], protect[NUM2VOICES];
+    unsigned char b4op[NUM2VOICES];
     WORD i;
 
     for (i = 0; i < NUM2VOICES; i++)
     {
-        int sv;
         time[i]  = m_Voice[i].dwTime;
         on[i]    = (unsigned char)(m_Voice[i].bOn ? 1 : 0);
         patch[i] = m_Voice[i].bPatch;
-
-        /* Protect an active 4-op primary and its reserved secondary so the 2-op path never
-         * steals half of a paired voice (plan/0009). */
-        protect[i] = (unsigned char)(m_Voice[i].b4Op ? 1 : 0);
-        if (!protect[i])
-        {
-            sv = FourOpVoiceOfSecondary((int)i);
-            if (sv >= 0 && m_Voice[gFourOpPrimary[sv]].b4Op)
-                protect[i] = 1;
-        }
+        b4op[i]  = (unsigned char)(m_Voice[i].b4Op ? 1 : 0);
     }
+
+    /* Protect only a LIVE 4-op pair (primary keyed on), through the pure policy. A
+     * released pair keeps its connection bit through the tail and stays stealable; the
+     * caller splits it after silencing both halves (Opl3_SplitPair, plan/0016). */
+    for (i = 0; i < NUM2VOICES; i++)
+        protect[i] = (unsigned char)(FourOpSlotProtected(b4op, on, (int)i) ? 1 : 0);
 
     return (WORD)FmVoiceAllocate(time, on, patch, protect, NUM2VOICES, bPatch);
 }

@@ -51,6 +51,35 @@ static void test_fmvoice4op(void)
     /* Every pair busy -> no free voice. */
     for (v = 0; v < FOUR_OP_COUNT; v++) busy[gFourOpPrimary[v]] = 1;
     CHECK(FourOpFindFree(busy) == -1, "no free voice when every pair is occupied");
+
+    /* Live-pair protection (plan/0016): only a sounding 4-op pair protects its halves.
+     * A released pair keeps its connection bit through the tail but stays stealable;
+     * the reuse paths silence both halves and split before the bit flips. */
+    {
+        unsigned char b4op[18], on[18];
+        for (s = 0; s < 18; s++) { b4op[s] = 0; on[s] = 0; }
+
+        b4op[gFourOpPrimary[1]] = 1;
+        on[gFourOpPrimary[1]] = 1; on[gFourOpSecondary[1]] = 1;
+        CHECK(FourOpSlotProtected(b4op, on, gFourOpPrimary[1]),
+              "a live pair protects its primary");
+        CHECK(FourOpSlotProtected(b4op, on, gFourOpSecondary[1]),
+              "a live pair protects its secondary");
+
+        on[gFourOpPrimary[1]] = 0; on[gFourOpSecondary[1]] = 0;
+        CHECK(!FourOpSlotProtected(b4op, on, gFourOpPrimary[1]),
+              "a released pair's primary is stealable");
+        CHECK(!FourOpSlotProtected(b4op, on, gFourOpSecondary[1]),
+              "a released pair's secondary is stealable");
+
+        on[6] = 1;
+        CHECK(!FourOpSlotProtected(b4op, on, 6),
+              "a standalone slot is never pair-protected");
+
+        b4op[gFourOpPrimary[1]] = 0; on[gFourOpSecondary[1]] = 1;
+        CHECK(!FourOpSlotProtected(b4op, on, gFourOpSecondary[1]),
+              "a split pair's secondary playing 2-op is not protected");
+    }
 }
 
 int main(void)

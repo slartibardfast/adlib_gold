@@ -60,6 +60,23 @@ FourOpVoiceOfSecondary(int slot)
     return -1;
 }
 
+/* Whether `slot` must not be taken by the 2-op allocator: it is half of a pair still
+ * sounding a 4-op note (the primary carries b4op and on). A released pair keeps its
+ * connection bit through the tail, since the bit may change only while both halves are
+ * silent (plan/0016), so release state alone no longer protects: the reuse paths
+ * silence both halves and split instead. b4op[] and on[] are per-slot views of the
+ * voice table. */
+static int
+FourOpSlotProtected(const unsigned char *b4op, const unsigned char *on, int slot)
+{
+    int v = FourOpVoiceOfPrimary(slot);
+    if (v < 0)
+        v = FourOpVoiceOfSecondary(slot);
+    if (v < 0)
+        return 0;
+    return b4op[gFourOpPrimary[v]] && on[gFourOpPrimary[v]];
+}
+
 /* Find a free 4-operator voice given the busy state of the 18 slots (busy[slot] != 0 when
  * occupied); return its index, or -1 when no pair is free. A voice is free only when both
  * its primary and secondary slots are free. */

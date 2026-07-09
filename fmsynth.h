@@ -313,6 +313,8 @@ private:
     void Opl3_FMNote(WORD wNote, noteStruct FAR * lpSN);
     void Opl3_FMNote4Op(WORD wVoice, noteStruct FAR * lpSN);
     void Opl3_UpdateConnection(void);
+    void Opl3_SilenceSlot(WORD wSlot);
+    void Opl3_SplitPair(int voice);
     void Opl3_SetSustain(BYTE bChannel, BYTE bSusLevel);
 
 public:
