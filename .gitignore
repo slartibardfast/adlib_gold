@@ -7,7 +7,7 @@ adlibgold.chk.sys
 .winebuild/
 
 # TLC (Specula lane) transient output — regenerated per run, never tracked.
+# (tla2tools.jar is vendored at spec/tla2tools.jar — tracked, the immutable pin.)
 spec/states/
 spec/*_TTrace_*.tla
 spec/*_TTrace_*.bin
-tla2tools.jar
