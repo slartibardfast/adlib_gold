@@ -1,0 +1,27 @@
+[book]
+title = "YMZ263B Datasheet"
+authors = ["Yamaha Corporation (original, Japanese)"]
+description = "Reproduction of the Yamaha YMZ263B (MMA) datasheet, OCR'd from the original Japanese PDF and rebuilt as a searchable mdBook, with a side-by-side English translation. Primary source for the Ad Lib Gold's MMA controller."
+language = "ja"
+src = "src"
+multilingual = true
+
+[output.html]
+default-theme = "rust"
+preferred-dark-theme = "ayu"
+git-repository-url = "https://github.com/slartibardfast/adlib_gold"
+edit-url-template = "https://github.com/slartibardfast/adlib_gold/edit/main/ymz263/{path}"
+no-section-label = false
+additional-css = ["css/fonts.css"]
+
+[output.html.fold]
+enable = true
+level = 1
+
+[output.html.search]
+enable = true
+limit-results = 30
+
+# Server-side math: render LaTeX to HTML at build time with KaTeX.
+[preprocessor.katex]
+after = ["links"]

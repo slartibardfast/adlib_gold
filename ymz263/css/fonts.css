@@ -1,0 +1,61 @@
+/* CJK-aware font stack for the YMZ263 datasheet mdBook.
+ *
+ * The book's primary language is Japanese (book.toml: language = "ja"),
+ * so <html lang="ja"> is set on every page. Browsers honour the lang
+ * attribute when selecting fonts from the fallback chain below: Latin
+ * runs use the system Latin font and CJK runs fall through to the
+ * Japanese fonts, selected per-glyph by the browser's font matcher.
+ *
+ * The English translation pages (datasheet.en.md, README.en.md) are
+ * wrapped in <div lang="en"> so assistive tech and per-language CSS
+ * can target them; they share the same font stack, which renders
+ * Latin text identically regardless of the page's book-level lang.
+ */
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+    "Yu Gothic", "YuGothic",
+    "Meiryo",
+    "Noto Sans JP", "Noto Sans CJK JP",
+    "IPAGothic",
+    sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* CJK text reads better with slightly more vertical breathing room
+ * than the Latin default; 1.7 keeps Latin readable too. */
+p, li, td, th, dd {
+  line-height: 1.7;
+}
+
+/* Inline code and <pre> blocks render in the Latin monospace stack;
+ * CJK inside code (rare here) falls back to the Japanese gothic font. */
+code, pre, kbd, samp {
+  font-family:
+    "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+    "Noto Sans Mono CJK JP", monospace;
+}
+
+/* Visually mark English-language sections within the Japanese book so
+ * the lang="en" wrapper is discoverable. The wrapper is informational
+ * (lang metadata) not decorative, so the indicator is a subtle
+ * right-aligned tag rather than a border around the content. */
+div[lang="en"]::before {
+  content: "English translation";
+  display: block;
+  float: right;
+  font-size: 0.75em;
+  color: var(--inline-code-color, #999);
+  margin-bottom: 0.5em;
+}
+
+/* Ensure register tables don't shrink CJK columns too aggressively. */
+table td, table th {
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
