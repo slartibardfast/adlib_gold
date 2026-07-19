@@ -372,10 +372,12 @@ NTSTATUS CMiniportWaveStream::SetState(KSSTATE NewState)
 
 ### DMA Configuration
 
-DMA channels are configured through the Control Chip, not the MMA:
+DMA channels are configured through the Control Chip, not the MMA. The bit layout follows the ch07 register map and `common.h:183–187` (the earlier D7-D6/D5/D4/D3-D1 assignment in this section was a stale restatement from the initial design and did not match either the manual or the shipped code):
 
-- **Channel 0** (reg 13h): DMA line select (bits D7-D6), DMA enable (D5), IRQ select (D3-D1), IRQ enable (D4)
-- **Channel 1** (reg 14h): DMA line select (bits D7-D6), DMA enable (D5)
+- **Channel 0** (reg 13h): DMA0 enable (D7), DMA0 select (D6-D4), IRQ enable/AEN (D3), IRQ select/INT SEL A (D2-D0)
+- **Channel 1** (reg 14h): DMA1 enable (D7), DMA1 select (D6-D4)
+
+INT SEL A maps 0→IRQ3, 1→IRQ4, 2→IRQ5, 3→IRQ7, 4→IRQ10, 5→IRQ11, 6→IRQ12, 7→IRQ15. `ConfigureDmaAndIrq` (algwave.cpp) reads the resource-list IRQ/DMA and programs reg 13h accordingly; it is the sole AEN enable and runs last in the boot sequence after `ControlRegReset` zeroes the register.
 
 Gold 1000 supports DMA 1-3 only. Gold 2000 supports DMA 0-3.
 
